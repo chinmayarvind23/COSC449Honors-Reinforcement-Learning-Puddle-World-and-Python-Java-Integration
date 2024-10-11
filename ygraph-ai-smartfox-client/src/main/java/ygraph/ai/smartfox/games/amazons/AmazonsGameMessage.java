@@ -2,7 +2,7 @@ package ygraph.ai.smartfox.games.amazons;
 
 import java.util.Collection;
 
-import com.smartfoxserver.v2.entities.data.SFSObject;
+// import com.smartfoxserver.v2.entities.data.SFSObject;
 
 import sfs2x.client.requests.ExtensionRequest;
 import ygraph.ai.smartfox.games.GameMessage;
@@ -28,6 +28,7 @@ import ygraph.ai.smartfox.games.GameMessage;
 	}
 
 	
+	@SuppressWarnings("unchecked")
 	public void setMessageDetails(String key, Object value){
 		if(super.messageType.equals(GAME_ACTION_MOVE)){
 			params.putIntArray(key, (Collection<Integer>) value); 
@@ -40,7 +41,7 @@ import ygraph.ai.smartfox.games.GameMessage;
 		
 	public void compile(){
 		super.req = new ExtensionRequest(messageType, params);
-		msgCompiled = true;
+		// msgCompiled = true;
 	}
 	
 }

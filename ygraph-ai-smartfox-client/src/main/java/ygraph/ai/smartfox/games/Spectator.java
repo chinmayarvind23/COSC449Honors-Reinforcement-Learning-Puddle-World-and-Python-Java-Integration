@@ -3,7 +3,7 @@ package ygraph.ai.smartfox.games;
 import java.util.ArrayList;
 import java.util.Map;
 
-import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
+//import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
 public class Spectator extends GamePlayer{
 
@@ -28,7 +28,8 @@ public class Spectator extends GamePlayer{
 	@Override
 	public boolean handleGameMessage(String messageType, Map<String, Object> msgDetails) {
 		if(messageType.equals(GameMessage.GAME_STATE_BOARD)){
-			ArrayList<Integer> gameS = (ArrayList<Integer>) msgDetails.get("game-state");
+			@SuppressWarnings("unchecked")
+            ArrayList<Integer> gameS = (ArrayList<Integer>) msgDetails.get("game-state");
 			if(getGameGUI() != null) {
 				getGameGUI().setGameState(gameS);
 			}

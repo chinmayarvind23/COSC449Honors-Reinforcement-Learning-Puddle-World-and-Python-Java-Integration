@@ -21,7 +21,7 @@ import sfs2x.client.requests.ExtensionRequest;
 import sfs2x.client.requests.LeaveRoomRequest;
 import sfs2x.client.requests.LoginRequest;
 import sfs2x.client.requests.LogoutRequest;
-import sfs2x.client.requests.SubscribeRoomGroupRequest;
+//import sfs2x.client.requests.SubscribeRoomGroupRequest;
 import ygraph.ai.smartfox.games.amazons.AmazonsGameMessage;
 
 
@@ -245,7 +245,8 @@ public class GameClient {
 	 * Send a move message to the server
 	 * @param msDetails
 	 */
-	public void sendMoveMessage(Map<String, Object> msDetails){
+	@SuppressWarnings("unchecked")
+    public void sendMoveMessage(Map<String, Object> msDetails){
  
 		SFSObject data = new SFSObject();
 	    data.putIntArray(AmazonsGameMessage.QUEEN_POS_CURR, (ArrayList<Integer>)msDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
@@ -479,7 +480,7 @@ public class GameClient {
 	
 	
 	public static void main(String[] args) {		
-		GameClient gc = new GameClient("yong.gao", "cosc322");				 
+		//GameClient gc = new GameClient("yong.gao", "cosc322");				 
 	}
 	
 }//end of class

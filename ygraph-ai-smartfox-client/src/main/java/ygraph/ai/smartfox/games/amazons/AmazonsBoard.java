@@ -129,10 +129,11 @@ public final class AmazonsBoard extends JPanel{
     	//handle the event that the opponent makes a move. 
     	//private void handleOpponentMove(Map<String, Object> msgDetails){
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+            @SuppressWarnings("unchecked")
+			public void run() {
     		//System.out.println("OpponentMove(): " + msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
-    		ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
-    		ArrayList<Integer> qnew = (ArrayList<Integer>)msgDetails.get(AmazonsGameMessage.QUEEN_POS_NEXT);
+			ArrayList<Integer> qcurr = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR);
+			ArrayList<Integer> qnew = (ArrayList<Integer>)msgDetails.get(AmazonsGameMessage.QUEEN_POS_NEXT);
     		ArrayList<Integer> arrow = (ArrayList<Integer>) msgDetails.get(AmazonsGameMessage.ARROW_POS);
     		System.out.println("QCurr: " + qcurr);
     		System.out.println("QNew: " + qnew);
@@ -223,7 +224,7 @@ public final class AmazonsBoard extends JPanel{
       
     	for(int i = 0; i < 11; i++) {
     		tileArray[i][0] = new javax.swing.JLabel(Integer.toString(i));
-    		tileArray[0][i] = new javax.swing.JLabel(Character.toString(i + 96));
+    		tileArray[0][i] = new javax.swing.JLabel(Character.toString((char) (i + 96)));
     		tileArray[0][i].setHorizontalAlignment(SwingConstants.CENTER);
     		
 			 tileArray[0][i].setMinimumSize(new java.awt.Dimension(50,50));
