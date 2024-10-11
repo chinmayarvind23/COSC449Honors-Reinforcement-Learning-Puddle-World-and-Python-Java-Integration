@@ -1,10 +1,8 @@
 package ygraph.ai.smartfox.games;
 
-//import java.util.Collection;
-
-//import com.smartfoxserver.v2.entities.data.SFSObject;
-
-// import sfs2x.client.requests.ExtensionRequest;
+import java.util.Collection;
+import com.smartfoxserver.v2.entities.data.SFSObject;
+import sfs2x.client.requests.ExtensionRequest;
 import ygraph.ai.smartfox.GameMessage;
 
 public class AmazonGameMessage extends GameMessage{
@@ -22,12 +20,13 @@ public class AmazonGameMessage extends GameMessage{
 	}
 
 	
-//	public void setMessageDetails(String key, Object value){
-//		if(super.messageType.equals(GAME_ACTION_MOVE)){
-//			params.putIntArray(key, (Collection<Integer>) value); 
-//		}
-//		else{
-//			params.putUtfString(key, (String) value);
-//		}			
-//	}	
+	@SuppressWarnings("unchecked")
+	public void setMessageDetails(String key, Object value){
+		if(super.messageType.equals(GAME_ACTION_MOVE)){
+			params.putIntArray(key, (Collection<Integer>) value); 
+		}
+		else{
+			params.putUtfString(key, (String) value);
+		}			
+	}	
 }//end of class
