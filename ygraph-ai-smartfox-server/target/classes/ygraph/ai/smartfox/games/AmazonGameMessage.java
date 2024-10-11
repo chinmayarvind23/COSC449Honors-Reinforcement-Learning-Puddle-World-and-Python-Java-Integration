@@ -1,8 +1,7 @@
 package ygraph.ai.smartfox.games;
 
 import java.util.Collection;
-import com.smartfoxserver.v2.entities.data.SFSObject;
-import sfs2x.client.requests.ExtensionRequest;
+// import com.smartfoxserver.v2.entities.data.SFSObject;
 import ygraph.ai.smartfox.GameMessage;
 
 public class AmazonGameMessage extends GameMessage{
