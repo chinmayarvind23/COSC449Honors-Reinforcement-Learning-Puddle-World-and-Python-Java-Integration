@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import sfs2x.client.entities.Room;
-// import ygraph.ai.smartfox.games.amazons.AmazonsBoard;
+import ygraph.ai.smartfox.games.amazons.AmazonsBoard;
 
 /**
  * Base Game GUI - A JFrame with two Panels: the Game Board (Amazons) and the Control Panel.
@@ -211,7 +211,7 @@ public class BaseGameGUI extends javax.swing.JFrame{
 	        if (e.getClickCount() == 1) {
 	        	//javax.swing.SwingUtilities.invokeLater(new Runnable() { 
 	        	//	public void run() {
-	        		int index = roomSelection.locationToIndex(e.getPoint());
+	        		//int index = roomSelection.locationToIndex(e.getPoint());
 	        		System.out.println(roomSelection.getSelectedValue());
 	        		//System.out.println("Single clicked on Item " + index);            
 	        		String rm = (String)roomSelection.getSelectedValue(); 
