@@ -42,9 +42,9 @@ public class RLGamePlayer implements IEventListener {
 
     // Learning Parameters: learning rate (prioritizes immediate over future rewards), discount factor (future rewards prioritized over immediate rewards), exploration rate (probability of choosing random action over best action given current knowledge of puddle world)
     // Set in server, so students don't need to worry about this
-    private double alpha;
-    private double gamma; 
-    private double epsilon;
+    private double alpha = 0.1;
+    private double gamma = 0.9; 
+    private double epsilon = 1;
 
     // RLGamePlayer constructor that takes in username, password, IP, port, zone name, and room name as params
     public RLGamePlayer(String userName, String password, String serverIP, int serverPort, String zoneName, String roomName) {
@@ -230,9 +230,17 @@ public class RLGamePlayer implements IEventListener {
     private void processInfo(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
-        String info = params.getUtfString("info");
-        System.out.println("Received GAME_INFO: " + info);
-    }
+        double cumulativeReward = params.getDouble("cumulativeReward");
+        int stepsThisEpisode = params.getInt("stepsThisEpisode");
+        int totalEpisodes = params.getInt("totalEpisodes");
+        int successfulEpisodes = params.getInt("successfulEpisodes");
+    
+        System.out.println("Episode " + totalEpisodes + " Summary:");
+        System.out.println(" - Cumulative Reward: " + cumulativeReward);
+        System.out.println(" - Steps Taken: " + stepsThisEpisode);
+        System.out.println(" - Successful Episodes: " + successfulEpisodes);
+        System.out.println(" - Total Episodes: " + totalEpisodes);
+    }    
 
     // Asks for the initial state of the game from the server through an extension request
     // Given to students
@@ -390,23 +398,50 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Sent Action: " + action + " for State: " + stateId);
     }
 
-    // Updates the Q-table based on the update formula defined in the textbook using the received reward from the server, the current and next states, the learning rate and discount factor
-    // Students must implement this
+    // Sends Q-Table updates to the server
+    private void sendQUpdate(int[] qStateIds, int[] qActionIndices, double[] qValues) {
+        RLClientGameMessage qUpdateMsg = new RLClientGameMessage(qStateIds, qActionIndices, qValues);
+        ISFSObject params = qUpdateMsg.toSFSObject();
+        ExtensionRequest qUpdateReq = new ExtensionRequest("rl.action", params, this.currentRoom);
+        smartFox.send(qUpdateReq);
+        System.out.println("Sent Q-Table updates to the server.");
+    }
+
+    // Sends V-Table updates to the server
+    private void sendVUpdate(int[] vStateIds, double[] vValues) {
+        RLClientGameMessage vUpdateMsg = new RLClientGameMessage(vStateIds, vValues);
+        ISFSObject params = vUpdateMsg.toSFSObject();
+        ExtensionRequest vUpdateReq = new ExtensionRequest("rl.action", params, this.currentRoom);
+        smartFox.send(vUpdateReq);
+        System.out.println("Sent V-Table updates to the server.");
+    }
+
+    // Updates the Q-table based on the update formula and sends updates to the server
     private void updateQTable(int stateId, int action, double reward, int nextStateId) {
         double[] currentQ = qTable.get(stateId);
         double[] nextQ = qTable.get(nextStateId);
         double maxNextQ = getMaxQ(nextQ);
         currentQ[action] = currentQ[action] + alpha * (reward + gamma * maxNextQ - currentQ[action]);
         qTable.put(stateId, currentQ);
+
+        // Send Q-Table update to the server
+        int[] qStateIds = {stateId};
+        int[] qActionIndices = {action};
+        double[] qValues = {currentQ[action]};
+        sendQUpdate(qStateIds, qActionIndices, qValues);
     }
 
-    // Updates the V-table based on TD error
-    // Students must implement this
+    // Updates the V-table based on TD error and sends updates to the server
     private void updateVTable(int stateId, double reward, int nextStateId) {
         double currentV = vTable.get(stateId);
         double nextV = vTable.get(nextStateId);
         double updatedV = currentV + alpha * (reward + gamma * nextV - currentV);
         vTable.put(stateId, updatedV);
+
+        // Send V-Table update to the server
+        int[] vStateIds = {stateId};
+        double[] vValues = {updatedV};
+        sendVUpdate(vStateIds, vValues);
     }
 
     // Gets the maximum Q-value from the array of Q-values for an action-state pair

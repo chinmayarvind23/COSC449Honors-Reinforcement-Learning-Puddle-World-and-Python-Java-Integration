@@ -14,6 +14,14 @@ public class RLGameUser {
     private double lastReward;
     private boolean isTerminal;
 
+    private int totalEpisodes = 0;
+    private int successfulEpisodes = 0;
+    private double cumulativeReward = 0.0;
+    private int stepsThisEpisode = 0;
+
+    // Thresholds for evaluation
+    private double successRewardThreshold = 1.0;
+
     // Constructor that associates a User object with an RL world and starts the game
     public RLGameUser(User user, RLWorld world) {
         this.user = user;
@@ -44,7 +52,7 @@ public class RLGameUser {
     }
 
     // Processes an action taken by a user for the following actions: "UP", "DOWN", "LEFT", "RIGHT".
-    public void takeAction(String action) {
+    public void takeAction(String actionStr) {
         // Terminal state check, no further processing needed
         if (isTerminal) {
             System.out.println("User " + user.getName() + " attempted to take action in a terminal state.");
@@ -52,17 +60,17 @@ public class RLGameUser {
         }
 
         // Check if the action string is one of the 4 actions possible in the puddle world
-        if (!isValidAction(action)) {
-            System.out.println("Invalid action '" + action + "' received from user: " + user.getName());
+        if (!isValidAction(actionStr)) {
+            System.out.println("Invalid action '" + actionStr + "' received from user: " + user.getName());
             return;
         }
 
         // Performs the action within the RL world and sets the current state ID to the next one
-        int nextStateId = world.performAction(currentStateId, action);
-        lastReward = world.getReward(currentStateId, action, nextStateId);
+        int nextStateId = world.performAction(currentStateId, actionStr);
+        lastReward = world.getReward(currentStateId, actionStr, nextStateId);
         currentStateId = nextStateId;
 
-        System.out.println("User " + user.getName() + " performed action '" + action + "'. New state: " + currentStateId + ", Reward: " + lastReward);
+        System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + currentStateId + ", Reward: " + lastReward);
 
         // New state terminal check
         if (world.isTerminalState(currentStateId)) {
@@ -105,11 +113,53 @@ public class RLGameUser {
     // Resets the game environment post-episode
     public void resetGame() {
         initializeGame();
+        cumulativeReward = 0.0;
+        stepsThisEpisode = 0;
     }
 
     // Cleans up the world, done in the RLWorld class when a user leaves a world
     public void cleanup() {
         System.out.println("Cleaning up RLGameUser for user: " + user.getName());
         world.cleanup();
+    }
+
+    // Increment total episodes
+    public void incrementEpisodes() {
+        this.totalEpisodes++;
+    }
+
+    // Update cumulative rewards
+    public void updateRewards(double reward) {
+        this.cumulativeReward += reward;
+    }
+
+    // Update steps taken in the current episode
+    public void updateSteps(int steps) {
+        this.stepsThisEpisode += steps;
+    }
+
+    // Increment successful episodes
+    public void incrementSuccessfulEpisodes() {
+        this.successfulEpisodes++;
+    }
+
+    public double getCumulativeReward() {
+        return cumulativeReward;
+    }
+
+    public int getStepsThisEpisode() {
+        return stepsThisEpisode;
+    }
+
+    public int getTotalEpisodes() {
+        return totalEpisodes;
+    }
+
+    public int getSuccessfulEpisodes() {
+        return successfulEpisodes;
+    }
+
+    public double getSuccessRewardThreshold() {
+        return successRewardThreshold;
     }
 }

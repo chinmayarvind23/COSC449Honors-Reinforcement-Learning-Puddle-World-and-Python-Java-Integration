@@ -127,6 +127,21 @@ public class RLWorld {
         initializePuddles();
     }
 
+    // Sets Q-value for a given state-action pair for managing client updates to Q-table
+    public void setQValue(int stateId, int action, double qValue) {
+        double[] currentQ = qTable.get(stateId);
+        if (currentQ != null && action >= 0 && action < currentQ.length) {
+            currentQ[action] = qValue;
+            qTable.put(stateId, currentQ);
+        }
+    }
+
+    // Sets V-value for a given state for managing client updates to V-table
+    public void setVValue(int stateId, double vValue) {
+        vTable.put(stateId, vValue);
+    }
+
+
     // Completes an action selection using epsilon-greedy policy and updates the current state ID to the next state ID by calling the helper method moveAgentWithAction that takes the current state and action
     public int moveAgent(int stateId) {
         int action;
@@ -162,22 +177,25 @@ public class RLWorld {
     }
 
     // Performs an action and updates the current state to the next state
-     public int moveAgentWithAction(int stateId, int action) {
+    public int moveAgentWithAction(int stateId, int action) {
         String actionStr = getActionString(action);
         if (actionStr == null) {
             return currentStateId;
         }
-
+    
         int newStateId = performAction(stateId, actionStr);
-
-        // Check for puddle entering
+    
+        // Check if the new state is a puddle
         if (isPuddle(newStateId)) {
-            return stateId;
+            // Apply penalty but don't move
+            double puddleReward = getReward(stateId, actionStr, newStateId);  // -1.0 reward
+            updateQTable(stateId, action, puddleReward, stateId);  // Agent stays in the same state
+            return stateId;  // Agent remains in the current state
         } else {
             currentStateId = newStateId;
             return currentStateId;
         }
-    }
+    }    
 
     // Perform a move using the current state ID and action string within the 1D array representing the puddle world
     // Returns the new state ID post action
@@ -204,20 +222,6 @@ public class RLWorld {
         }
 
         return row * gridSize + col;
-    }
-
-    // Reverts an action by an agent and moves it back to the prior state
-    // Returns the reverted state ID
-    public int performActionReverse(int stateId, String action, int nextStateId) {
-        String reverseAction = getReverseAction(action);
-        if (reverseAction == null) {
-            // Invalid action
-            return stateId;
-        }
-
-        int revertedStateId = performAction(nextStateId, reverseAction);
-        currentStateId = revertedStateId;
-        return revertedStateId;
     }
 
     // Gets the reward from moving from a certain state ID to the next state ID via some action
@@ -272,9 +276,9 @@ public class RLWorld {
     }
 
     // Gets the list of available actions in the actions array
-    public String[] getActionSpace() {
-        return actions;
-    }
+    // public String[] getActionSpace() {
+    //     return actions;
+    // }
 
     // Checks if a given state is a terminal state
     public boolean isTerminalState(int stateId) {
@@ -298,22 +302,6 @@ public class RLWorld {
             }
         }
         return max;
-    }
-
-    // Gets the reverse of an action to revert state
-    private String getReverseAction(String action) {
-        switch (action) {
-            case "UP":
-                return "DOWN";
-            case "DOWN":
-                return "UP";
-            case "LEFT":
-                return "RIGHT";
-            case "RIGHT":
-                return "LEFT";
-            default:
-                return null;
-        }
     }
 
     // Gets the current state ID of the agent
