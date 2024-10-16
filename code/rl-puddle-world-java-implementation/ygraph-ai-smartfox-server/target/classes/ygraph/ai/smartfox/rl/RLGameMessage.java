@@ -243,8 +243,8 @@ public class RLGameMessage {
             case GAME_INFO:
                 this.cumulativeReward = params.getDouble("cumulativeReward");
                 this.steps = params.getInt("stepsThisEpisode");
-                this.stateId = params.getInt("totalEpisodes");
-                this.action = params.getInt("successfulEpisodes");
+                this.totalEpisodes = params.getInt("totalEpisodes");
+                this.successfulEpisodes = params.getInt("successfulEpisodes");
                 break;
             default:
                 break;
