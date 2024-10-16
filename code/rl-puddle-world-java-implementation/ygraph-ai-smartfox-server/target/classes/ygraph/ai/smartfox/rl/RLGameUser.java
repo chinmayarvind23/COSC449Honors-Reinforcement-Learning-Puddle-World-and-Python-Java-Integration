@@ -162,4 +162,8 @@ public class RLGameUser {
     public double getSuccessRewardThreshold() {
         return successRewardThreshold;
     }
+    
+    public void setStateId(int stateId) {
+        this.currentStateId = stateId;
+    }
 }

@@ -14,6 +14,7 @@ public class RLGameTest extends RLGamePlayer {
     private List<Integer> stepsPerEpisode = new ArrayList<>();
     private double cumulativeReward = 0.0;
     private int stepsThisEpisode = 0;
+    private int maxEpisodes = 1000; // Training limit for test
 
     // Thresholds for evaluation
     private double successRewardThreshold = 1.0;
@@ -56,6 +57,15 @@ public class RLGameTest extends RLGamePlayer {
 
         // Print metrics to console
         logMetrics();
+
+        // Calculate average reward over all episodes
+        double averageReward = rewardsPerEpisode.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+
+        // Check for training termination
+        if (totalEpisodes >= maxEpisodes || averageReward >= successRewardThreshold) {
+            System.out.println("Training terminated based on defined conditions.");
+            disconnect();
+        }
     }
 
     // Overrides sendAction from GamePlayer and allows for tracking steps in the current episode

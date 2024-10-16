@@ -87,14 +87,18 @@ public class RLWorld {
     }
 
     // Initializes the puddle positions randomly within the grid
-    private void initializePuddles() {
+    public void initializePuddles() {
         puddlePositions.clear();
         while (puddlePositions.size() < maxPuddles) {
             int row = random.nextInt(gridSize - puddleSize + 1);
             int col = random.nextInt(gridSize - puddleSize + 1);
             int[] puddle = {row, col};
             if (!isOverlapping(puddle)) {
-                puddlePositions.add(puddle);
+                if (!(row <= (goalStateId / gridSize) && (goalStateId / gridSize) < row + puddleSize &&
+                  col <= (goalStateId % gridSize) && (goalStateId % gridSize) < col + puddleSize)) 
+                {
+                    puddlePositions.add(puddle);
+                }
             }
         }
     }
@@ -325,5 +329,67 @@ public class RLWorld {
         // Update Q-value for current state-action pair
         currentQ[action] = currentQ[action] + alpha * (reward + gamma * maxNextStateQ - currentQ[action]);
         qTable.put(stateId, currentQ);
-    }    
+    }
+
+    // Check for puddle states overlapping with goal state
+    private boolean isOverlappingGoal(int row, int col) {
+        int goalRow = goalStateId / gridSize;
+        int goalCol = goalStateId % gridSize;
+        
+        return (row <= goalRow && goalRow < row + puddleSize) &&
+            (col <= goalCol && goalCol < col + puddleSize);
+    }
+
+    // Check if a puddle overlaps with any existing puddle
+    private boolean isOverlappingExistingPuddle(int row, int col) {
+        for (int[] existingPuddle : puddlePositions) {
+            int existingRow = existingPuddle[0];
+            int existingCol = existingPuddle[1];
+            boolean rowOverlap = row < existingRow + puddleSize && existingRow < row + puddleSize;
+            boolean colOverlap = col < existingCol + puddleSize && existingCol < col + puddleSize;
+            if (rowOverlap && colOverlap) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Setting puddle positions for testing
+    public void setPuddlePositions(List<int[]> puddles) {
+        if (puddles == null) {
+            throw new IllegalArgumentException("Puddle positions list cannot be null.");
+        }
+        
+        this.puddlePositions.clear();
+        
+        // Adding new puddle positions
+        for (int[] puddle : puddles) {
+            if (puddle == null || puddle.length != 2) {
+                throw new IllegalArgumentException("Each puddle position must be an array of two integers [row, col].");
+            }
+            
+            int row = puddle[0];
+            int col = puddle[1];
+            
+            // Boundary checks for rows and columns
+            if (row < 0 || row >= gridSize || col < 0 || col >= gridSize) {
+                throw new IllegalArgumentException("Puddle position out of grid bounds: (" + row + ", " + col + ")");
+            }
+            
+            // Goal state overlap check for puddles inserted
+            if (isOverlappingGoal(row, col)) {
+                throw new IllegalArgumentException("Puddle position overlaps with the goal state at (" 
+                    + (goalStateId / gridSize) + ", " + (goalStateId % gridSize) + ")");
+            }
+            
+            // Existing puddle state overlap check for puddles inserted
+            if (isOverlappingExistingPuddle(row, col)) {
+                throw new IllegalArgumentException("Puddle position overlaps with an existing puddle at (" 
+                    + row + ", " + col + ")");
+            }
+            
+            // Adding the validated puddle position
+            this.puddlePositions.add(new int[]{row, col});
+        }
+    }        
 }

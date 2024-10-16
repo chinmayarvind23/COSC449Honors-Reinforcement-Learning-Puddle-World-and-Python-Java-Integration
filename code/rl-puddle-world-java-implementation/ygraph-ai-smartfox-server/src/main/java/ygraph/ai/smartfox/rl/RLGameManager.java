@@ -19,6 +19,9 @@ public class RLGameManager {
     // RLGameManager constructor that initializes a concurrent hashmap to store the user and their corresponding world instances distinctly from other users' instances
     public RLGameManager() {
         this.userMap = new ConcurrentHashMap<>();
+        this.alpha = 0.1;
+        this.gamma = 0.9;
+        this.epsilon = 1.0;
     }
 
     // Adds a user to an RL puddle world game by creating an RL world and binding the RLGameUser to it
