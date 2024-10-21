@@ -3,6 +3,8 @@ package ygraph.ai.smartfox.games.rl;
 import sfs2x.client.entities.Room;
 import sfs2x.client.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.entities.data.SFSObject;
+
 import sfs2x.client.SmartFox;
 import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
@@ -10,7 +12,7 @@ import sfs2x.client.core.SFSEvent;
 import sfs2x.client.requests.ExtensionRequest;
 import sfs2x.client.requests.LoginRequest;
 import sfs2x.client.requests.LogoutRequest;
-import sfs2x.client.requests.JoinRoomRequest;
+// import sfs2x.client.requests.JoinRoomRequest;
 import com.smartfoxserver.v2.exceptions.SFSException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -151,8 +153,16 @@ public class RLGamePlayer implements IEventListener {
     private void handleLogin(BaseEvent event) {
         this.currentUser = (User) event.getArguments().get("user");
         System.out.println("Logged in as: " + currentUser.getName());
-        JoinRoomRequest joinReq = new JoinRoomRequest(this.roomName);
+        ISFSObject params = new SFSObject();
+        params.putUtfString("command", "join");
+        params.putUtfString("room.name", this.roomName);
+        params.putUtfString("room.password", this.password);
+        
+        // Send an extension request to join the room with password
+        ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, null);
         smartFox.send(joinReq);
+        
+        System.out.println("Sent ROOM_JOIN request with password.");
     }
 
     // Handles the LOGIN_ERROR event by sending an error message to the console

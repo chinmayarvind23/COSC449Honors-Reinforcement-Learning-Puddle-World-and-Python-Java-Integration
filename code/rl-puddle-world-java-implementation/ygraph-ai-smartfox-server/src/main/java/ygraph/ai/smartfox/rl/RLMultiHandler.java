@@ -11,8 +11,14 @@ import com.smartfoxserver.v2.exceptions.SFSJoinRoomException;
 public class RLMultiHandler extends BaseClientRequestHandler {
 
     private final RLGameManager gameManager;
-    public RLMultiHandler(RLGameManager manager) {
-        this.gameManager = manager;
+    // public RLMultiHandler(RLGameManager manager) {
+    //     this.gameManager = manager;
+    // }
+
+    public RLMultiHandler() {
+        // Retrieve RLGameManager from parent extension
+        RLGameExtension extension = (RLGameExtension) getParentExtension();
+        this.gameManager = extension.getGameManager();
     }
 
     // Handles client requests to join a room and disconnect from the server
@@ -39,6 +45,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
     // And notifies the game manager that the user has been added to a room
     private void handleJoinRequest(User user, ISFSObject params) {
         String roomName = params.getUtfString("room.name");
+        String roomPassword = params.getUtfString("room.password");
         trace("User " + user.getName() + " requests to join room: " + roomName);
 
         Room room = getParentExtension().getParentZone().getRoomByName(roomName);
@@ -50,7 +57,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         }
 
         int numOfPlayers = room.getPlayersList().size();
-        boolean canJoin = numOfPlayers <= 1;
+        boolean canJoin = numOfPlayers == 1;
 
         if (!canJoin) {
             trace("Room " + roomName + " is already occupied.");
@@ -59,13 +66,16 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         }
 
         try {
-            String zoneName = getParentExtension().getParentZone().getName();
-            getApi().joinRoom(user, room, zoneName, false, user.getLastJoinedRoom());
-            trace("User " + user.getName() + " joined room: " + roomName + " as Player.");
+            getApi().joinRoom(user, room, roomPassword, false, user.getLastJoinedRoom());
+            trace("User " + user.getName() + " successfully joined room: " + roomName + ".");
             gameManager.addUser(user);
-        } catch (SFSJoinRoomException e) {
-            trace("Failed to join room " + roomName + ": " + e.getMessage());
+        }
+        catch (SFSJoinRoomException e) {
+            trace("Failed to join room " + roomName + " for user " + user.getName() + ": " + e.getMessage());
             sendErrorMessage(user, "Failed to join room " + roomName + ": " + e.getMessage());
+        } catch (Exception e) {
+            trace("Unexpected error while user " + user.getName() + " attempts to join room " + roomName + ": " + e.getMessage());
+            sendErrorMessage(user, "An unexpected error occurred.");
         }
     }
 

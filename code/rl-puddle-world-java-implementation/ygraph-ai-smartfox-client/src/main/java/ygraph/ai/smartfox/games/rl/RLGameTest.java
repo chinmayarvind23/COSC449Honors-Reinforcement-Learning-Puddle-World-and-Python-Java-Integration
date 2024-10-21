@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 
-// Subclassed from RLGamePlayer for easier testing
+// Subclassed from RLGamePlayer for easier testing - not used, only for testing individual client methods
 public class RLGameTest extends RLGamePlayer {
 
     // Metrics to evaluate the RL agent's performance

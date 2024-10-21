@@ -1,6 +1,6 @@
 package ygraph.ai.smartfox.rl;
 
-import com.smartfoxserver.v2.core.SFSEventType;
+// import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.extensions.SFSExtension;
 
 // This class create the RL environment within the server and sets up request handles for client logic and event handlers for client interaction
@@ -28,9 +28,10 @@ public class RLGameExtension extends SFSExtension {
         addRequestHandler(RLGameMessage.GAME_ACTION_REWARD, RLGameRequestHandler.class);
         addRequestHandler(RLGameMessage.GAME_FINAL_STATE, RLGameRequestHandler.class);
         addRequestHandler(RLGameMessage.GAME_RESET, RLGameRequestHandler.class);
+        addRequestHandler("rl.action", RLMultiHandler.class);
 
         // Create event handlers for users joiing and leaving a game room
-        addEventHandler(SFSEventType.USER_JOIN_ROOM, RLMultiHandler.class);
-        addEventHandler(SFSEventType.USER_LEAVE_ROOM, RLMultiHandler.class);
+        // addEventHandler(SFSEventType.USER_JOIN_ROOM, RLMultiHandler.class);
+        // addEventHandler(SFSEventType.USER_LEAVE_ROOM, RLMultiHandler.class);
     }
 }
