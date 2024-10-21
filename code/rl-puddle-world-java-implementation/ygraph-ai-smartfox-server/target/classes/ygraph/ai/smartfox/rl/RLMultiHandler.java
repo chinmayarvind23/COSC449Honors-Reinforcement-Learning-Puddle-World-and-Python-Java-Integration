@@ -11,14 +11,9 @@ import com.smartfoxserver.v2.exceptions.SFSJoinRoomException;
 public class RLMultiHandler extends BaseClientRequestHandler {
 
     private final RLGameManager gameManager;
-    // public RLMultiHandler(RLGameManager manager) {
-    //     this.gameManager = manager;
-    // }
 
-    public RLMultiHandler() {
-        // Retrieve RLGameManager from parent extension
-        RLGameExtension extension = (RLGameExtension) getParentExtension();
-        this.gameManager = extension.getGameManager();
+    public RLMultiHandler(RLGameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     // Handles client requests to join a room and disconnect from the server

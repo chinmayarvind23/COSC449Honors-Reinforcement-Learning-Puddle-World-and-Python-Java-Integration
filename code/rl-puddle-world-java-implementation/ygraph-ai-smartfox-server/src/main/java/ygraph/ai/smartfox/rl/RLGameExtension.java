@@ -19,6 +19,7 @@ public class RLGameExtension extends SFSExtension {
 
         // Initialize a RLGameManager
         gameManager = new RLGameManager();
+        trace("RLGameManager initialized.");
         
         // Create request handlers for all client-to-server message types
         addRequestHandler(RLGameMessage.GAME_STATE, RLGameRequestHandler.class);
@@ -28,7 +29,7 @@ public class RLGameExtension extends SFSExtension {
         addRequestHandler(RLGameMessage.GAME_ACTION_REWARD, RLGameRequestHandler.class);
         addRequestHandler(RLGameMessage.GAME_FINAL_STATE, RLGameRequestHandler.class);
         addRequestHandler(RLGameMessage.GAME_RESET, RLGameRequestHandler.class);
-        addRequestHandler("rl.action", RLMultiHandler.class);
+        addRequestHandler("rl.action", new RLMultiHandler(gameManager));
 
         // Create event handlers for users joiing and leaving a game room
         // addEventHandler(SFSEventType.USER_JOIN_ROOM, RLMultiHandler.class);
