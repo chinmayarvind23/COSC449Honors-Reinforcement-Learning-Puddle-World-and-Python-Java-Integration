@@ -233,7 +233,7 @@ public class RLGamePlayer implements IEventListener {
                     System.out.println("Unknown messageType: " + messageType);
                     break;
             }
-        } // **A
+        }
     }
 
     // Handles error messages from the server

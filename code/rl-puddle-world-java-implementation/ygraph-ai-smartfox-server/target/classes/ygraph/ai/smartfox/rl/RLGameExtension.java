@@ -1,5 +1,6 @@
 package ygraph.ai.smartfox.rl;
 
+import com.smartfoxserver.v2.entities.User;
 // import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.extensions.SFSExtension;
 
@@ -31,8 +32,22 @@ public class RLGameExtension extends SFSExtension {
         addRequestHandler(RLGameMessage.GAME_RESET, RLGameRequestHandler.class);
         addRequestHandler("rl.action", new RLMultiHandler(gameManager));
 
-        // Create event handlers for users joiing and leaving a game room
         // addEventHandler(SFSEventType.USER_JOIN_ROOM, RLMultiHandler.class);
         // addEventHandler(SFSEventType.USER_LEAVE_ROOM, RLMultiHandler.class);
+    }
+
+    public void handleGameJoin(User user) {
+        trace("Handling game join for user: " + user.getName());
+        if (gameManager.addUser(user)) {
+            trace("Game state initialized for user: " + user.getName());
+        } else {
+            trace("Failed to add user to the game: " + user.getName());
+        }
+    }
+
+    @Override
+    public void destroy() {
+        trace("RLGameExtension destroyed for COSC 322.");
+        super.destroy();
     }
 }

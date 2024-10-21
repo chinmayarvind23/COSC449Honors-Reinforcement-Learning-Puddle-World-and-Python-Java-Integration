@@ -42,24 +42,30 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         String roomName = params.getUtfString("room.name");
         String roomPassword = params.getUtfString("room.password");
         trace("User " + user.getName() + " requests to join room: " + roomName + " with password: " + roomPassword);
-
+    
+        // Only allow RLRoom logic
+        if (!"RLRoom".equals(roomName)) {
+            trace("User " + user.getName() + " is attempting to join a room that is not RLRoom. Ignoring request.");
+            return;
+        }
+    
         Room room = getParentExtension().getParentZone().getRoomByName(roomName);
-
+    
         if (room == null) {
             trace("Room " + roomName + " does not exist.");
             sendErrorMessage(user, "Room " + roomName + " does not exist.");
             return;
         }
-
+    
         int numOfPlayers = room.getPlayersList().size();
-        boolean canJoin = numOfPlayers == 1;
-
-        if (!canJoin) {
+    
+        // Allow user to join only if the room is empty
+        if (numOfPlayers > 0) {
             trace("Room " + roomName + " is already occupied.");
             sendErrorMessage(user, "Room " + roomName + " is already occupied.");
             return;
         }
-
+    
         try {
             getApi().joinRoom(user, room, roomPassword, false, user.getLastJoinedRoom());
             trace("User " + user.getName() + " successfully joined room: " + roomName + ".");
@@ -72,7 +78,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             trace("Unexpected error while user " + user.getName() + " attempts to join room " + roomName + ": " + e.getMessage());
             sendErrorMessage(user, "An unexpected error occurred.");
         }
-    }
+    }        
 
     // Handles the disconnect command from the client by removing the user from their game and disconnecting them from the server by notifiying the game manager
     private void handleDisconnectRequest(User user, ISFSObject params) {
