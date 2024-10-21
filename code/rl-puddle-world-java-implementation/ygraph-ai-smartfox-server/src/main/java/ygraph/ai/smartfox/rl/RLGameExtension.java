@@ -17,7 +17,7 @@ public class RLGameExtension extends SFSExtension {
     public void init() {
         trace("RLGameExtension initialized for COSC 322.");
 
-        // Initialize an RLGameManager
+        // Initialize a RLGameManager
         gameManager = new RLGameManager();
         
         // Create request handlers for all client-to-server message types

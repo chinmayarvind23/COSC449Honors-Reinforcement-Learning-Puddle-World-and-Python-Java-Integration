@@ -8,9 +8,11 @@ public class RLGameModel {
     private int[] availableActions;
     private double[] availableRewards;
     private boolean isTerminal;
+    
 
     // For testing purposes
     private double cumulativeReward;
+    private int stepsThisEpisode;
     private boolean success;
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
@@ -50,6 +52,19 @@ public class RLGameModel {
             this.success = this.cumulativeReward >= this.successRewardThreshold;
         }
     }
+
+    public void setCumulativeReward(double cumulativeReward) {
+        this.cumulativeReward = cumulativeReward;
+    }
+
+    public void setStepsThisEpisode(int stepsThisEpisode) {
+        this.stepsThisEpisode = stepsThisEpisode;
+    }
+
+    public int getStepsThisEpisode() {
+        return stepsThisEpisode;
+    }
+
 
     // Resets cumulative reward and success boolean for next episode
     public void resetCumulativeReward() {

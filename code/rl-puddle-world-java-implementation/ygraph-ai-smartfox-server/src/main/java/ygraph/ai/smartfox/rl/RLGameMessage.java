@@ -18,6 +18,7 @@ public class RLGameMessage {
     public static final String GAME_RESET = "GAME_RESET";
     public static final String GAME_Q_UPDATE = "GAME_Q_UPDATE";
     public static final String GAME_V_UPDATE = "GAME_V_UPDATE";
+    public static final String GAME_INFO = "GAME_INFO";
 
     // Server to Client messages
     public static final String GAME_STATE_RESPONSE = "GAME_STATE_RESPONSE";
@@ -27,7 +28,7 @@ public class RLGameMessage {
     public static final String GAME_FINAL_STATE_RESPONSE = "GAME_FINAL_STATE_RESPONSE";
     public static final String GAME_RESET_RESPONSE = "GAME_RESET_RESPONSE";
     public static final String GAME_ERROR = "GAME_ERROR";
-    public static final String GAME_INFO = "GAME_INFO";
+    public static final String GAME_INFO_RESPONSE = "GAME_INFO_RESPONSE";
 
     // Fields for Q-Table updates
     private int[] qStateIds;
@@ -37,7 +38,7 @@ public class RLGameMessage {
     String userName;
     private int stateId;
     private int action;
-    private double reward;
+    private double reward; // reward for action x
     private int nextStateId;
     private int[] availableActions;
     private double[] availableRewards;
@@ -85,6 +86,13 @@ public class RLGameMessage {
         this.vValues = vValues;
     }
 
+    public RLGameMessage(boolean isTerminal, double cumulativeReward, int stepsThisEpisode) {
+        this.messageType = GAME_FINAL_STATE;
+        this.isTerminal = isTerminal;
+        this.cumulativeReward = cumulativeReward;
+        this.stepsThisEpisode = stepsThisEpisode;
+    }
+
     public ISFSObject toSFSObject() {
         ISFSObject params = new SFSObject();
         params.putUtfString("messageType", this.messageType);
@@ -93,17 +101,17 @@ public class RLGameMessage {
         }
     
         switch (this.messageType) {
-            case GAME_STATE:
+            case GAME_STATE_RESPONSE:
                 params.putInt("stateId", this.stateId);
                 break;
-            case GAME_AVAILABLE_ACTIONS:
+            case GAME_AVAILABLE_ACTIONS_RESPONSE:
                 List<Integer> actionList = new ArrayList<>();
                 for (int action : availableActions) {
                     actionList.add(action);
                 }
                 params.putIntArray("availableActions", actionList);
                 break;
-            case GAME_AVAILABLE_REWARDS:
+            case GAME_AVAILABLE_REWARDS_RESPONSE:
                 List<Double> rewardList = new ArrayList<>();
                 for (double reward : availableRewards) {
                     rewardList.add(reward);
@@ -114,15 +122,15 @@ public class RLGameMessage {
                 params.putInt("action", this.action);
                 params.putInt("stateId", this.stateId);
                 break;
-            case GAME_ACTION_REWARD:
+            case GAME_ACTION_REWARD_RESPONSE:
                 params.putInt("action", this.action);
                 params.putDouble("reward", this.reward);
                 params.putInt("nextStateId", this.nextStateId);
                 break;
-            case GAME_FINAL_STATE:
+            case GAME_FINAL_STATE_RESPONSE:
                 params.putBool("isTerminal", this.isTerminal);
-                params.putDouble("reward", this.reward);
-                params.putInt("steps", this.steps);
+                params.putDouble("reward", this.cumulativeReward);
+                params.putInt("steps", this.stepsThisEpisode);
                 break;
             case GAME_RESET:
                 params.putUtfString("userName", this.userName);
@@ -149,7 +157,7 @@ public class RLGameMessage {
                 for (double v : vValues) vValueList.add(v);
                 params.putDoubleArray("vValues", vValueList);
                 break;
-            case GAME_INFO:
+            case GAME_INFO_RESPONSE:
                 params.putDouble("cumulativeReward", this.cumulativeReward);
                 params.putInt("stepsThisEpisode", this.stepsThisEpisode);
                 params.putInt("totalEpisodes", this.totalEpisodes);
@@ -195,13 +203,12 @@ public class RLGameMessage {
                 this.reward = params.getDouble("reward");
                 this.nextStateId = params.getInt("nextStateId");
                 break;
-            case GAME_FINAL_STATE:
+            case GAME_FINAL_STATE_RESPONSE:
                 this.isTerminal = params.getBool("isTerminal");
-                this.reward = params.getDouble("reward"); // Assuming 'reward' is sent
-                this.steps = params.getInt("steps"); // Assuming 'steps' is sent
+                this.reward = params.getDouble("cumulativeReward");
+                this.steps = params.getInt("stepsThisEpisode");
                 break;
             case GAME_RESET:
-                // No fields to set
                 break;
             case GAME_Q_UPDATE:
                 List<Integer> qStateList = (List<Integer>) params.getIntArray("qStateIds");
@@ -240,7 +247,7 @@ public class RLGameMessage {
                     this.vValues = new double[0];
                 }
                 break;
-            case GAME_INFO:
+            case GAME_INFO_RESPONSE:
                 this.cumulativeReward = params.getDouble("cumulativeReward");
                 this.steps = params.getInt("stepsThisEpisode");
                 this.totalEpisodes = params.getInt("totalEpisodes");

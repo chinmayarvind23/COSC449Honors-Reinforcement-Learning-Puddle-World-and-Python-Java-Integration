@@ -22,25 +22,25 @@ public class RLWorldTest {
 
     @Test
     public void testPerformActionUp() {
-        int nextState = world.performAction(25, "UP");
+        int nextState = world.simulateAction(25, "UP");
         assertEquals("State should decrement row by 1", 5, nextState);
     }
 
     @Test
     public void testPerformActionDown() {
-        int nextState = world.performAction(5, "DOWN");
+        int nextState = world.simulateAction(5, "DOWN");
         assertEquals("State should increment row by 1", 5 + 20, nextState);
     }
 
     @Test
     public void testPerformActionLeft() {
-        int nextState = world.performAction(5, "LEFT");
+        int nextState = world.simulateAction(5, "LEFT");
         assertEquals("State should decrement column by 1", 5 - 1, nextState);
     }
 
     @Test
     public void testPerformActionRight() {
-        int nextState = world.performAction(5, "RIGHT");
+        int nextState = world.simulateAction(5, "RIGHT");
         assertEquals("State should increment column by 1", 5 + 1, nextState);
     }
 

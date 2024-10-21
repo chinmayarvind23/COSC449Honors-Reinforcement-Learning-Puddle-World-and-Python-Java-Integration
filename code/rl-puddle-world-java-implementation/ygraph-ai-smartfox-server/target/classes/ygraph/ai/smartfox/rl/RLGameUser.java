@@ -66,7 +66,7 @@ public class RLGameUser {
         }
 
         // Performs the action within the RL world and sets the current state ID to the next one
-        int nextStateId = world.performAction(currentStateId, actionStr);
+        int nextStateId = world.simulateAction(currentStateId, actionStr);
         lastReward = world.getReward(currentStateId, actionStr, nextStateId);
         currentStateId = nextStateId;
 
@@ -165,5 +165,9 @@ public class RLGameUser {
     
     public void setStateId(int stateId) {
         this.currentStateId = stateId;
+    }
+
+    public void updateStepsThisEpisode(int steps) {
+        this.stepsThisEpisode += steps;
     }
 }

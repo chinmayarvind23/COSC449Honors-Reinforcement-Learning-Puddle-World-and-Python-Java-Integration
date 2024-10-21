@@ -20,6 +20,7 @@ public class RLClientGameMessage {
     public static final String GAME_RESET = "GAME_RESET";
     public static final String GAME_Q_UPDATE = "GAME_Q_UPDATE";
     public static final String GAME_V_UPDATE = "GAME_V_UPDATE";
+    public static final String GAME_INFO = "GAME_INFO";
 
     // Server to Client messages
     public static final String GAME_STATE_RESPONSE = "GAME_STATE_RESPONSE";
@@ -29,7 +30,6 @@ public class RLClientGameMessage {
     public static final String GAME_FINAL_STATE_RESPONSE = "GAME_FINAL_STATE_RESPONSE";
     public static final String GAME_RESET_RESPONSE = "GAME_RESET_RESPONSE";
     public static final String GAME_ERROR = "GAME_ERROR";
-    public static final String GAME_INFO = "GAME_INFO";
     
     // Message Fields
     private String messageType;
@@ -109,6 +109,13 @@ public class RLClientGameMessage {
         this.nextStateId = nextStateId;
     }
 
+    public RLClientGameMessage(boolean isTerminal, double cumulativeReward, int stepsThisEpisode) {
+        this.messageType = GAME_FINAL_STATE;
+        this.isTerminal = isTerminal;
+        this.cumulativeReward = cumulativeReward;
+        this.stepsThisEpisode = stepsThisEpisode;
+    }
+
     public RLClientGameMessage(boolean isTerminal) {
         this(GAME_FINAL_STATE);
         this.isTerminal = isTerminal;
@@ -157,6 +164,8 @@ public class RLClientGameMessage {
                 break;
             case GAME_FINAL_STATE:
                 params.putBool("isTerminal", this.isTerminal);
+                params.putDouble("cumulativeReward", this.cumulativeReward);
+                params.putInt("stepsThisEpisode", this.stepsThisEpisode);
                 break;
             case GAME_RESET:
                 params.putUtfString("userName", this.userName);
@@ -184,10 +193,12 @@ public class RLClientGameMessage {
                 params.putDoubleArray("vValues", vValueList);
                 break;
             case GAME_INFO:
-                params.putDouble("cumulativeReward", this.cumulativeReward);
-                params.putInt("stepsThisEpisode", this.stepsThisEpisode);
-                params.putInt("totalEpisodes", this.totalEpisodes);
-                params.putInt("successfulEpisodes", this.successfulEpisodes);
+                if (this.cumulativeReward != 0.0 || this.stepsThisEpisode != 0 || this.totalEpisodes != 0 || this.successfulEpisodes != 0) {
+                    params.putDouble("cumulativeReward", this.cumulativeReward);
+                    params.putInt("stepsThisEpisode", this.stepsThisEpisode);
+                    params.putInt("totalEpisodes", this.totalEpisodes);
+                    params.putInt("successfulEpisodes", this.successfulEpisodes);
+                }
                 break;
             default:
                 break;
@@ -232,6 +243,8 @@ public class RLClientGameMessage {
                 break;
             case GAME_FINAL_STATE:
                 this.isTerminal = params.getBool("isTerminal");
+                this.cumulativeReward = params.getDouble("cumulativeReward");
+                this.stepsThisEpisode = params.getInt("stepsThisEpisode");
                 break;
             case GAME_RESET:
                 break;

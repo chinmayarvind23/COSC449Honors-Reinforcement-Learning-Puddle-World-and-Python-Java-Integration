@@ -90,7 +90,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         double[] availableRewards = new double[availableActions.length];
         for (int i = 0; i < availableActions.length; i++) {
             String action = availableActions[i];
-            int nextStateId = rlUser.getWorld().performAction(stateId, action);
+            int nextStateId = rlUser.getWorld().simulateAction(stateId, action);
             availableRewards[i] = rlUser.getWorld().getReward(stateId, action, nextStateId);
         }
         ISFSObject rewardsResponse = new SFSObject();
@@ -133,7 +133,13 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         double[] availableRewards = new double[availableActions.length];
     
         for (int i = 0; i < availableActions.length; i++) {
-            int nextStateId = rlUser.getWorld().performAction(stateId, availableActions[i]);
+            String actionStr = availableActions[i];
+            if (actionStr == null || actionStr.isEmpty()) {
+                System.err.println("Invalid action string at index " + i);
+                continue;
+            }
+            System.out.println("Processing Action: " + actionStr);
+            int nextStateId = rlUser.getWorld().simulateAction(stateId, availableActions[i]);
             availableRewards[i] = rlUser.getWorld().getReward(stateId, availableActions[i], nextStateId);
         }
         
@@ -223,7 +229,43 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         RLGameMessage msg = new RLGameMessage();
         msg.fromSFSObject(params);
         boolean isTerminal = msg.isTerminal();
+        double cumulativeReward = msg.getCumulativeReward();
+        int stepsThisEpisode = msg.getStepsThisEpisode();
+    
+        RLGameUser rlUser = gameManager.getUser(user);
+        if (rlUser == null) {
+            trace("RLGameUser not found for user: " + user.getName());
+            sendErrorMessage(user, "User not found.");
+            return;
+        }
+    
+        rlUser.setTerminal(isTerminal);
+        if (isTerminal) {
+            rlUser.incrementEpisodes();
+            rlUser.updateRewards(cumulativeReward);
+            rlUser.updateStepsThisEpisode(stepsThisEpisode);
+    
+            if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
+                rlUser.incrementSuccessfulEpisodes();
+                trace("Episode " + rlUser.getTotalEpisodes() + " was successful!");
+            }
+    
+            rlUser.resetGame();
+    
+            // Respond with GAME_INFO_RESPONSE
+            RLGameMessage infoResponseMsg = new RLGameMessage();
+            infoResponseMsg.setMessageType(RLGameMessage.GAME_INFO_RESPONSE);
+            infoResponseMsg.setCumulativeReward(rlUser.getCumulativeReward());
+            infoResponseMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
+            infoResponseMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
+            infoResponseMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
+            ISFSObject infoResponse = infoResponseMsg.toSFSObject();
+            send("rl.action", infoResponse, user);
+        }
+    }    
 
+    // Handles the GAME_INFO request by sending a summary of the RL agent's training over x episodes
+    private void handleInfoRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
             trace("RLGameUser not found for user: " + user.getName());
@@ -231,55 +273,29 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             return;
         }
 
-        rlUser.setTerminal(isTerminal);
-        if (isTerminal) {
-            rlUser.incrementEpisodes();
-            rlUser.updateRewards(msg.getReward());
-            rlUser.updateSteps(msg.getSteps());
+        // Retrieve metrics from RLGameUser
+        double cumulativeReward = rlUser.getCumulativeReward();
+        int stepsThisEpisode = rlUser.getStepsThisEpisode();
+        int totalEpisodes = rlUser.getTotalEpisodes();
+        int successfulEpisodes = rlUser.getSuccessfulEpisodes();
 
-            if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
-                rlUser.incrementSuccessfulEpisodes();
-                trace("Episode " + rlUser.getTotalEpisodes() + " was successful!");
-            }
-
-            rlUser.resetGame();
-
-            ISFSObject metricsResponse = new SFSObject();
-            metricsResponse.putUtfString("messageType", RLGameMessage.GAME_INFO);
-            metricsResponse.putDouble("cumulativeReward", rlUser.getCumulativeReward());
-            metricsResponse.putInt("stepsThisEpisode", rlUser.getStepsThisEpisode());
-            metricsResponse.putInt("totalEpisodes", rlUser.getTotalEpisodes());
-            metricsResponse.putInt("successfulEpisodes", rlUser.getSuccessfulEpisodes());
-            send("rl.action", metricsResponse, user);
-        }
-    }
-
-    // Handles the GAME_INFO request by sending a summary of the RL agent's training over x episodes
-    private void handleInfoRequest(User user, ISFSObject params, RLGameManager gameManager) {
-        RLGameMessage msg = new RLGameMessage();
-        msg.fromSFSObject(params);
-    
-        double cumulativeReward = msg.getCumulativeReward();
-        int stepsThisEpisode = msg.getStepsThisEpisode();
-        int totalEpisodes = msg.getTotalEpisodes();
-        int successfulEpisodes = msg.getSuccessfulEpisodes();
-    
+        // Log metrics
         System.out.println("Episode " + totalEpisodes + " Summary:");
         System.out.println(" - Cumulative Reward: " + cumulativeReward);
         System.out.println(" - Steps Taken: " + stepsThisEpisode);
         System.out.println(" - Successful Episodes: " + successfulEpisodes);
         System.out.println(" - Total Episodes: " + totalEpisodes);
-    
+
+        // GAME_INFO response message
         RLGameMessage infoResponseMsg = new RLGameMessage();
-        infoResponseMsg.setMessageType(RLGameMessage.GAME_INFO);
+        infoResponseMsg.setMessageType(RLGameMessage.GAME_INFO_RESPONSE);
         infoResponseMsg.setCumulativeReward(cumulativeReward);
         infoResponseMsg.setStepsThisEpisode(stepsThisEpisode);
         infoResponseMsg.setTotalEpisodes(totalEpisodes);
         infoResponseMsg.setSuccessfulEpisodes(successfulEpisodes);
-    
         ISFSObject infoResponse = infoResponseMsg.toSFSObject();
         send("rl.action", infoResponse, user);
-    }            
+    }
 
     // Handles the GAME_ACTION_MOVE request by performing the action, updating the state, calculating the reward and responding with the reward, state, available actions and available rewards
     private void handleActionMove(User user, ISFSObject params, RLGameManager gameManager) {
@@ -343,7 +359,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         double[] availableRewards = new double[availableActions.length];
         for (int i = 0; i < availableActions.length; i++) {
             String actionString = availableActions[i];
-            int nextStateId = rlUser.getWorld().performAction(rlUser.getWorld().getCurrentStateId(), actionString);
+            int nextStateId = rlUser.getWorld().simulateAction(rlUser.getWorld().getCurrentStateId(), actionString);
             availableRewards[i] = rlUser.getWorld().getReward(rlUser.getWorld().getCurrentStateId(), actionString, nextStateId);
 
         }
@@ -358,8 +374,10 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             ISFSObject finalStateResponse = new SFSObject();
             finalStateResponse.putUtfString("messageType", RLGameMessage.GAME_FINAL_STATE_RESPONSE);
             finalStateResponse.putBool("isTerminal", true);
+            finalStateResponse.putDouble("cumulativeReward", rlUser.getCumulativeReward());
+            finalStateResponse.putInt("stepsThisEpisode", rlUser.getStepsThisEpisode()); 
             send("rl.action", finalStateResponse, user);
-        }
+        }        
     }
 
     // Handles GAME_RESET request by client by resetting RL world

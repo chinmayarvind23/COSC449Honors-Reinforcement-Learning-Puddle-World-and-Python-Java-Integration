@@ -185,35 +185,37 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Received EXTENSION_RESPONSE: cmd=" + cmd + ", fromRoom=" + fromRoomName);
         String messageType = params.getUtfString("messageType");
     
-        switch (messageType) {
-            case RLClientGameMessage.GAME_STATE_RESPONSE:
-                processGameState(params);
-                break;
-            case RLClientGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE:
-                processAvailableActions(params);
-                break;
-            case RLClientGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE:
-                processAvailableRewards(params);
-                break;
-            case RLClientGameMessage.GAME_ACTION_REWARD_RESPONSE:
-                processActionReward(params);
-                break;
-            case RLClientGameMessage.GAME_FINAL_STATE_RESPONSE:
-                processFinalState(params);
-                break;
-            case RLClientGameMessage.GAME_RESET_RESPONSE:
-                processReset(params);
-                break;
-            case RLClientGameMessage.GAME_ERROR:
-                processError(params);
-                break;
-            case RLClientGameMessage.GAME_INFO:
-                processInfo(params);
-                break;
-            default:
-                System.out.println("Unknown EXTENSION_RESPONSE messageType: " + messageType);
-                break;
-        }
+        if ("rl.action".equals(cmd)) {
+            switch (messageType) {
+                case "GAME_STATE_RESPONSE":
+                    processGameState(params);
+                    break;
+                case "GAME_AVAILABLE_ACTIONS_RESPONSE":
+                    processAvailableActions(params);
+                    break;
+                case "GAME_AVAILABLE_REWARDS_RESPONSE":
+                    processAvailableRewards(params);
+                    break;
+                case "GAME_ACTION_REWARD_RESPONSE":
+                    processActionReward(params);
+                    break;
+                case "GAME_FINAL_STATE_RESPONSE":
+                    processFinalState(params);
+                    break;
+                case "GAME_RESET_RESPONSE":
+                    processReset(params);
+                    break;
+                case "GAME_ERROR":
+                    processError(params);
+                    break;
+                case "GAME_INFO_RESPONSE":
+                    processInfo(params);
+                    break;
+                default:
+                    System.out.println("Unknown messageType: " + messageType);
+                    break;
+            }
+        } // **A
     }
 
     // Handles error messages from the server
@@ -230,16 +232,20 @@ public class RLGamePlayer implements IEventListener {
     private void processInfo(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
-        double cumulativeReward = params.getDouble("cumulativeReward");
-        int stepsThisEpisode = params.getInt("stepsThisEpisode");
-        int totalEpisodes = params.getInt("totalEpisodes");
-        int successfulEpisodes = params.getInt("successfulEpisodes");
+        double cumulativeReward = msg.getCumulativeReward();
+        int stepsThisEpisode = msg.getStepsThisEpisode();
+        int totalEpisodes = msg.getTotalEpisodes();
+        int successfulEpisodes = msg.getSuccessfulEpisodes();
     
         System.out.println("Episode " + totalEpisodes + " Summary:");
         System.out.println(" - Cumulative Reward: " + cumulativeReward);
         System.out.println(" - Steps Taken: " + stepsThisEpisode);
         System.out.println(" - Successful Episodes: " + successfulEpisodes);
         System.out.println(" - Total Episodes: " + totalEpisodes);
+
+        if (totalEpisodes % 100 == 0) {
+            sendGameInfoRequest();
+        }
     }    
 
     // Asks for the initial state of the game from the server through an extension request
@@ -248,6 +254,7 @@ public class RLGamePlayer implements IEventListener {
         RLClientGameMessage initialStateReq = new RLClientGameMessage(RLClientGameMessage.GAME_STATE);
         initialStateReq.setUserName(this.userName);
         ISFSObject params = initialStateReq.toSFSObject();
+        params.putUtfString("messageType", "GAME_STATE");
         ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(req);
         System.out.println("Requested initial state.");
@@ -333,8 +340,14 @@ public class RLGamePlayer implements IEventListener {
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
         boolean isTerminal = msg.isTerminal();
+        double cumulativeReward = msg.getCumulativeReward();
+        int stepsThisEpisode = msg.getStepsThisEpisode();
+
         this.gameModel.setTerminal(isTerminal);
+        this.gameModel.setCumulativeReward(cumulativeReward);
+        this.gameModel.setStepsThisEpisode(stepsThisEpisode);
         System.out.println("Is Terminal State: " + isTerminal);
+        System.out.println("Received Cumulative Reward: " + cumulativeReward + ", Steps Taken: " + stepsThisEpisode);
 
         if (isTerminal) {
             System.out.println("Episode terminated. Resetting environment...");
@@ -373,17 +386,27 @@ public class RLGamePlayer implements IEventListener {
     // Gets the best possible action for the RL agent to take based on the maximum Q-value in the Q-table for a particular state-action pair
     // Students must implement this
     private int getBestAvailableAction(int stateId, int[] availableActions) {
+        if (availableActions.length == 0) {
+            throw new IllegalArgumentException("No available actions to choose from.");
+        }
         double[] actions = qTable.get(stateId);
+        if (actions == null) {
+            throw new IllegalStateException("Q-Table not initialized for stateId: " + stateId);
+        }
         double maxQ = Double.NEGATIVE_INFINITY;
         int bestAction = availableActions[0];
         for (int action : availableActions) {
+            if (action < 0 || action >= actions.length) {
+                System.err.println("Invalid action index: " + action + " for stateId: " + stateId);
+                continue;
+            }
             if (actions[action] > maxQ) {
                 maxQ = actions[action];
                 bestAction = action;
             }
         }
         return bestAction;
-    }
+    }    
 
     // Sends the action chosen by the RL agent to the server via the extension request
     // Given to students
@@ -442,6 +465,16 @@ public class RLGamePlayer implements IEventListener {
         int[] vStateIds = {stateId};
         double[] vValues = {updatedV};
         sendVUpdate(vStateIds, vValues);
+    }
+
+    // Sends a GAME_INFO request to the server
+    private void sendGameInfoRequest() {
+        RLClientGameMessage infoRequest = new RLClientGameMessage(RLClientGameMessage.GAME_INFO);
+        infoRequest.setUserName(this.userName);
+        ISFSObject params = infoRequest.toSFSObject();
+        ExtensionRequest infoReq = new ExtensionRequest("rl.action", params, this.currentRoom);
+        smartFox.send(infoReq);
+        System.out.println("Sent GAME_INFO request to the server.");
     }
 
     // Gets the maximum Q-value from the array of Q-values for an action-state pair

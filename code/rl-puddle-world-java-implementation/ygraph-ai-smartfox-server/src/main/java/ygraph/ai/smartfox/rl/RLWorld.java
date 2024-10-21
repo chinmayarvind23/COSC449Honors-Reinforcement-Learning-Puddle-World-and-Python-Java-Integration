@@ -187,7 +187,7 @@ public class RLWorld {
             return currentStateId;
         }
     
-        int newStateId = performAction(stateId, actionStr);
+        int newStateId = simulateAction(stateId, actionStr);
     
         // Check if the new state is a puddle
         if (isPuddle(newStateId)) {
@@ -203,7 +203,7 @@ public class RLWorld {
 
     // Perform a move using the current state ID and action string within the 1D array representing the puddle world
     // Returns the new state ID post action
-    public int performAction(int stateId, String action) {
+    public int simulateAction(int stateId, String action) {
         int row = stateId / gridSize;
         int col = stateId % gridSize;
 

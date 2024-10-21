@@ -14,7 +14,7 @@ public class RLGameTest extends RLGamePlayer {
     private List<Integer> stepsPerEpisode = new ArrayList<>();
     private double cumulativeReward = 0.0;
     private int stepsThisEpisode = 0;
-    private int maxEpisodes = 1000; // Training limit for test
+    private int maxEpisodes = 100; // Training limit for test
 
     // Thresholds for evaluation
     private double successRewardThreshold = 1.0;
