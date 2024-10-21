@@ -46,7 +46,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
     private void handleJoinRequest(User user, ISFSObject params) {
         String roomName = params.getUtfString("room.name");
         String roomPassword = params.getUtfString("room.password");
-        trace("User " + user.getName() + " requests to join room: " + roomName);
+        trace("User " + user.getName() + " requests to join room: " + roomName + " with password: " + roomPassword);
 
         Room room = getParentExtension().getParentZone().getRoomByName(roomName);
 
