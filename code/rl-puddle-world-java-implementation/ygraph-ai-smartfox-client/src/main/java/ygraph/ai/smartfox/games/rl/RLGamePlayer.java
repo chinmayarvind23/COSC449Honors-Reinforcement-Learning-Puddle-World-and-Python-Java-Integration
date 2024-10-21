@@ -149,19 +149,31 @@ public class RLGamePlayer implements IEventListener {
         }
     }
 
+    private void joinRoom() {
+        ISFSObject params = new SFSObject();
+        params.putUtfString("messageType", "join");
+        params.putUtfString("room.name", this.roomName);
+        params.putUtfString("room.password", this.password.trim());
+        ExtensionRequest joinReq = new ExtensionRequest("rl.multi", params, null);
+        smartFox.send(joinReq);
+        
+        System.out.println("Sent JOIN request for room: " + this.roomName);
+    }
+
     // Handles the LOGIN event by sending a join request for the current user to a particular room
     private void handleLogin(BaseEvent event) {
         this.currentUser = (User) event.getArguments().get("user");
         System.out.println("Logged in as: " + currentUser.getName());
 
-        ISFSObject params = new SFSObject();
-        params.putUtfString("command", "join");
-        params.putUtfString("room.name", this.roomName);
-        params.putUtfString("room.password", this.password.trim());
-        ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
-        smartFox.send(joinReq);
+        // ISFSObject params = new SFSObject();
+        // params.putUtfString("messageType", "join");
+        // params.putUtfString("room.name", this.roomName);
+        // params.putUtfString("room.password", this.password.trim());
+        // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
+        // smartFox.send(joinReq);
         
-        System.out.println("Sent ROOM_JOIN request with password: " + this.password);
+        // System.out.println("Sent LOGIN request with password: " + this.password);
+        joinRoom();
     }
 
     // Handles the LOGIN_ERROR event by sending an error message to the console
@@ -175,14 +187,14 @@ public class RLGamePlayer implements IEventListener {
         this.currentRoom = (Room) event.getArguments().get("room");
         System.out.println("Joined room: " + currentRoom.getName());
 
-        // Room joined, now send extension request
-        ISFSObject params = new SFSObject();
-        params.putUtfString("command", "join");
-        params.putUtfString("room.name", this.roomName);
-        params.putUtfString("room.password", this.password);
-        ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
-        smartFox.send(joinReq);
-        System.out.println("Sent ROOM_JOIN request with password.");
+        // // Room joined, now send extension request
+        // ISFSObject params = new SFSObject();
+        // params.putUtfString("command", "join");
+        // params.putUtfString("room.name", this.roomName);
+        // params.putUtfString("room.password", this.password);
+        // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
+        // smartFox.send(joinReq);
+        System.out.println("Requesting initial state.....");
         requestInitialState();
     }
 
@@ -198,12 +210,13 @@ public class RLGamePlayer implements IEventListener {
     private void handleExtensionResponse(BaseEvent event) {
         String cmd = (String) event.getArguments().get("cmd");
         ISFSObject params = (ISFSObject) event.getArguments().get("params");
-        String fromRoomName = params.getUtfString("room.name");
     
-        System.out.println("Received EXTENSION_RESPONSE: cmd=" + cmd + ", fromRoom=" + fromRoomName);
+        System.out.println("Received EXTENSION_RESPONSE: cmd=" + cmd);
+    
         String messageType = params.getUtfString("messageType");
     
         if ("rl.action".equals(cmd)) {
+            // Handle RLGameRequestHandler responses
             switch (messageType) {
                 case "GAME_STATE_RESPONSE":
                     processGameState(params);
@@ -233,8 +246,34 @@ public class RLGamePlayer implements IEventListener {
                     System.out.println("Unknown messageType: " + messageType);
                     break;
             }
+        } else if ("rl.multi".equals(cmd)) {
+            // Handle RLMultiHandler responses
+            switch (messageType) {
+                case "join":
+                    processJoinResponse(params);
+                    break;
+                case "disconnect":
+                    processDisconnectResponse(params);
+                    break;
+                default:
+                    System.out.println("Unknown messageType in rl.multi: " + messageType);
+                    break;
+            }
+        } else {
+            System.out.println("Unknown cmd: " + cmd);
         }
     }
+    
+    private void processDisconnectResponse(ISFSObject params) {
+        System.out.println("Processed disconnect response.");
+    }
+    
+
+    private void processJoinResponse(ISFSObject params) {
+        System.out.println("Processed join response.");
+        System.out.println("Requesting initial state...");
+        requestInitialState();
+    }    
 
     // Handles error messages from the server
     // Given to students
@@ -272,7 +311,6 @@ public class RLGamePlayer implements IEventListener {
         RLClientGameMessage initialStateReq = new RLClientGameMessage(RLClientGameMessage.GAME_STATE);
         initialStateReq.setUserName(this.userName);
         ISFSObject params = initialStateReq.toSFSObject();
-        params.putUtfString("messageType", "GAME_STATE");
         ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(req);
         System.out.println("Requested initial state.");

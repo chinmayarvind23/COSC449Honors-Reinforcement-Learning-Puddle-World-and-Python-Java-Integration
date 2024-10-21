@@ -10,15 +10,36 @@ import java.util.ArrayList;
 // This class handles RL-specific client-side requests like making actions and resets of a game
 public class RLGameRequestHandler extends BaseClientRequestHandler {
 
-    public RLGameRequestHandler() {
+    private RLGameManager gameManager;
+    public RLGameRequestHandler(RLGameManager gameManager) {
+        this.gameManager = gameManager;
     }
 
     // Handles various client requests like state, action, reset, available actions, available rewards, reward of action chosen, and final state
     @Override
     public void handleClientRequest(User user, ISFSObject params) {
+        if (params == null) {
+            sendErrorMessage(user, "No parameters provided.");
+            return;
+        }
+    
         String messageType = params.getUtfString("messageType");
+        if (messageType == null) {
+            sendErrorMessage(user, "Missing message type.");
+            return;
+        }
 
-        RLGameManager gameManager = ((RLGameExtension) getParentExtension()).getGameManager();
+        if (gameManager == null) {
+            sendErrorMessage(user, "GameManager is not initialized.");
+            return;
+        }
+
+        RLGameUser rlUser = gameManager.getUser(user);
+        if (rlUser == null) {
+            System.out.println("RLGameUser not found for user: " + user.getName());
+            sendErrorMessage(user, "User not found.");
+            return;
+        }
 
         switch (messageType) {
             case RLGameMessage.GAME_STATE:
@@ -52,7 +73,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 handleInfoRequest(user, params, gameManager);
                 break;
             default:
-                trace("Unknown message type: " + messageType);
+                System.out.println("Unknown message type: " + messageType);
                 sendErrorMessage(user, "Unknown message type: " + messageType);
                 break;
         }
@@ -62,8 +83,14 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleGameStateRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
+            return;
+        }
+
+        if (rlUser.getWorld() == null) {
+            System.out.println("RLWorld is null for user: " + user.getName());
+            sendErrorMessage(user, "Game world not initialized.");
             return;
         }
 
@@ -102,7 +129,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleAvailableActionsRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -123,7 +150,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleAvailableRewardsRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -153,7 +180,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleActionRewardRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -184,7 +211,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -210,7 +237,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -234,7 +261,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -247,7 +274,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
             if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
                 rlUser.incrementSuccessfulEpisodes();
-                trace("Episode " + rlUser.getTotalEpisodes() + " was successful!");
+                System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
             }
     
             rlUser.resetGame();
@@ -268,7 +295,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleInfoRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -301,7 +328,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleActionMove(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }
@@ -311,7 +338,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
 
         // Validate the state ID
         if (stateId != rlUser.getWorld().getCurrentStateId()) {
-            trace("State ID mismatch for user: " + user.getName() + ". Expected: " 
+            System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
                   + rlUser.getWorld().getCurrentStateId() + ", Received: " + stateId);
             ISFSObject errorResponse = new SFSObject();
             errorResponse.putUtfString("messageType", RLGameMessage.GAME_ERROR);
@@ -325,7 +352,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         if (actionStr != null) {
             rlUser.takeAction(actionStr);
         } else {
-            trace("Invalid action index received: " + action);
+            System.out.println("Invalid action index received: " + action);
             sendErrorMessage(user, "Invalid action index: " + action);
             return;
         }
@@ -384,7 +411,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void handleGameReset(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            trace("RLGameUser not found for user: " + user.getName());
+            System.out.println("RLGameUser not found for user: " + user.getName());
             sendErrorMessage(user, "User not found.");
             return;
         }

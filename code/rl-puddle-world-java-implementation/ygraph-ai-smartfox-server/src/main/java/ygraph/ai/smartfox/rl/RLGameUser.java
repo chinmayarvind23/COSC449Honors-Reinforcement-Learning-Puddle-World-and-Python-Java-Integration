@@ -43,12 +43,12 @@ public class RLGameUser {
 
     // Gets an RLWorld instance
     public RLWorld getWorld() {
-        return world;
+        return this.world;
     }
 
     // Gets a user instance
     public User getUser() {
-        return user;
+        return this.user;
     }
 
     // Processes an action taken by a user for the following actions: "UP", "DOWN", "LEFT", "RIGHT".

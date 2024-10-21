@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 public class RLGameManager {
 
     // Thread-safe map to store User and their corresponding RLGameUser
-    private final Map<User, RLGameUser> userMap;
+    private final Map<String, RLGameUser> userMap;
     private double alpha;
     private double gamma;
     private double epsilon;
 
     // RLGameManager constructor that initializes a concurrent hashmap to store the user and their corresponding world instances distinctly from other users' instances
     public RLGameManager() {
-        this.userMap = new ConcurrentHashMap<>();
+        this.userMap = new ConcurrentHashMap<String, RLGameUser>();
         this.alpha = 0.1;
         this.gamma = 0.9;
         this.epsilon = 1.0;
@@ -27,46 +27,59 @@ public class RLGameManager {
     // Adds a user to an RL puddle world game by creating an RL world and binding the RLGameUser to it
     // Then inserting the pair into the hashmap
     public boolean addUser(User user) {
-        if (userMap.containsKey(user)) {
-            System.out.println("Attempted to add user who already exists: " + user.getName());
+        String userName = user.getName();
+        if (userMap.containsKey(userName)) {
+            System.out.println("Attempted to add user who already exists: " + userName);
             return false;
         }
-
+    
         RLWorld world = new RLWorld(user, alpha, gamma, epsilon);
         RLGameUser rlUser = new RLGameUser(user, world);
-        userMap.put(user, rlUser);
-        System.out.println("RLGameUser created for user: " + user.getName());
+        userMap.put(userName, rlUser);
+        System.out.println("RLGameUser created for user: " + userName);
         System.out.println("Current number of active users: " + userMap.size());
         return true;
     }
 
     // Removes a user from an RL puddle world game and cleans up the user removed
     public boolean removeUser(User user) {
-        RLGameUser removedUser = userMap.remove(user);
+        String userName = user.getName();
+        RLGameUser removedUser = userMap.remove(userName);
         if (removedUser != null) {
             removedUser.cleanup();
-            System.out.println("RLGameUser removed for user: " + user.getName());
+            System.out.println("RLGameUser removed for user: " + userName);
             System.out.println("Current number of active users: " + userMap.size());
             return true;
         } else {
-            System.out.println("Attempted to remove non-existent user: " + user.getName());
+            System.out.println("Attempted to remove non-existent user: " + userName);
             return false;
         }
     }
 
     // Gets a user from the hashmap
     public RLGameUser getUser(User user) {
-        return userMap.get(user);
+        String userName = user.getName();
+        RLGameUser rlUser = userMap.get(userName);
+        if (rlUser == null) {
+            System.out.println("User not found in userMap: " + userName);
+            System.out.println("Current users in userMap:");
+            for (String uName : userMap.keySet()) {
+                System.out.println(" - " + uName);
+            }
+        }
+        return rlUser;
     }
 
     // Check if an RLWorld instance has a user
     public boolean hasUser(User user) {
-        return userMap.containsKey(user);
+        return userMap.containsKey(user.getName());
     }
 
     // Gets a list of all active users in the hashmap
     public List<User> getAllUsers() {
-        return userMap.keySet().stream().collect(Collectors.toList());
+        return userMap.values().stream()
+            .map(RLGameUser::getUser)
+            .collect(Collectors.toList());
     }
 
     // Removes all users from their world instances (admin) and ensures that the user instances are cleaned up
