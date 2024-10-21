@@ -9,11 +9,14 @@ ygraph/ai/smartfox/games/rl/RLClientGameMessage.class
 ubc/cosc322/COSC322Test$1.class
 ygraph/ai/smartfox/games/BaseGameGUI$1.class
 ygraph/ai/smartfox/games/Spectator$1.class
+ygraph/ai/smartfox/games/Amazon$GameBoard.class
 ubc/cosc322/COSC322Test.class
 ygraph/ai/smartfox/games/BaseGameGUI$RoomSelectionListener.class
 ygraph/ai/smartfox/games/GameTimer.class
+ygraph/ai/smartfox/games/Amazon$GameBoard$GameEventHandler.class
 ygraph/ai/smartfox/games/GameClient.class
 ygraph/ai/smartfox/games/BaseGameGUI$3.class
+ygraph/ai/smartfox/games/Amazon.class
 ygraph/ai/smartfox/games/GameModel.class
 ygraph/ai/smartfox/games/GameClient$EventHandler.class
 ygraph/ai/smartfox/games/GameClient$EventHandlerZoneWide.class
@@ -22,5 +25,6 @@ ygraph/ai/smartfox/games/rl/RLGameTest.class
 ygraph/ai/smartfox/games/rl/RLGamePlayer.class
 ygraph/ai/smartfox/games/amazons/AmazonsBoard$1.class
 ygraph/ai/smartfox/games/GamePlayer.class
+ygraph/ai/smartfox/games/rl/RLGameClient.class
 ygraph/ai/smartfox/games/Spectator.class
 ygraph/ai/smartfox/games/BaseGameGUI$2.class
