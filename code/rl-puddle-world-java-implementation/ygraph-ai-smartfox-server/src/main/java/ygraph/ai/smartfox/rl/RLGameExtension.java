@@ -18,7 +18,7 @@ public class RLGameExtension extends SFSExtension {
         System.out.println("RLGameExtension initialized for COSC 322.");
 
         // Initialize the RLGameManager
-        gameManager = new RLGameManager();
+        gameManager = RLGameManager.getInstance();
         System.out.println("RLGameManager initialized.");
 
         // Register request handlers

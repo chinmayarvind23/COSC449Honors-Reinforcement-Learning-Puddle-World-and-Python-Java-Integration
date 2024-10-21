@@ -48,7 +48,6 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         String roomPassword = params.getUtfString("room.password");
         System.out.println("User " + user.getName() + " requests to join room: " + roomName + " with password: " + roomPassword);
     
-        // Only allow RLRoom logic
         if (!"RLRoom".equals(roomName)) {
             System.out.println("User " + user.getName() + " is attempting to join a room that is not RLRoom. Ignoring request.");
             return;
@@ -63,8 +62,6 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         }
     
         int numOfPlayers = room.getPlayersList().size();
-    
-        // Allow user to join only if the room is empty
         if (numOfPlayers > 0) {
             System.out.println("Room " + roomName + " is already occupied.");
             sendErrorMessage(user, "Room " + roomName + " is already occupied.");
@@ -74,16 +71,12 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         try {
             getApi().joinRoom(user, room, roomPassword, false, user.getLastJoinedRoom());
             System.out.println("User " + user.getName() + " successfully joined room: " + roomName + ".");
+            
+            // Add user to RLGameManager after successful room join
             if (gameManager.addUser(user)) {
                 System.out.println("User " + user.getName() + " added to RLGameManager.");
-    
-                // Send join success message to client
-                ISFSObject response = new SFSObject();
-                response.putUtfString("messageType", "join.success");
-                send("rl.multi", response, user);
             } else {
                 System.out.println("Failed to add user to RLGameManager.");
-                sendErrorMessage(user, "Failed to add user to game.");
             }
         }
         catch (SFSJoinRoomException e) {
@@ -93,7 +86,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             System.out.println("Unexpected error while user " + user.getName() + " attempts to join room " + roomName + ": " + e.getMessage());
             sendErrorMessage(user, "An unexpected error occurred.");
         }
-    }        
+    }            
 
     // Handles the disconnect command from the client by removing the user from their game and disconnecting them from the server by notifiying the game manager
     private void handleDisconnectRequest(User user, ISFSObject params) {

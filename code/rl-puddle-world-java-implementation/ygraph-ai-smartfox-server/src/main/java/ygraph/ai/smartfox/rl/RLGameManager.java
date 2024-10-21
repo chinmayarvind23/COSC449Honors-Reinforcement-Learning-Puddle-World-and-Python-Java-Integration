@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 // This class takes RLGameUser instances and binds them with RLWorld intances allowing for concurrent access
 public class RLGameManager {
 
+    private static RLGameManager instance = null;
     // Thread-safe map to store User and their corresponding RLGameUser
     private final Map<String, RLGameUser> userMap;
     private double alpha;
@@ -22,6 +23,14 @@ public class RLGameManager {
         this.alpha = 0.1;
         this.gamma = 0.9;
         this.epsilon = 1.0;
+    }
+
+    // Static method to get the singleton instance of RLGameManager
+    public static synchronized RLGameManager getInstance() {
+        if (instance == null) {
+            instance = new RLGameManager();
+        }
+        return instance;
     }
 
     // Adds a user to an RL puddle world game by creating an RL world and binding the RLGameUser to it

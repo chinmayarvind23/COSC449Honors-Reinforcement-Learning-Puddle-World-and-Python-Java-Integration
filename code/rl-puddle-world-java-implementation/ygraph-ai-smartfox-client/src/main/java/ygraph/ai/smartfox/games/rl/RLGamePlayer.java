@@ -325,6 +325,7 @@ public class RLGamePlayer implements IEventListener {
         msg.fromSFSObject(params);
         this.gameModel.updateState(msg.getStateId());
         System.out.println("Current State ID: " + msg.getStateId());
+        System.out.println("Requesting available actions for state: " + msg.getStateId());
         requestAvailableActions(msg.getStateId());
     }
 

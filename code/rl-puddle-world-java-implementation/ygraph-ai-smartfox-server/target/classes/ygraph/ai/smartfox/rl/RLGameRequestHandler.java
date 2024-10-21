@@ -97,6 +97,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         int stateId = rlUser.getCurrentStateId();
 
         // Sends GAME_STATE_RESPONSE
+        System.out.println("Server is sending initial game state...");
         ISFSObject stateResponse = new SFSObject();
         stateResponse.putUtfString("messageType", RLGameMessage.GAME_STATE_RESPONSE);
         stateResponse.putInt("stateId", stateId);

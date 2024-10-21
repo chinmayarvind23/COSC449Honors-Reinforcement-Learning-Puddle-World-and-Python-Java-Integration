@@ -18,7 +18,7 @@ public class COSC322Extension extends SFSExtension {
         System.out.println("Server extension for COSC 322 (V2) at UBC Okanagan");
 
         // Initialize the RLGameManager
-        RLGameManager gameManager = new RLGameManager();
+        RLGameManager gameManager = RLGameManager.getInstance();
         RLMultiHandler rlMultiHandler = new RLMultiHandler(gameManager);
 
         // Register RLMultiHandler for join and disconnect
