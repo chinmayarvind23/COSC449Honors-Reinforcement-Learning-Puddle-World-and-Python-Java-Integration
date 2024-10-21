@@ -480,7 +480,7 @@ public class RLGamePlayer implements IEventListener {
     // The following arguments needed to be typed into command line: <username> <password> <serverIP> <serverPort> <zoneName> <roomName>
     // Given to students
     public static void main(String[] args) {
-        if (args.length != 9) {
+        if (args.length != 6) {
             System.out.println("Usage: java RLGamePlayer <username> <password> <serverIP> <serverPort> <zoneName> <roomName>");
             return;
         }
