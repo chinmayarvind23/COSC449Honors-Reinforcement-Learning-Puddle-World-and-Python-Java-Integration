@@ -10,6 +10,7 @@ import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
 import sfs2x.client.core.SFSEvent;
 import sfs2x.client.requests.ExtensionRequest;
+import sfs2x.client.requests.JoinRoomRequest;
 import sfs2x.client.requests.LoginRequest;
 import sfs2x.client.requests.LogoutRequest;
 // import sfs2x.client.requests.JoinRoomRequest;
@@ -151,17 +152,19 @@ public class RLGamePlayer implements IEventListener {
 
     // Handles the LOGIN event by sending a join request for the current user to a particular room
     private void handleLogin(BaseEvent event) {
+        // this.currentUser = (User) event.getArguments().get("user");
+        // System.out.println("Logged in as: " + currentUser.getName());
+        // ISFSObject params = new SFSObject();
+        // params.putUtfString("command", "join");
+        // params.putUtfString("room.name", this.roomName);
+        // params.putUtfString("room.password", this.password);
+        // smartFox.send(new JoinRoomRequest(this.roomName));
+        // // Send an extension request to join the room with password
+        // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, null);
+        // smartFox.send(joinReq);
         this.currentUser = (User) event.getArguments().get("user");
         System.out.println("Logged in as: " + currentUser.getName());
-        ISFSObject params = new SFSObject();
-        params.putUtfString("command", "join");
-        params.putUtfString("room.name", this.roomName);
-        params.putUtfString("room.password", this.password);
-        
-        // Send an extension request to join the room with password
-        ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, null);
-        smartFox.send(joinReq);
-        
+        smartFox.send(new JoinRoomRequest(this.roomName));
         System.out.println("Sent ROOM_JOIN request with password.");
     }
 
@@ -175,6 +178,15 @@ public class RLGamePlayer implements IEventListener {
     private void handleRoomJoin(BaseEvent event) {
         this.currentRoom = (Room) event.getArguments().get("room");
         System.out.println("Joined room: " + currentRoom.getName());
+
+        // Room joined, now send extension request
+        ISFSObject params = new SFSObject();
+        params.putUtfString("command", "join");
+        params.putUtfString("room.name", this.roomName);
+        params.putUtfString("room.password", this.password);
+        ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
+        smartFox.send(joinReq);
+        System.out.println("Sent ROOM_JOIN request with password.");
         requestInitialState();
     }
 
