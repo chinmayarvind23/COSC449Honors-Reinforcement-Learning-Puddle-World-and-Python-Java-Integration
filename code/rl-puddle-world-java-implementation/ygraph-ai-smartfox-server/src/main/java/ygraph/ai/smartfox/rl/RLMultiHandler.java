@@ -35,8 +35,8 @@ public class RLMultiHandler extends BaseClientRequestHandler {
                 handleDisconnectRequest(sender, params);
                 break;
             default:
-                RLGameRequestHandler requestHandler = new RLGameRequestHandler(gameManager);
-                requestHandler.handleClientRequest(sender, params);
+                System.out.println("Unknown message type received in RLMultiHandler: " + messageType);
+                sendErrorMessage(sender, "Unknown message type: " + messageType);
                 break;
         }
     }
@@ -76,8 +76,14 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             System.out.println("User " + user.getName() + " successfully joined room: " + roomName + ".");
             if (gameManager.addUser(user)) {
                 System.out.println("User " + user.getName() + " added to RLGameManager.");
+    
+                // Send join success message to client
+                ISFSObject response = new SFSObject();
+                response.putUtfString("messageType", "join.success");
+                send("rl.multi", response, user);
             } else {
                 System.out.println("Failed to add user to RLGameManager.");
+                sendErrorMessage(user, "Failed to add user to game.");
             }
         }
         catch (SFSJoinRoomException e) {
