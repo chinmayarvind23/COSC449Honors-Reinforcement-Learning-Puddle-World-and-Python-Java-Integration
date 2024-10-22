@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="CA"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib"/>
-    <property name="sun.java.command" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire/surefirebooter7537813749484754193.jar /Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire 2024-10-22T05-41-58_674-jvmRun1 surefire14125805261967078710tmp surefire_012367878757308034305tmp"/>
+    <property name="sun.java.command" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire/surefirebooter9701227630107697820.jar /Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire 2024-10-22T06-26-58_904-jvmRun1 surefire18095790858267912147tmp surefire_012718427772620051173tmp"/>
     <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/test-classes:/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/classes:/Users/chinmayarvind/.m2/repository/com/smartfoxserver/sfs2x/2.0.0/sfs2x-2.0.0.jar:/Users/chinmayarvind/.m2/repository/com/smartfoxserver/sfs2x-core/2.1.1/sfs2x-core-2.1.1.jar:/Users/chinmayarvind/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/chinmayarvind/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
@@ -28,7 +28,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire/surefirebooter7537813749484754193.jar"/>
+    <property name="surefire.real.class.path" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire/surefirebooter9701227630107697820.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.runtime.version" value="17.0.8+7"/>
@@ -57,10 +57,10 @@
   </properties>
   <testcase name="testPerformActionUp" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.002"/>
   <testcase name="testPerformActionRight" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testPerformActionDown" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testPerformActionLeft" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testIsPuddle" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.003"/>
-  <testcase name="testIsTerminalState" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testInitialState" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
+  <testcase name="testPerformActionDown" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
+  <testcase name="testPerformActionLeft" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
+  <testcase name="testIsPuddle" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
+  <testcase name="testIsTerminalState" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
+  <testcase name="testInitialState" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
   <testcase name="testGetReward" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
 </testsuite>
