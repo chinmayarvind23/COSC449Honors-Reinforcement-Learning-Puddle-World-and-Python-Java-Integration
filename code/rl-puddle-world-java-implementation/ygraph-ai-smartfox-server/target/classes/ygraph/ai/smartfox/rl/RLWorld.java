@@ -44,6 +44,7 @@ public class RLWorld {
     // Constructor for RLWorld that initializes the puddle locations, Q and V tables, and resets the environment
     public RLWorld() {
         random = new Random();
+        this.currentStateId = 0;
         puddlePositions = new ArrayList<>();
         qTable = new HashMap<>();
         vTable = new HashMap<>();
@@ -129,6 +130,7 @@ public class RLWorld {
     public void reset() {
         currentStateId = 0;
         initializePuddles();
+        System.out.println("World reset. Current state set to 0.");
     }
 
     // Sets Q-value for a given state-action pair for managing client updates to Q-table

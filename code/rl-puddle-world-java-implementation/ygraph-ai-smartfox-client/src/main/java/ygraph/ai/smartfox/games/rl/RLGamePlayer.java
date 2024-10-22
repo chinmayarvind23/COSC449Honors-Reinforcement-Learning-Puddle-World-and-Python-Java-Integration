@@ -433,6 +433,10 @@ public class RLGamePlayer implements IEventListener {
     // Takes the current state, and the available actions and if the probability generated is < epsilon, then choose a random available action, else choose the action with the highest Q-value
     // Students must implement decideAction(), getRandomAvailableAction(), and getBestAvailableAction() or an action selection policy of their own
     private int decideAction(int stateId, int[] availableActions) {
+        if (availableActions == null || availableActions.length == 0) {
+            // Handle case where no available actions exist (perhaps return a default or throw an error)
+            throw new IllegalArgumentException("No available actions for the current state.");
+        }
         if (Math.random() < epsilon) {
             return getRandomAvailableAction(availableActions);
         } else {
@@ -443,6 +447,9 @@ public class RLGamePlayer implements IEventListener {
     // Gets a random action from the available actions
     // Students must implement this
     private int getRandomAvailableAction(int[] availableActions) {
+        if (availableActions == null || availableActions.length == 0) {
+            throw new IllegalArgumentException("No available actions to choose from.");
+        }
         int index = (int) (Math.random() * availableActions.length);
         return availableActions[index];
     }

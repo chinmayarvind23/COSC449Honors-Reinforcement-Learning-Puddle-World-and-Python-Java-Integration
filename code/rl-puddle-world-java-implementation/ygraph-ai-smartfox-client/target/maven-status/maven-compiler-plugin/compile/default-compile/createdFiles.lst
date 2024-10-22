@@ -21,7 +21,6 @@ ygraph/ai/smartfox/games/GameModel.class
 ygraph/ai/smartfox/games/GameClient$EventHandler.class
 ygraph/ai/smartfox/games/GameClient$EventHandlerZoneWide.class
 ygraph/ai/smartfox/games/amazons/AmazonsBoard.class
-ygraph/ai/smartfox/games/rl/RLGameTest.class
 ygraph/ai/smartfox/games/rl/RLGamePlayer.class
 ygraph/ai/smartfox/games/amazons/AmazonsBoard$1.class
 ygraph/ai/smartfox/games/GamePlayer.class

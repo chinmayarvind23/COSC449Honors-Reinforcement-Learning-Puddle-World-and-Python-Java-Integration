@@ -20,7 +20,7 @@ public class RLGameModel {
 
     // Initialize game model with state, available actions, rewards, and final state check
     public RLGameModel() {
-        this.stateId = -1;
+        this.stateId = 0;
         this.availableActions = new int[0];
         this.availableRewards = new double[0];
         this.isTerminal = false;

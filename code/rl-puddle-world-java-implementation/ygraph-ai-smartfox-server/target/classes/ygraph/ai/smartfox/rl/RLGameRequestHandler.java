@@ -107,7 +107,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         int stateId = rlUser.getCurrentStateId();
 
         // Sends GAME_STATE_RESPONSE
-        System.out.println("Server is sending initial game state...");
+        System.out.println("Server is sending initial game state..." + stateId);
         ISFSObject stateResponse = new SFSObject();
         stateResponse.putUtfString("messageType", RLGameMessage.GAME_STATE_RESPONSE);
         stateResponse.putInt("stateId", stateId);
@@ -169,7 +169,9 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         int stateId = params.getInt("stateId");
         String[] availableActions = rlUser.getWorld().getAvailableActions(stateId);
         double[] availableRewards = new double[availableActions.length];
-    
+        System.out.println("State ID: " + stateId);
+        System.out.println("Available rewards: " + availableRewards);
+
         for (int i = 0; i < availableActions.length; i++) {
             String actionStr = availableActions[i];
             if (actionStr == null || actionStr.isEmpty()) {
