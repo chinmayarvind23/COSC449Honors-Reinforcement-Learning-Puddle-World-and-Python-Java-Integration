@@ -72,11 +72,12 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             getApi().joinRoom(user, room, roomPassword, false, user.getLastJoinedRoom());
             System.out.println("User " + user.getName() + " successfully joined room: " + roomName + ".");
             
-            // Add user to RLGameManager after successful room join
-            if (gameManager.addUser(user)) {
-                System.out.println("User " + user.getName() + " added to RLGameManager.");
-            } else {
-                System.out.println("Failed to add user to RLGameManager.");
+            if (gameManager != null) {
+                if (gameManager.addUser(user)) {
+                    System.out.println("User " + user.getName() + " added to RLGameManager.");
+                } else {
+                    System.out.println("Failed to add user to RLGameManager.");
+                }
             }
         }
         catch (SFSJoinRoomException e) {
@@ -91,7 +92,9 @@ public class RLMultiHandler extends BaseClientRequestHandler {
     // Handles the disconnect command from the client by removing the user from their game and disconnecting them from the server by notifiying the game manager
     private void handleDisconnectRequest(User user, ISFSObject params) {
         System.out.println("User " + user.getName() + " requests to disconnect.");
-        gameManager.removeUser(user);
+        if (gameManager != null) {
+            gameManager.removeUser(user);
+        }
         getApi().logout(user);
         System.out.println("User " + user.getName() + " has been disconnected.");
     }

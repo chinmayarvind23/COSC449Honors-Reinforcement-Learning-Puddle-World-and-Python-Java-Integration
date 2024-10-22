@@ -19,6 +19,7 @@ public class RLGameMessage {
     public static final String GAME_Q_UPDATE = "GAME_Q_UPDATE";
     public static final String GAME_V_UPDATE = "GAME_V_UPDATE";
     public static final String GAME_INFO = "GAME_INFO";
+    public static final String FORWARD_ACTION = "FORWARD_ACTION";
 
     // Server to Client messages
     public static final String GAME_STATE_RESPONSE = "GAME_STATE_RESPONSE";

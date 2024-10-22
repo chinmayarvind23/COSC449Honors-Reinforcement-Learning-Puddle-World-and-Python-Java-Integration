@@ -1,14 +1,9 @@
 package ygraph.ai.smartfox;
 
 import com.smartfoxserver.v2.extensions.SFSExtension;
-import ygraph.ai.smartfox.rl.RLGameManager;
-// import ygraph.ai.smartfox.rl.RLGameRequestHandler;
 import ygraph.ai.smartfox.rl.RLMultiHandler;
 
-/**
- * Server extension for COSC 322 (V2) at UBC Okanagan
- * This class forwards requests to room-level RLGameExtension.
- */
+// Handles RLMultiHandler events by delegating to RLMultiHandler
 public class COSC322Extension extends SFSExtension {
 
     public static final String zoneName = "cosc322-2";
@@ -17,11 +12,8 @@ public class COSC322Extension extends SFSExtension {
     public void init() {
         System.out.println("Server extension for COSC 322 (V2) at UBC Okanagan");
 
-        // Initialize the RLGameManager
-        RLGameManager gameManager = RLGameManager.getInstance();
-        RLMultiHandler rlMultiHandler = new RLMultiHandler(gameManager);
-
-        // Register RLMultiHandler for join and disconnect
+        // Registering RL MultiHandler with null RLGameManager
+        RLMultiHandler rlMultiHandler = new RLMultiHandler(null);
         addRequestHandler("rl.multi", rlMultiHandler);
     }
 

@@ -172,7 +172,7 @@ public class RLGamePlayer implements IEventListener {
         // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
         // smartFox.send(joinReq);
         
-        // System.out.println("Sent LOGIN request with password: " + this.password);
+        System.out.println("Sent LOGIN request with password: " + this.password);
         joinRoom();
     }
 
@@ -194,8 +194,13 @@ public class RLGamePlayer implements IEventListener {
         // params.putUtfString("room.password", this.password);
         // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
         // smartFox.send(joinReq);
-        // System.out.println("Requesting initial state.....");
-        // requestInitialState();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Requesting initial state.....");
+        requestInitialState();
     }
 
     // Handles the ROOM_JOIN_ERROR event by sending an error message to the console

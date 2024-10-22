@@ -11,6 +11,7 @@ import java.util.ArrayList;
 public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     private RLGameManager gameManager;
+    
     public RLGameRequestHandler(RLGameManager gameManager) {
         this.gameManager = gameManager;
     }
@@ -34,11 +35,21 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             return;
         }
 
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
             System.out.println("RLGameUser not found for user: " + user.getName());
-            sendErrorMessage(user, "User not found.");
-            return;
+            String userName = user.getName();
+            rlUser = gameManager.getUserByUsername(userName);
+            if (rlUser == null) {
+                sendErrorMessage(user, "User not found.");
+                return;
+            }
         }
 
         switch (messageType) {

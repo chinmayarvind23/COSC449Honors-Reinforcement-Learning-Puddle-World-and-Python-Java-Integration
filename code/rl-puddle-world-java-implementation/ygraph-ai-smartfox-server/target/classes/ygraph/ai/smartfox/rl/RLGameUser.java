@@ -30,6 +30,7 @@ public class RLGameUser {
         this.lastReward = 0.0;
         this.isTerminal = false;
         initializeGame();
+        System.out.println("RLGameUser initialized for user: " + user.getName() + " with RLWorld instance: " + System.identityHashCode(world));
     }
 
     // Starts the game by resetting the world and sets the initial state for the user in the RL world, a final reward and a terminal state check to false
