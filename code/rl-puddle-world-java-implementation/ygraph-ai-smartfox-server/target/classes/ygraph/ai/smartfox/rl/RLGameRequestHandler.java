@@ -29,28 +29,27 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             sendErrorMessage(user, "Missing message type.");
             return;
         }
-
+    
         if (gameManager == null) {
             sendErrorMessage(user, "GameManager is not initialized.");
             return;
         }
-
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
-            System.out.println("RLGameUser not found for user: " + user.getName());
-            String userName = user.getName();
-            rlUser = gameManager.getUserByUsername(userName);
-            if (rlUser == null) {
-                sendErrorMessage(user, "User not found.");
+            System.out.println("RLGameUser not found for user: " + user.getName() + ". Adding now.");
+            boolean added = gameManager.addUser(user);
+            if (!added) {
+                sendErrorMessage(user, "Failed to add user to game.");
                 return;
             }
-        }
+    
+            rlUser = gameManager.getUser(user);
+            if (rlUser == null) {
+                sendErrorMessage(user, "User not found after adding.");
+                return;
+            }
+        }  
 
         switch (messageType) {
             case RLGameMessage.GAME_STATE:

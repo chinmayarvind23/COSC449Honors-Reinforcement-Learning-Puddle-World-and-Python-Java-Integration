@@ -51,6 +51,12 @@ public class RLGameManager {
             System.out.println(" - " + name + " (equals agent1? " + name.equals("agent1") + ")");
         }
 
+        RLGameUser addedUser = userMap.get(userName);
+        if (addedUser == null) {
+            System.out.println("User addition failed unexpectedly: " + userName);
+            return false;
+        }
+
         System.out.println("Current number of active users: " + userMap.size());
         return true;
     }    
