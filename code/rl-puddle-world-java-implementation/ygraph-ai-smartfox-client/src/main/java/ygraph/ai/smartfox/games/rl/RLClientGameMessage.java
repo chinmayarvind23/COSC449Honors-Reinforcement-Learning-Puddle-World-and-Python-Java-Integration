@@ -140,6 +140,7 @@ public class RLClientGameMessage {
                 params.putInt("stateId", this.stateId);
                 break;
             case GAME_AVAILABLE_ACTIONS:
+                params.putInt("stateId", this.stateId);
                 List<Integer> actionList = new ArrayList<>();
                 for (int action : availableActions) {
                     actionList.add(action);
@@ -147,6 +148,7 @@ public class RLClientGameMessage {
                 params.putIntArray("availableActions", actionList);
                 break;
             case GAME_AVAILABLE_REWARDS:
+                params.putInt("stateId", this.stateId);
                 List<Double> rewardList = new ArrayList<>();
                 for (double reward : availableRewards) {
                     rewardList.add(reward);

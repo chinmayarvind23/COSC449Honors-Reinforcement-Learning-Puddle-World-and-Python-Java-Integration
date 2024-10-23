@@ -13,6 +13,8 @@ public class RLGameUser {
     private int currentStateId;
     private double lastReward;
     private boolean isTerminal;
+    private final int maxEpisodes = 100;
+    private final int maxStepsPerEpisode = 200; 
 
     private int totalEpisodes = 0;
     private int successfulEpisodes = 0;
@@ -86,7 +88,12 @@ public class RLGameUser {
         totalEpisodes++;
 
         System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + newStateId + ", Reward: " + lastReward);
-
+        if (stepsThisEpisode >= maxStepsPerEpisode) {
+            System.out.println("User " + user.getName() + " reached maximum steps per episode.");
+            isTerminal = true;
+            resetGame();
+            return;
+        }
         // System.out.println("Current state before action: " + currentStateId);
         // int nextStateId = world.simulateAction(currentStateId, actionStr);
         // System.out.println("New state after action: " + nextStateId);
@@ -109,6 +116,11 @@ public class RLGameUser {
                 successfulEpisodes++;
                 System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
             }
+            resetGame();
+        }
+        if (totalEpisodes >= maxEpisodes) {
+            System.out.println("User " + user.getName() + " reached maximum episodes.");
+            isTerminal = true;
             resetGame();
         }
     }

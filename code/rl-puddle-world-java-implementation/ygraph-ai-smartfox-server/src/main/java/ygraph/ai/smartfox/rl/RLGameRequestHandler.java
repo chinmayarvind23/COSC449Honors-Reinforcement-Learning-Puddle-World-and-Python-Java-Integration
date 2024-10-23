@@ -447,7 +447,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         // Validate the state ID
         if (stateId != rlUser.getWorld().getCurrentStateId()) {
             System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
-                  + rlUser.getWorld().getCurrentStateId() + ", Received: " + stateId);
+                + rlUser.getWorld().getCurrentStateId() + ", Received: " + stateId);
             ISFSObject errorResponse = new SFSObject();
             errorResponse.putUtfString("messageType", RLGameMessage.GAME_ERROR);
             errorResponse.putUtfString("error", "State ID mismatch.");

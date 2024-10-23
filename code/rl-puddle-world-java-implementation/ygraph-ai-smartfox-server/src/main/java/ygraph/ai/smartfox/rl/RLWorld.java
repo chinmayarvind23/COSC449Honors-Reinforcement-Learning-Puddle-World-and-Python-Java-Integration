@@ -102,10 +102,12 @@ public class RLWorld {
                   col <= (goalStateId % gridSize) && (goalStateId % gridSize) < col + puddleSize)) 
                 {
                     puddlePositions.add(puddle);
+                    System.out.println("Puddle added at row: " + row + ", col: " + col);
                 }
             }
         }
-    }
+        System.out.println("Total Puddles Initialized: " + puddlePositions.size());
+    }    
 
     // Checks if a puddle overlaps with existing puddles or the terminal state and returns a boolean if so
     private boolean isOverlapping(int[] newPuddle) {
@@ -202,19 +204,21 @@ public class RLWorld {
             // Apply penalty but don't move
             double puddleReward = getReward(stateId, actionStr, newStateId);  // -1.0 reward
             updateQTable(stateId, action, puddleReward, stateId);  // Agent stays in the same state
-            return stateId;  // Agent remains in the current state
+            System.out.println("Puddle encountered. Agent remains in state " + stateId + " with reward " + puddleReward);
+            return stateId;  // Agent remains in the same state
         } else {
             currentStateId = newStateId;
+            System.out.println("Agent moved to state " + currentStateId + " with default reward " + defaultReward);
             return currentStateId;
         }
-    }    
+    }        
 
     // Perform a move using the current state ID and action string within the 1D array representing the puddle world
     // Returns the new state ID post action
     public int simulateAction(int stateId, String action) {
         int row = stateId / gridSize;
         int col = stateId % gridSize;
-
+        System.out.println("Simulating action '" + action + "' from state (" + row + ", " + col + ")");
         switch (action) {
             case "UP":
                 row = Math.max(row - 1, 0);
@@ -229,38 +233,50 @@ public class RLWorld {
                 col = Math.min(col + 1, gridSize - 1);
                 break;
             default:
-                // No movement
+                System.out.println("Invalid action string: " + action);
                 break;
         }
 
-        return row * gridSize + col;
+        int newStateId = row * gridSize + col;
+        System.out.println("Action '" + action + "' results in new state ID: " + newStateId);
+        return newStateId;
     }
 
     // Gets the reward from moving from a certain state ID to the next state ID via some action
     public double getReward(int stateId, String action, int nextStateId) {
         if (nextStateId == goalStateId) {
+            System.out.println("Reached goal state: " + goalStateId + ". Assigning reward: " + goalReward);
             return goalReward;
         }
-
+    
         if (isPuddle(nextStateId)) {
+            System.out.println("Entered puddle state: " + nextStateId + ". Assigning reward: " + puddleReward);
             return puddleReward;
         }
-
+    
+        System.out.println("Normal state transition. Assigning reward: " + defaultReward);
         return defaultReward;
-    }
+    }    
 
     // Checks if the given state is within a puddle
     public boolean isPuddle(int stateId) {
         int row = stateId / gridSize; // each row has gridSize elements, so index/gridSize = row
         int col = stateId % gridSize; // each row has gridSize elements, so the remainder gives position in the row (which is the column)
-
+        boolean inPuddle = false;
         for (int[] puddle : puddlePositions) {
             if (row >= puddle[0] && row < puddle[0] + puddleSize &&
                 col >= puddle[1] && col < puddle[1] + puddleSize) {
-                return true;
+                inPuddle = true;
+                System.out.println("State " + stateId + " is a puddle at row: " + row + ", col: " + col);
+                break;
             }
         }
-        return false;
+    
+        if (!inPuddle) {
+            System.out.println("State " + stateId + " is not a puddle.");
+        }
+    
+        return inPuddle;
     }
 
     // Gets the list of possible actions from a current state
@@ -355,7 +371,15 @@ public class RLWorld {
     // Updates the Q-Table with the current state, action, reward, and next state as params
     public synchronized void updateQTable(int stateId, int action, double reward, int nextStateId) {
         double[] currentQ = qTable.get(stateId);
+        if (currentQ == null) {
+            System.err.println("Q-Table entry missing for stateId: " + stateId);
+            return;
+        }
         double[] nextQ = qTable.get(nextStateId);
+        if (nextQ == null) {
+            System.err.println("Q-Table entry missing for nextStateId: " + nextStateId);
+            return;
+        }
         double maxNextStateQ = getMaxQ(nextQ);
         
         // Update Q-value for current state-action pair

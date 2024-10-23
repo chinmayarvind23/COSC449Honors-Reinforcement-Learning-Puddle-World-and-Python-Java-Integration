@@ -399,7 +399,7 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.updateState(nextStateId);
         System.out.println("Updated Current State ID to: " + nextStateId);
         requestAvailableActions(nextStateId);
-    }
+    }    
 
     // Processes the GAME_FINAL_STATE message from the server by resetting the environment by checking if the final state has been reached
     // Given to students
@@ -518,10 +518,20 @@ public class RLGamePlayer implements IEventListener {
     // Updates the Q-table based on the update formula and sends updates to the server
     private void updateQTable(int stateId, int action, double reward, int nextStateId) {
         double[] currentQ = qTable.get(stateId);
+        if (currentQ == null) {
+            System.err.println("Q-Table entry missing for stateId: " + stateId);
+            return;
+        }
         double[] nextQ = qTable.get(nextStateId);
+        if (nextQ == null) {
+            System.err.println("Q-Table entry missing for nextStateId: " + nextStateId);
+            return;
+        }
         double maxNextQ = getMaxQ(nextQ);
         currentQ[action] = currentQ[action] + alpha * (reward + gamma * maxNextQ - currentQ[action]);
         qTable.put(stateId, currentQ);
+
+        System.out.println("Updated Q-value for state " + stateId + ", action " + action + ": " + currentQ[action]);
 
         // Send Q-Table update to the server
         int[] qStateIds = {stateId};
