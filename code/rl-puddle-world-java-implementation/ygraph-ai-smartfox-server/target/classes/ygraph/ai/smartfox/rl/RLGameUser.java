@@ -44,8 +44,14 @@ public class RLGameUser {
 
     // Gets an RLWorld instance
     public RLWorld getWorld() {
-        return this.world;
+        if (world == null) {
+            System.err.println("RLWorld is null for user: " + user.getName());
+        } else {
+            System.out.println("RLWorld retrieved for user: " + user.getName() + " - Instance ID: " + System.identityHashCode(world));
+        }
+        return world;
     }
+    
 
     // Gets a user instance
     public User getUser() {
@@ -66,19 +72,43 @@ public class RLGameUser {
             return;
         }
 
-        System.out.println("Current state before action: " + currentStateId);
-        // Performs the action within the RL world and sets the current state ID to the next one
-        int nextStateId = world.simulateAction(currentStateId, actionStr);
-        System.out.println("New state after action: " + nextStateId);
-        lastReward = world.getReward(currentStateId, actionStr, nextStateId);
-        currentStateId = nextStateId;
+        System.out.println("User " + user.getName() + " is taking action: " + actionStr + " from state: " + currentStateId);
+        int actionIndex = world.getActionIndex(actionStr);
+        if (actionIndex == -1) {
+            System.err.println("Invalid action string: " + actionStr);
+            return;
+        }
+
+        int newStateId = world.moveAgentWithAction(currentStateId, actionIndex);
+        lastReward = world.getReward(currentStateId, actionStr, newStateId);
+        cumulativeReward += lastReward;
+        stepsThisEpisode++;
+        totalEpisodes++;
+
+        System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + newStateId + ", Reward: " + lastReward);
+
+        // System.out.println("Current state before action: " + currentStateId);
+        // int nextStateId = world.simulateAction(currentStateId, actionStr);
+        // System.out.println("New state after action: " + nextStateId);
+        // lastReward = world.getReward(currentStateId, actionStr, nextStateId);
+        // currentStateId = nextStateId;
 
         System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + currentStateId + ", Reward: " + lastReward);
 
-        // New state terminal check
-        if (world.isTerminalState(currentStateId)) {
+        // // New state terminal check
+        // if (world.isTerminalState(currentStateId)) {
+        //     isTerminal = true;
+        //     System.out.println("User " + user.getName() + " has reached a terminal state.");
+        //     resetGame();
+        // }
+        // Terminal state check
+        if (world.isTerminalState(newStateId)) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " has reached a terminal state.");
+            if (cumulativeReward >= successRewardThreshold) {
+                successfulEpisodes++;
+                System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
+            }
             resetGame();
         }
     }
@@ -118,6 +148,8 @@ public class RLGameUser {
         initializeGame();
         cumulativeReward = 0.0;
         stepsThisEpisode = 0;
+        isTerminal = false;
+        System.out.println("Game reset for user: " + user.getName() + ". New starting state: " + currentStateId);
     }
 
     // Cleans up the world, done in the RLWorld class when a user leaves a world

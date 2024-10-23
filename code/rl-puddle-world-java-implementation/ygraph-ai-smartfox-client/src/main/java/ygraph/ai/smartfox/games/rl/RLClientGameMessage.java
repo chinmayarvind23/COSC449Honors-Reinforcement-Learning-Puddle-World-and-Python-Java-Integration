@@ -54,10 +54,10 @@ public class RLClientGameMessage {
     // Multiple constructors to make communication easier
     public RLClientGameMessage() {
         this.messageType = "";
-        this.stateId = -1;
-        this.action = -1;
+        this.stateId = 0;
+        // this.action = -1;
         this.reward = 0.0;
-        this.nextStateId = -1;
+        // this.nextStateId = 0;
         this.availableActions = new int[0];
         this.availableRewards = new double[0];
         this.isTerminal = false;
@@ -200,6 +200,11 @@ public class RLClientGameMessage {
                     params.putInt("successfulEpisodes", this.successfulEpisodes);
                 }
                 break;
+            case GAME_ERROR:
+                if (this.userName != null && !this.userName.isEmpty()) {
+                    params.putUtfString("error", this.userName);
+                }
+                break;
             default:
                 break;
         }
@@ -213,10 +218,10 @@ public class RLClientGameMessage {
         this.userName = params.getUtfString("userName");
     
         switch (this.messageType) {
-            case GAME_STATE:
+            case GAME_STATE_RESPONSE:
                 this.stateId = params.getInt("stateId");
                 break;
-            case GAME_AVAILABLE_ACTIONS:
+            case GAME_AVAILABLE_ACTIONS_RESPONSE:
                 List<Integer> availableActionsList = (List<Integer>) params.getIntArray("availableActions");
                 if (availableActionsList != null) {
                     this.availableActions = availableActionsList.stream().mapToInt(Integer::intValue).toArray();
@@ -224,7 +229,7 @@ public class RLClientGameMessage {
                     this.availableActions = new int[0];
                 }
                 break;
-            case GAME_AVAILABLE_REWARDS:
+            case GAME_AVAILABLE_REWARDS_RESPONSE:
                 List<Double> availableRewardsList = (List<Double>) params.getDoubleArray("availableRewards");
                 if (availableRewardsList != null) {
                     this.availableRewards = availableRewardsList.stream().mapToDouble(Double::doubleValue).toArray();
@@ -236,12 +241,12 @@ public class RLClientGameMessage {
                 this.action = params.getInt("action");
                 this.stateId = params.getInt("stateId");
                 break;
-            case GAME_ACTION_REWARD:
+            case GAME_ACTION_REWARD_RESPONSE:
                 this.action = params.getInt("action");
                 this.reward = params.getDouble("reward");
                 this.nextStateId = params.getInt("nextStateId");
                 break;
-            case GAME_FINAL_STATE:
+            case GAME_FINAL_STATE_RESPONSE:
                 this.isTerminal = params.getBool("isTerminal");
                 this.cumulativeReward = params.getDouble("cumulativeReward");
                 this.stepsThisEpisode = params.getInt("stepsThisEpisode");
@@ -291,10 +296,17 @@ public class RLClientGameMessage {
                 this.totalEpisodes = params.getInt("totalEpisodes");
                 this.successfulEpisodes = params.getInt("successfulEpisodes");
                 break;
+            case GAME_ERROR:
+                if (params.containsKey("error")) {
+                    this.userName = params.getUtfString("error");
+                } else {
+                    System.err.println("Missing 'error' field in GAME_ERROR message.");
+                }
+                break;
             default:
                 break;
         }
-    }    
+    } 
 
     // Getters and Setters for all fields
     public String getMessageType() {
@@ -474,6 +486,9 @@ public class RLClientGameMessage {
                 sb.append(", stepsThisEpisode: ").append(stepsThisEpisode);
                 sb.append(", totalEpisodes: ").append(totalEpisodes);
                 sb.append(", successfulEpisodes: ").append(successfulEpisodes);
+                break;
+            case GAME_ERROR:
+                sb.append(", error: ").append(userName);
                 break;
             default:
                 sb.append(", Unknown message type");

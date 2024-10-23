@@ -3,15 +3,16 @@ package ygraph.ai.smartfox.rl;
 import com.smartfoxserver.v2.entities.User;
 
 import java.util.List;
-import java.util.Map;
+// import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 // This class takes RLGameUser instances and binds them with RLWorld intances allowing for concurrent access
 public class RLGameManager {
 
     // Thread-safe map to store username and their corresponding RLGameUser
-    private final Map<String, RLGameUser> userMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, RLGameUser> userMap = new ConcurrentHashMap<>();
     private double alpha;
     private double gamma;
     private double epsilon;
@@ -32,7 +33,7 @@ public class RLGameManager {
 
     // Adds a user to an RL puddle world game by creating an RL world and binding the RLGameUser to it
     // Then inserting the pair into the hashmap
-    public synchronized boolean addUser(User user) {
+    public boolean addUser(User user) {
         String userName = user.getName().trim().toLowerCase();
         System.out.println("Adding User: " + userName + " with memory reference: " + System.identityHashCode(user));
 
@@ -82,7 +83,7 @@ public class RLGameManager {
     }
 
     // Gets a user from the hashmap
-    public synchronized RLGameUser getUser(User user) {
+    public RLGameUser getUser(User user) {
         String userName = user.getName().trim().toLowerCase();
         System.out.println("Attempting to retrieve user: " + userName + " with memory reference: " + System.identityHashCode(user));
 

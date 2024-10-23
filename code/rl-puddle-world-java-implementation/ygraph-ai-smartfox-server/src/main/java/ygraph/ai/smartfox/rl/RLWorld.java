@@ -1,10 +1,12 @@
 package ygraph.ai.smartfox.rl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+// import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.smartfoxserver.v2.entities.User;
 
@@ -46,8 +48,8 @@ public class RLWorld {
         random = new Random();
         this.currentStateId = 0;
         puddlePositions = new ArrayList<>();
-        qTable = new HashMap<>();
-        vTable = new HashMap<>();
+        qTable = new ConcurrentHashMap<>();
+        vTable = new ConcurrentHashMap<>();
         initializeQTable();
         initializeVTable();
         initializePuddles();
@@ -60,13 +62,14 @@ public class RLWorld {
         this.gamma = gamma;
         this.epsilon = epsilon;
         this.random = new Random();
-        this.qTable = new HashMap<>();
-        this.vTable = new HashMap<>();
+        this.qTable = new ConcurrentHashMap<>();
+        this.vTable = new ConcurrentHashMap<>();
         this.puddlePositions = new ArrayList<>();
         initializeQTable();
         initializeVTable();
         initializePuddles();
         reset();
+        System.out.println("RLWorld initialized with actions: " + String.join(", ", actions));
     }
 
     // Initializes the master Q-table with random values for each state-action pair
@@ -131,6 +134,9 @@ public class RLWorld {
         currentStateId = 0;
         initializePuddles();
         System.out.println("World reset. Current state set to 0.");
+        for (int[] puddle : puddlePositions) {
+            System.out.println("Puddle at row: " + puddle[0] + ", col: " + puddle[1]);
+        }
     }
 
     // Sets Q-value for a given state-action pair for managing client updates to Q-table
@@ -259,7 +265,31 @@ public class RLWorld {
 
     // Gets the list of possible actions from a current state
     public String[] getAvailableActions(int stateId) {
-        return actions;
+        if (actions == null) {
+            System.err.println("Error: Actions array is null for stateId: " + stateId);
+            return new String[0];
+        }
+        
+        // If agent at top edge, UP is restricted for example
+        List<String> available = new ArrayList<>(Arrays.asList(actions));
+        int row = stateId / gridSize;
+        int col = stateId % gridSize;
+        
+        if (row == 0) {
+            available.remove("UP");
+        }
+        if (row == gridSize - 1) {
+            available.remove("DOWN");
+        }
+        if (col == 0) {
+            available.remove("LEFT");
+        }
+        if (col == gridSize - 1) {
+            available.remove("RIGHT");
+        }
+        
+        System.out.println("Available Actions for state " + stateId + ": " + String.join(", ", available));
+        return available.toArray(new String[0]);
     }
 
     // Gets the index of the action in the actions array from the action string
@@ -323,7 +353,7 @@ public class RLWorld {
     }
 
     // Updates the Q-Table with the current state, action, reward, and next state as params
-    public void updateQTable(int stateId, int action, double reward, int nextStateId) {
+    public synchronized void updateQTable(int stateId, int action, double reward, int nextStateId) {
         double[] currentQ = qTable.get(stateId);
         double[] nextQ = qTable.get(nextStateId);
         double maxNextStateQ = getMaxQ(nextQ);

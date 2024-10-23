@@ -57,10 +57,10 @@ public class RLGameMessage {
     public RLGameMessage() {
         this.messageType = "";
         this.userName = "";
-        this.stateId = -1;
-        this.action = -1;
+        this.stateId = 0;
+        // this.action = -1;
         this.reward = 0.0;
-        this.nextStateId = -1;
+        // this.nextStateId = -1;
         this.isTerminal = false;
         this.qStateIds = new int[0];
         this.qActionIndices = new int[0];
@@ -130,8 +130,8 @@ public class RLGameMessage {
                 break;
             case GAME_FINAL_STATE_RESPONSE:
                 params.putBool("isTerminal", this.isTerminal);
-                params.putDouble("reward", this.cumulativeReward);
-                params.putInt("steps", this.stepsThisEpisode);
+                params.putDouble("cumulativeReward", this.cumulativeReward);
+                params.putInt("stepsThisEpisode", this.stepsThisEpisode);
                 break;
             case GAME_RESET:
                 params.putUtfString("userName", this.userName);
@@ -164,6 +164,11 @@ public class RLGameMessage {
                 params.putInt("totalEpisodes", this.totalEpisodes);
                 params.putInt("successfulEpisodes", this.successfulEpisodes);
                 break;
+            case GAME_ERROR:
+                if (this.userName != null && !this.userName.isEmpty()) {
+                    params.putUtfString("errorMessage", this.userName);
+                }
+                break;
             default:
                 break;
         }
@@ -177,13 +182,18 @@ public class RLGameMessage {
     
         switch (this.messageType) {
             case GAME_STATE:
-                this.stateId = params.getInt("stateId");
+                if (params.containsKey("stateId")) {
+                    this.stateId = params.getInt("stateId");
+                } else {
+                    System.err.println("Missing 'stateId' in GAME_STATE message.");
+                }
                 break;
             case GAME_AVAILABLE_ACTIONS:
                 List<Integer> availableActionsList = (List<Integer>) params.getIntArray("availableActions");
                 if (availableActionsList != null) {
                     this.availableActions = availableActionsList.stream().mapToInt(Integer::intValue).toArray();
                 } else {
+                    System.err.println("Missing 'availableActions' in GAME_AVAILABLE_ACTIONS message.");
                     this.availableActions = new int[0];
                 }
                 break;
@@ -192,22 +202,35 @@ public class RLGameMessage {
                 if (availableRewardsList != null) {
                     this.availableRewards = availableRewardsList.stream().mapToDouble(Double::doubleValue).toArray();
                 } else {
+                    System.err.println("Missing 'availableRewards' in GAME_AVAILABLE_REWARDS message.");
                     this.availableRewards = new double[0];
                 }
                 break;
             case GAME_ACTION_MOVE:
-                this.action = params.getInt("action");
-                this.stateId = params.getInt("stateId");
+                if (params.containsKey("action") && params.containsKey("stateId")) {
+                    this.action = params.getInt("action");
+                    this.stateId = params.getInt("stateId");
+                } else {
+                    System.err.println("Missing 'action' or 'stateId' in GAME_ACTION_MOVE message.");
+                }
                 break;
             case GAME_ACTION_REWARD:
-                this.action = params.getInt("action");
-                this.reward = params.getDouble("reward");
-                this.nextStateId = params.getInt("nextStateId");
+                if (params.containsKey("action") && params.containsKey("reward") && params.containsKey("nextStateId")) {
+                    this.action = params.getInt("action");
+                    this.reward = params.getDouble("reward");
+                    this.nextStateId = params.getInt("nextStateId");
+                } else {
+                    System.err.println("Missing fields in GAME_ACTION_REWARD message.");
+                }
                 break;
             case GAME_FINAL_STATE_RESPONSE:
-                this.isTerminal = params.getBool("isTerminal");
-                this.reward = params.getDouble("cumulativeReward");
-                this.steps = params.getInt("stepsThisEpisode");
+                if (params.containsKey("isTerminal") && params.containsKey("cumulativeReward") && params.containsKey("stepsThisEpisode")) {
+                    this.isTerminal = params.getBool("isTerminal");
+                    this.cumulativeReward = params.getDouble("cumulativeReward");
+                    this.steps = params.getInt("stepsThisEpisode");
+                } else {
+                    System.err.println("Missing fields in GAME_FINAL_STATE_RESPONSE message.");
+                }
                 break;
             case GAME_RESET:
                 break;
@@ -216,6 +239,7 @@ public class RLGameMessage {
                 if (qStateList != null) {
                     this.qStateIds = qStateList.stream().mapToInt(Integer::intValue).toArray();
                 } else {
+                    System.err.println("Missing 'qStateIds' in GAME_Q_UPDATE message.");
                     this.qStateIds = new int[0];
                 }
     
@@ -223,6 +247,7 @@ public class RLGameMessage {
                 if (qActionList != null) {
                     this.qActionIndices = qActionList.stream().mapToInt(Integer::intValue).toArray();
                 } else {
+                    System.err.println("Missing 'qActionIndices' in GAME_Q_UPDATE message.");
                     this.qActionIndices = new int[0];
                 }
     
@@ -230,6 +255,7 @@ public class RLGameMessage {
                 if (qValueList != null) {
                     this.qValues = qValueList.stream().mapToDouble(Double::doubleValue).toArray();
                 } else {
+                    System.err.println("Missing 'qValues' in GAME_Q_UPDATE message.");
                     this.qValues = new double[0];
                 }
                 break;
@@ -238,6 +264,7 @@ public class RLGameMessage {
                 if (vStateList != null) {
                     this.vStateIds = vStateList.stream().mapToInt(Integer::intValue).toArray();
                 } else {
+                    System.err.println("Missing 'vStateIds' in GAME_V_UPDATE message.");
                     this.vStateIds = new int[0];
                 }
     
@@ -245,19 +272,26 @@ public class RLGameMessage {
                 if (vValueList != null) {
                     this.vValues = vValueList.stream().mapToDouble(Double::doubleValue).toArray();
                 } else {
+                    System.err.println("Missing 'vValues' in GAME_V_UPDATE message.");
                     this.vValues = new double[0];
                 }
                 break;
             case GAME_INFO_RESPONSE:
-                this.cumulativeReward = params.getDouble("cumulativeReward");
-                this.steps = params.getInt("stepsThisEpisode");
-                this.totalEpisodes = params.getInt("totalEpisodes");
-                this.successfulEpisodes = params.getInt("successfulEpisodes");
+                if (params.containsKey("cumulativeReward") && params.containsKey("stepsThisEpisode")
+                    && params.containsKey("totalEpisodes") && params.containsKey("successfulEpisodes")) {
+                    this.cumulativeReward = params.getDouble("cumulativeReward");
+                    this.stepsThisEpisode = params.getInt("stepsThisEpisode");
+                    this.totalEpisodes = params.getInt("totalEpisodes");
+                    this.successfulEpisodes = params.getInt("successfulEpisodes");
+                } else {
+                    System.err.println("Missing fields in GAME_INFO_RESPONSE message.");
+                }
                 break;
             default:
+                System.err.println("Unhandled message type in fromSFSObject: " + this.messageType);
                 break;
         }
-    }    
+    }        
     
     // Getters and Setters for all fields
     public String getMessageType() {

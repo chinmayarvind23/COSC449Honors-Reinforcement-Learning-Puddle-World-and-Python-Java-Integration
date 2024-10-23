@@ -51,41 +51,43 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             }
         }  
 
-        switch (messageType) {
-            case RLGameMessage.GAME_STATE:
-                handleGameStateRequest(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_ACTION_MOVE:
-                handleActionMove(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_RESET:
-                handleGameReset(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_AVAILABLE_ACTIONS:
-                handleAvailableActionsRequest(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_AVAILABLE_REWARDS:
-                handleAvailableRewardsRequest(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_ACTION_REWARD:
-                handleActionRewardRequest(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_FINAL_STATE:
-                handleFinalStateRequest(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_Q_UPDATE:
-                handleQUpdate(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_V_UPDATE:
-                handleVUpdate(user, params, gameManager);
-                break;
-            case RLGameMessage.GAME_INFO:
-                handleInfoRequest(user, params, gameManager);
-                break;
-            default:
-                System.out.println("Unknown message type: " + messageType);
-                sendErrorMessage(user, "Unknown message type: " + messageType);
-                break;
+        synchronized (rlUser) {
+            switch (messageType) {
+                case RLGameMessage.GAME_STATE:
+                    handleGameStateRequest(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_ACTION_MOVE:
+                    handleActionMove(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_RESET:
+                    handleGameReset(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_AVAILABLE_ACTIONS:
+                    handleAvailableActionsRequest(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_AVAILABLE_REWARDS:
+                    handleAvailableRewardsRequest(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_ACTION_REWARD:
+                    handleActionRewardRequest(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_FINAL_STATE:
+                    handleFinalStateRequest(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_Q_UPDATE:
+                    handleQUpdate(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_V_UPDATE:
+                    handleVUpdate(user, params, gameManager);
+                    break;
+                case RLGameMessage.GAME_INFO:
+                    handleInfoRequest(user, params, gameManager);
+                    break;
+                default:
+                    System.out.println("Unknown message type: " + messageType);
+                    sendErrorMessage(user, "Unknown message type: " + messageType);
+                    break;
+            }
         }
     }
 
@@ -138,57 +140,150 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     }
 
     private void handleAvailableActionsRequest(User user, ISFSObject params, RLGameManager gameManager) {
-        RLGameUser rlUser = gameManager.getUser(user);
-        if (rlUser == null) {
-            System.out.println("RLGameUser not found for user: " + user.getName());
-            sendErrorMessage(user, "User not found.");
-            return;
-        }
+        try {
+            RLGameUser rlUser = gameManager.getUser(user);
+            if (rlUser == null) {
+                System.out.println("RLGameUser not found for user: " + user.getName());
+                sendErrorMessage(user, "User not found.");
+                return;
+            }
     
-        int stateId = params.getInt("stateId");
-        String[] availableActions = rlUser.getWorld().getAvailableActions(stateId);
-        int[] actionIndices = new int[availableActions.length];
-        for (int i = 0; i < availableActions.length; i++) {
-            actionIndices[i] = mapActionStringToIndex(availableActions[i]); 
+            RLWorld world = rlUser.getWorld();
+            if (world == null) {
+                System.err.println("RLWorld is null for user: " + user.getName());
+                sendErrorMessage(user, "Game world not initialized.");
+                return;
+            }
+    
+            int stateId = params.getInt("stateId");
+            System.out.println("Handling Available Actions Request for stateId: " + stateId);
+    
+            String[] availableActions = world.getAvailableActions(stateId);
+    
+            if (availableActions == null) {
+                System.err.println("Available Actions is null for stateId: " + stateId);
+                sendErrorMessage(user, "Available actions are null.");
+                return;
+            }
+    
+            if (availableActions.length == 0) {
+                System.err.println("No available actions for stateId: " + stateId);
+                sendErrorMessage(user, "No available actions for the current state.");
+                return;
+            }
+    
+            System.out.println("Available Actions Length: " + availableActions.length);
+            System.out.println("Available Actions: " + String.join(", ", availableActions));
+    
+            int[] actionIndices = new int[availableActions.length];
+            for (int i = 0; i < availableActions.length; i++) {
+                int actionIndex = mapActionStringToIndex(availableActions[i]);
+                if (actionIndex == -1) {
+                    System.err.println("Invalid action string: " + availableActions[i]);
+                    sendErrorMessage(user, "Invalid action received: " + availableActions[i]);
+                    return;
+                }
+                actionIndices[i] = actionIndex;
+            }
+    
+            List<Integer> actionsList = convertIntArrayToList(actionIndices);
+            if (actionsList == null) {
+                System.err.println("convertIntArrayToList returned null.");
+                sendErrorMessage(user, "Internal server error: Failed to process actions.");
+                return;
+            }
+    
+            System.out.println("Available Actions Indices: " + actionsList);
+            ISFSObject actionsResponse = new SFSObject();
+            actionsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE);
+            actionsResponse.putIntArray("availableActions", actionsList);
+            send("rl.action", actionsResponse, user);
+            System.out.println("Sent Available Actions Response to user: " + user.getName());
+        } catch (Exception e) {
+            System.err.println("Exception in handleAvailableActionsRequest: " + e.getMessage());
+            e.printStackTrace();
+            sendErrorMessage(user, "An unexpected error occurred.");
         }
-        // Sends available actions
-        ISFSObject actionsResponse = new SFSObject();
-        actionsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE);
-        actionsResponse.putIntArray("availableActions", convertIntArrayToList(actionIndices));
-        send("rl.action", actionsResponse, user);
-    }    
+    }            
 
     private void handleAvailableRewardsRequest(User user, ISFSObject params, RLGameManager gameManager) {
-        RLGameUser rlUser = gameManager.getUser(user);
-        if (rlUser == null) {
-            System.out.println("RLGameUser not found for user: " + user.getName());
-            sendErrorMessage(user, "User not found.");
-            return;
-        }
-    
-        int stateId = params.getInt("stateId");
-        String[] availableActions = rlUser.getWorld().getAvailableActions(stateId);
-        double[] availableRewards = new double[availableActions.length];
-        System.out.println("State ID: " + stateId);
-        System.out.println("Available rewards: " + availableRewards);
-
-        for (int i = 0; i < availableActions.length; i++) {
-            String actionStr = availableActions[i];
-            if (actionStr == null || actionStr.isEmpty()) {
-                System.err.println("Invalid action string at index " + i);
-                continue;
+        try {
+            RLGameUser rlUser = gameManager.getUser(user);
+            if (rlUser == null) {
+                System.out.println("RLGameUser not found for user: " + user.getName());
+                sendErrorMessage(user, "User not found.");
+                return;
             }
-            System.out.println("Processing Action: " + actionStr);
-            int nextStateId = rlUser.getWorld().simulateAction(stateId, availableActions[i]);
-            availableRewards[i] = rlUser.getWorld().getReward(stateId, availableActions[i], nextStateId);
+    
+            RLWorld world = rlUser.getWorld();
+            if (world == null) {
+                System.err.println("RLWorld is null for user: " + user.getName());
+                sendErrorMessage(user, "Game world not initialized.");
+                return;
+            }
+    
+            int stateId = params.getInt("stateId");
+            System.out.println("Handling Available Rewards Request for stateId: " + stateId);
+    
+            String[] availableActions = world.getAvailableActions(stateId);
+    
+            if (availableActions == null) {
+                System.err.println("Available Actions is null for stateId: " + stateId);
+                sendErrorMessage(user, "Available actions are null.");
+                return;
+            }
+    
+            if (availableActions.length == 0) {
+                System.err.println("No available actions for stateId: " + stateId);
+                sendErrorMessage(user, "No available actions for the current state.");
+                return;
+            }
+    
+            System.out.println("Available Actions Length: " + availableActions.length);
+            System.out.println("Available Actions: " + String.join(", ", availableActions));
+    
+            double[] availableRewards = new double[availableActions.length];
+            System.out.println("State ID: " + stateId);
+            System.out.println("Available rewards array initialized with length: " + availableRewards.length);
+    
+            for (int i = 0; i < availableActions.length; i++) {
+                String actionStr = availableActions[i];
+                if (actionStr == null || actionStr.isEmpty()) {
+                    System.err.println("Invalid action string at index " + i);
+                    sendErrorMessage(user, "Invalid action received at index " + i + ".");
+                    return;
+                }
+                System.out.println("Processing Action: " + actionStr);
+                int nextStateId = world.simulateAction(stateId, actionStr);
+                double reward = world.getReward(stateId, actionStr, nextStateId);
+                availableRewards[i] = reward;
+                System.out.println("Action '" + actionStr + "' leads to state " + nextStateId + " with reward " + reward);
+                if (Double.isNaN(reward)) {
+                    System.err.println("Received invalid reward for action: " + actionStr);
+                    sendErrorMessage(user, "Invalid reward received for action: " + actionStr);
+                    return;
+                }
+            }
+    
+            List<Double> rewardsList = convertDoubleArrayToList(availableRewards);
+            if (rewardsList == null) {
+                System.err.println("convertDoubleArrayToList returned null.");
+                sendErrorMessage(user, "Internal server error: Failed to process rewards.");
+                return;
+            }
+    
+            System.out.println("Available Rewards: " + rewardsList);
+            ISFSObject rewardsResponse = new SFSObject();
+            rewardsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE);
+            rewardsResponse.putDoubleArray("availableRewards", rewardsList);
+            send("rl.action", rewardsResponse, user);
+            System.out.println("Sent Available Rewards Response to user: " + user.getName());
+        } catch (Exception e) {
+            System.err.println("Exception in handleAvailableRewardsRequest: " + e.getMessage());
+            e.printStackTrace();
+            sendErrorMessage(user, "An unexpected error occurred.");
         }
-        
-        // Sends available rewards
-        ISFSObject rewardsResponse = new SFSObject();
-        rewardsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE);
-        rewardsResponse.putDoubleArray("availableRewards", convertDoubleArrayToList(availableRewards));
-        send("rl.action", rewardsResponse, user);
-    }   
+    }               
     
     private void handleActionRewardRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
@@ -442,6 +537,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     // Converts an integer array to a list of integers
     private List<Integer> convertIntArrayToList(int[] array) {
+        if (array == null) return null;
         List<Integer> list = new ArrayList<>();
         for (int num : array) {
             list.add(num);
@@ -451,6 +547,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     // Converts an array of doubles into a list of doubles
     private List<Double> convertDoubleArrayToList(double[] array) {
+        if (array == null) return null;
         List<Double> list = new ArrayList<>();
         for (double num : array) {
             list.add(num);

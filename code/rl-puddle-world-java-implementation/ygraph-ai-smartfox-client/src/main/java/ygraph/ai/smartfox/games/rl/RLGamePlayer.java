@@ -354,6 +354,9 @@ public class RLGamePlayer implements IEventListener {
         msg.fromSFSObject(params);
         this.gameModel.updateAvailableActions(msg.getAvailableActions());
         System.out.println("Available Actions: " + Arrays.toString(msg.getAvailableActions()));
+        if (msg.getAvailableActions().length == 0) {
+            System.err.println("Received empty available actions from server.");
+        }
         requestAvailableRewards(this.gameModel.getStateId());
         int action = decideAction(this.gameModel.getStateId(), msg.getAvailableActions());
         System.out.println("Chosen Action: " + action);
@@ -434,7 +437,9 @@ public class RLGamePlayer implements IEventListener {
     // Students must implement decideAction(), getRandomAvailableAction(), and getBestAvailableAction() or an action selection policy of their own
     private int decideAction(int stateId, int[] availableActions) {
         if (availableActions == null || availableActions.length == 0) {
+            System.err.println("No available actions for the current state.");
             // Handle case where no available actions exist (perhaps return a default or throw an error)
+            resetEnvironment();
             throw new IllegalArgumentException("No available actions for the current state.");
         }
         if (Math.random() < epsilon) {
