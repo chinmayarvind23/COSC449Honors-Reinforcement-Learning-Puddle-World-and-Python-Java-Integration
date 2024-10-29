@@ -85,7 +85,7 @@ public class RLGameUser {
         lastReward = world.getReward(currentStateId, actionStr, newStateId);
         cumulativeReward += lastReward;
         stepsThisEpisode++;
-        totalEpisodes++;
+        // totalEpisodes++;
 
         System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + newStateId + ", Reward: " + lastReward);
         if (stepsThisEpisode >= maxStepsPerEpisode) {
@@ -112,17 +112,22 @@ public class RLGameUser {
         if (world.isTerminalState(newStateId)) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " has reached a terminal state.");
-            if (cumulativeReward >= successRewardThreshold) {
-                successfulEpisodes++;
-                System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
-            }
-            resetGame();
+            concludeEpisode();
         }
         if (totalEpisodes >= maxEpisodes) {
             System.out.println("User " + user.getName() + " reached maximum episodes.");
             isTerminal = true;
-            resetGame();
+            concludeEpisode();
         }
+    }
+
+    public void concludeEpisode() {
+        if (cumulativeReward >= successRewardThreshold) {
+            successfulEpisodes++;
+            System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
+        }
+        totalEpisodes++;
+        resetGame();
     }
 
     // Checks if the action string is valid and one of the 4 possible actions in the puddle world

@@ -385,7 +385,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
             }
     
-            rlUser.resetGame();
+            rlUser.concludeEpisode();
     
             // Respond with GAME_INFO_RESPONSE
             RLGameMessage infoResponseMsg = new RLGameMessage();

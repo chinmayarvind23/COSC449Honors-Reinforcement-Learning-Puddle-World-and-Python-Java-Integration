@@ -419,6 +419,7 @@ public class RLGamePlayer implements IEventListener {
         if (isTerminal) {
             System.out.println("Episode terminated. Resetting environment...");
             resetEnvironment();
+            sendGameInfoRequest();
         }
     }
 
@@ -430,6 +431,7 @@ public class RLGamePlayer implements IEventListener {
         String resetUserName = msg.userName;
         System.out.println("Environment reset for user: " + resetUserName);
         requestInitialState();
+        System.out.println("Sent GAME_INFO request to fetch new state.");
     }
 
     // Method that decides the next action to be taken based on an epsilon-greedy policy

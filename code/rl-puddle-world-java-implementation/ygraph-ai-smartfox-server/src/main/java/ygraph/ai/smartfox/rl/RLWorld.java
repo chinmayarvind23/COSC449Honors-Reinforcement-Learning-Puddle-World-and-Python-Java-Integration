@@ -97,6 +97,9 @@ public class RLWorld {
             int row = random.nextInt(gridSize - puddleSize + 1);
             int col = random.nextInt(gridSize - puddleSize + 1);
             int[] puddle = {row, col};
+            if (row == 0 && col == 0) {
+                continue;
+            }
             if (!isOverlapping(puddle)) {
                 if (!(row <= (goalStateId / gridSize) && (goalStateId / gridSize) < row + puddleSize &&
                   col <= (goalStateId % gridSize) && (goalStateId % gridSize) < col + puddleSize)) 
@@ -109,7 +112,7 @@ public class RLWorld {
         System.out.println("Total Puddles Initialized: " + puddlePositions.size());
     }    
 
-    // Checks if a puddle overlaps with existing puddles or the terminal state and returns a boolean if so
+    // Checks if a puddle overlaps with existing puddles or the terminal state and returns true if so
     private boolean isOverlapping(int[] newPuddle) {
         for (int[] existingPuddle : puddlePositions) {
             if (newPuddle[0] < existingPuddle[0] + puddleSize &&
@@ -194,6 +197,7 @@ public class RLWorld {
     public int moveAgentWithAction(int stateId, int action) {
         String actionStr = getActionString(action);
         if (actionStr == null) {
+            System.err.println("Invalid action index: " + action);
             return currentStateId;
         }
     
