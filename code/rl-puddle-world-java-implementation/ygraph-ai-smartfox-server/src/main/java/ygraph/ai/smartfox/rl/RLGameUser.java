@@ -38,7 +38,7 @@ public class RLGameUser {
     // Starts the game by resetting the world and sets the initial state for the user in the RL world, a final reward and a terminal state check to false
     public void initializeGame() {
         world.reset();
-        currentStateId = world.getCurrentStateId();
+        currentStateId = 0;
         lastReward = 0.0;
         isTerminal = false;
         System.out.println("Game initialized for user: " + user.getName() + " at state: " + currentStateId);
@@ -86,6 +86,7 @@ public class RLGameUser {
         cumulativeReward += lastReward;
         stepsThisEpisode++;
         // totalEpisodes++;
+        currentStateId = newStateId;
 
         System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + newStateId + ", Reward: " + lastReward);
         if (stepsThisEpisode >= maxStepsPerEpisode) {
@@ -146,9 +147,9 @@ public class RLGameUser {
     }
 
     // Updates the Q-Table based on action, reward, and next state
-    public void updateQTable(int action, double reward, int nextStateId) {
-        world.updateQTable(currentStateId, action, reward, nextStateId);
-    }
+    // public void updateQTable(int action, double reward, int nextStateId) {
+    //     world.updateQTable(currentStateId, action, reward, nextStateId);
+    // }
 
     // Set if the current state is the goal state
     public void setTerminal(boolean isTerminal) {

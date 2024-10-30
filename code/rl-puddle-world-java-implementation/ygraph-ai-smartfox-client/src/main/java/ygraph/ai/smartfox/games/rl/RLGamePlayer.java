@@ -42,6 +42,9 @@ public class RLGamePlayer implements IEventListener {
     private Map<Integer, double[]> qTable;
     private Map<Integer, Double> vTable;
 
+    private boolean isAwaitingResponse = false;
+    private final int gridSize = 20;
+
     // Learning Parameters: learning rate (prioritizes immediate over future rewards), discount factor (future rewards prioritized over immediate rewards), exploration rate (probability of choosing random action over best action given current knowledge of puddle world)
     // Set in server, so students don't need to worry about this
     private double alpha = 0.1;
@@ -331,6 +334,7 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.updateState(msg.getStateId());
         System.out.println("Current State ID: " + msg.getStateId());
         System.out.println("Requesting available actions for state: " + msg.getStateId());
+        isAwaitingResponse = false;
         requestAvailableActions(msg.getStateId());
     }
 
@@ -394,12 +398,59 @@ public class RLGamePlayer implements IEventListener {
         int nextStateId = msg.getNextStateId();
         int action = msg.getAction();
         System.out.println("Received Reward: " + reward + ", Next State ID: " + nextStateId);
-        updateQTable(this.gameModel.getStateId(), action, reward, nextStateId);
-        updateVTable(this.gameModel.getStateId(), reward, nextStateId);
+        
+        // Store the previous state ID before updating
+        int previousStateId = this.gameModel.getStateId();
+        
+        // Update Q and V tables based on the previous state
+        updateQTable(previousStateId, action, reward, nextStateId);
+        updateVTable(previousStateId, reward, nextStateId);
+        
+        // Update the current state to the next state
         this.gameModel.updateState(nextStateId);
         System.out.println("Updated Current State ID to: " + nextStateId);
-        requestAvailableActions(nextStateId);
+        
+        // Reset the awaiting response flag
+        isAwaitingResponse = false;
+        // requestAvailableActions(nextStateId);
+        
+        // Send Q and V updates for the previous state, not the new state
+        sendQUpdate(
+            new int[]{previousStateId},
+            new int[]{action},
+            new double[]{this.qTable.get(previousStateId)[action]}
+        );
+        sendVUpdate(
+            new int[]{previousStateId},
+            new double[]{this.vTable.get(previousStateId)}
+        );
+        updateEpsilon();
+        logStateMapping(previousStateId);
+        logStateMapping(nextStateId);
+    }
+
+    private void updateEpsilon() {
+        if (epsilon > 0.01) {
+            epsilon *= 0.995; // Decay rate
+            System.out.println("Epsilon decayed to: " + epsilon);
+        }
     }    
+
+    // Helper method to log state mapping
+    private void logStateMapping(int stateId) {
+        int row = getRow(stateId);
+        int col = getCol(stateId);
+        System.out.println("State ID: " + stateId + " corresponds to Grid Position: (" + row + ", " + col + ")");
+    }
+
+    // Helper methods to get row and column from stateId
+    private int getRow(int stateId) {
+        return stateId / gridSize;
+    }
+    
+    private int getCol(int stateId) {
+        return stateId % gridSize;
+    }   
 
     // Processes the GAME_FINAL_STATE message from the server by resetting the environment by checking if the final state has been reached
     // Given to students
@@ -420,6 +471,7 @@ public class RLGamePlayer implements IEventListener {
             System.out.println("Episode terminated. Resetting environment...");
             resetEnvironment();
             sendGameInfoRequest();
+            requestInitialState();
         }
     }
 
@@ -430,24 +482,29 @@ public class RLGamePlayer implements IEventListener {
         msg.fromSFSObject(params);
         String resetUserName = msg.userName;
         System.out.println("Environment reset for user: " + resetUserName);
-        requestInitialState();
-        System.out.println("Sent GAME_INFO request to fetch new state.");
+        // requestInitialState();
+        // System.out.println("Sent GAME_INFO request to fetch new state.");
     }
 
     // Method that decides the next action to be taken based on an epsilon-greedy policy
     // Takes the current state, and the available actions and if the probability generated is < epsilon, then choose a random available action, else choose the action with the highest Q-value
     // Students must implement decideAction(), getRandomAvailableAction(), and getBestAvailableAction() or an action selection policy of their own
     private int decideAction(int stateId, int[] availableActions) {
+        System.out.println("Deciding action for state: " + stateId + " with available actions: " + Arrays.toString(availableActions));
         if (availableActions == null || availableActions.length == 0) {
             System.err.println("No available actions for the current state.");
             // Handle case where no available actions exist (perhaps return a default or throw an error)
             resetEnvironment();
             throw new IllegalArgumentException("No available actions for the current state.");
         }
-        if (Math.random() < epsilon) {
-            return getRandomAvailableAction(availableActions);
+        if (Math.random() > epsilon) {
+            int randomAction = getRandomAvailableAction(availableActions);
+            System.out.println("Epsilon condition met. Exploring with random action: " + randomAction);
+            return randomAction;
         } else {
-            return getBestAvailableAction(stateId, availableActions);
+            int bestAction = getBestAvailableAction(stateId, availableActions);
+            System.out.println("Exploiting with best action: " + bestAction);
+            return bestAction;
         }
     }
 
@@ -489,6 +546,11 @@ public class RLGamePlayer implements IEventListener {
     // Sends the action chosen by the RL agent to the server via the extension request
     // Given to students
     protected void sendAction(int action, int stateId) {
+        if (isAwaitingResponse) {
+            System.out.println("Awaiting server response. Action not sent.");
+            return;
+        }
+        isAwaitingResponse = true;
         RLClientGameMessage actionMsg = new RLClientGameMessage(RLClientGameMessage.GAME_ACTION_MOVE);
         actionMsg.setAction(action);
         actionMsg.setStateId(stateId);
@@ -536,10 +598,10 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Updated Q-value for state " + stateId + ", action " + action + ": " + currentQ[action]);
 
         // Send Q-Table update to the server
-        int[] qStateIds = {stateId};
-        int[] qActionIndices = {action};
-        double[] qValues = {currentQ[action]};
-        sendQUpdate(qStateIds, qActionIndices, qValues);
+        // int[] qStateIds = {stateId};
+        // int[] qActionIndices = {action};
+        // double[] qValues = {currentQ[action]};
+        // sendQUpdate(qStateIds, qActionIndices, qValues);
     }
 
     // Updates the V-table based on TD error and sends updates to the server
@@ -550,9 +612,9 @@ public class RLGamePlayer implements IEventListener {
         vTable.put(stateId, updatedV);
 
         // Send V-Table update to the server
-        int[] vStateIds = {stateId};
-        double[] vValues = {updatedV};
-        sendVUpdate(vStateIds, vValues);
+        // int[] vStateIds = {stateId};
+        // double[] vValues = {updatedV};
+        // sendVUpdate(vStateIds, vValues);
     }
 
     // Sends a GAME_INFO request to the server
@@ -585,6 +647,8 @@ public class RLGamePlayer implements IEventListener {
         ExtensionRequest resetReq = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(resetReq);
         System.out.println("Sent GAME_RESET message to the server.");
+        this.gameModel.resetCumulativeReward();
+        this.gameModel.setTerminal(false);
     }
 
     // Disconnect client from the SmartFoxServer

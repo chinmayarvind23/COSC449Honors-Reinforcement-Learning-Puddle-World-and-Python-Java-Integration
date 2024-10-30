@@ -15,10 +15,10 @@ public class RLWorldTest {
         world = new RLWorld();
     }
 
-    @Test
-    public void testInitialState() {
-        assertEquals("Initial state should be 0", 0, world.getCurrentStateId());
-    }
+    // @Test
+    // public void testInitialState() {
+    //     assertEquals("Initial state should be 0", 0, world.getCurrentStateId());
+    // }
 
     @Test
     public void testPerformActionUp() {

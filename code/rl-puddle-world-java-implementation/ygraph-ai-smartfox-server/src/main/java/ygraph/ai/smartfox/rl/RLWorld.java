@@ -14,12 +14,12 @@ import com.smartfoxserver.v2.entities.User;
 // It contains the grid, puddles, state transitions, and reward mechanisms handling capabilities
 // The grid itself is represented as a flattened 1D array instead of a 2D array for ease of understanding
 public class RLWorld {
-    private Map<Integer, double[]> qTable;
-    private Map<Integer, Double> vTable;
+    private final Map<Integer, double[]> qTable = new ConcurrentHashMap<>();
+    private final Map<Integer, Double> vTable = new ConcurrentHashMap<>();
 
     // Learning parameters: learning rate, discount factor, and exploration rate
-    private double alpha = 0.1;
-    private double gamma = 0.9;
+    // private double alpha = 0.1;
+    // private double gamma = 0.9;
     private double epsilon = 1;
 
     private final int gridSize = 20;
@@ -31,7 +31,7 @@ public class RLWorld {
 
     private final int goalStateId = gridSize * gridSize - 1; //399 is the terminal state ID
 
-    private int currentStateId;
+    // private int currentStateId;
 
     private final Random random;
 
@@ -43,13 +43,14 @@ public class RLWorld {
     // Possible actions are up, down, left, and right
     private final String[] actions = {"UP", "DOWN", "LEFT", "RIGHT"};
 
+    private double lastReward;
+    private boolean isTerminal;
+
     // Constructor for RLWorld that initializes the puddle locations, Q and V tables, and resets the environment
     public RLWorld() {
         random = new Random();
-        this.currentStateId = 0;
+        // this.currentStateId = 0;
         puddlePositions = new ArrayList<>();
-        qTable = new ConcurrentHashMap<>();
-        vTable = new ConcurrentHashMap<>();
         initializeQTable();
         initializeVTable();
         initializePuddles();
@@ -58,12 +59,10 @@ public class RLWorld {
 
     // Constructor for RLWorld that sets the user, and the learning parameters from defined values, as well as initializing the puddle locations, Q and V tables, and resetting the environment
     public RLWorld(User user, double alpha, double gamma, double epsilon) {
-        this.alpha = alpha;
-        this.gamma = gamma;
+        // this.alpha = alpha;
+        // this.gamma = gamma;
         this.epsilon = epsilon;
         this.random = new Random();
-        this.qTable = new ConcurrentHashMap<>();
-        this.vTable = new ConcurrentHashMap<>();
         this.puddlePositions = new ArrayList<>();
         initializeQTable();
         initializeVTable();
@@ -136,7 +135,7 @@ public class RLWorld {
 
     // Resets the RLWorld to the initial state with current state starting with state ID = 0 and initialize the puddles
     public void reset() {
-        currentStateId = 0;
+        // currentStateId = 0;
         initializePuddles();
         System.out.println("World reset. Current state set to 0.");
         for (int[] puddle : puddlePositions) {
@@ -147,17 +146,28 @@ public class RLWorld {
     // Sets Q-value for a given state-action pair for managing client updates to Q-table
     public void setQValue(int stateId, int action, double qValue) {
         double[] currentQ = qTable.get(stateId);
-        if (currentQ != null && action >= 0 && action < currentQ.length) {
-            currentQ[action] = qValue;
-            qTable.put(stateId, currentQ);
+        if (currentQ != null) {
+            if (action >= 0 && action < currentQ.length) {
+                currentQ[action] = qValue;
+                qTable.put(stateId, currentQ);
+                System.out.println("Q-Table Updated: StateID=" + stateId + ", Action=" + action + ", QValue=" + qValue);
+            } else {
+                System.err.println("Invalid action index: " + action + " for StateID: " + stateId);
+            }
+        } else {
+            System.err.println("Invalid stateId: " + stateId + " when setting Q-value.");
         }
-    }
+    }    
 
     // Sets V-value for a given state for managing client updates to V-table
     public void setVValue(int stateId, double vValue) {
-        vTable.put(stateId, vValue);
+        if (vTable.containsKey(stateId)) {
+            vTable.put(stateId, vValue);
+            System.out.println("V-Table Updated: StateID=" + stateId + ", VValue=" + vValue);
+        } else {
+            System.err.println("Invalid stateId: " + stateId + " when setting V-value.");
+        }
     }
-
 
     // Completes an action selection using epsilon-greedy policy and updates the current state ID to the next state ID by calling the helper method moveAgentWithAction that takes the current state and action
     public int moveAgent(int stateId) {
@@ -198,24 +208,97 @@ public class RLWorld {
         String actionStr = getActionString(action);
         if (actionStr == null) {
             System.err.println("Invalid action index: " + action);
-            return currentStateId;
+            return stateId;
         }
-    
+
         int newStateId = simulateAction(stateId, actionStr);
-    
+
         // Check if the new state is a puddle
         if (isPuddle(newStateId)) {
             // Apply penalty but don't move
-            double puddleReward = getReward(stateId, actionStr, newStateId);  // -1.0 reward
-            updateQTable(stateId, action, puddleReward, stateId);  // Agent stays in the same state
-            System.out.println("Puddle encountered. Agent remains in state " + stateId + " with reward " + puddleReward);
+            System.out.println("Puddle encountered at state " + newStateId + ". Agent remains in state " + stateId);
             return stateId;  // Agent remains in the same state
         } else {
-            currentStateId = newStateId;
-            System.out.println("Agent moved to state " + currentStateId + " with default reward " + defaultReward);
-            return currentStateId;
+            System.out.println("Agent would move to state " + newStateId + " with default reward " + defaultReward);
+            return newStateId;
         }
-    }        
+    }
+    
+    public int moveAgentWithAction(int stateId, String actionStr) {
+        // Validate action
+        actionStr = actionStr.toUpperCase();
+        if (!isValidAction(actionStr)) {
+            System.err.println("Invalid action received: " + actionStr);
+            // Assign a penalty for invalid actions
+            setLastReward(-0.1);
+            setTerminal(true);
+            return stateId; // State remains unchanged
+        }
+        
+        // Map stateId to (row, col)
+        int row = stateId / gridSize;
+        int col = stateId % gridSize;
+        
+        // Determine new position based on action
+        switch(actionStr) {
+            case "UP":
+                row = Math.max(row - 1, 0);
+                break;
+            case "DOWN":
+                row = Math.min(row + 1, gridSize - 1);
+                break;
+            case "LEFT":
+                col = Math.max(col - 1, 0);
+                break;
+            case "RIGHT":
+                col = Math.min(col + 1, gridSize - 1);
+                break;
+            default:
+                // This case should not occur due to prior validation
+                break;
+        }
+        
+        // Compute new stateId
+        int newStateId = row * gridSize + col;
+        
+        // Assign reward based on the new state
+        double reward = defaultReward; // Default small positive reward for non-terminal transitions
+        
+        if (newStateId == goalStateId) {
+            reward = goalReward; // Positive reward for reaching the goal
+        } else if (isPuddle(newStateId)) {
+            reward = puddleReward; // Negative reward for entering a puddle
+        }
+        
+        // Update state and reward
+        stateId = newStateId;
+        setLastReward(reward);
+        
+        // Check for terminal state
+        if (isTerminalState(newStateId)) {
+            setTerminal(true);
+            if (newStateId == goalStateId) {
+                System.out.println("Agent has reached the terminal goal state: " + newStateId);
+            } else {
+                System.out.println("Agent has entered a puddle state: " + newStateId);
+            }
+        } else {
+            setTerminal(false);
+        }
+        
+        System.out.println("Moved to state ID: " + newStateId + " (Row: " + row + ", Col: " + col + ") with Reward: " + reward);
+        
+        return newStateId;
+    }
+
+    private boolean isValidAction(String actionStr) {
+        for (String action : actions) {
+            if (action.equals(actionStr)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // Perform a move using the current state ID and action string within the 1D array representing the puddle world
     // Returns the new state ID post action
@@ -338,7 +421,15 @@ public class RLWorld {
 
     // Checks if a given state is a terminal state
     public boolean isTerminalState(int stateId) {
-        return stateId == goalStateId;
+        if (stateId == goalStateId) {
+            System.out.println("State ID " + stateId + " is terminal (Goal).");
+            return true;
+        }
+        if (isPuddle(stateId)) {
+            System.out.println("State ID " + stateId + " is terminal (Puddle).");
+            return true;
+        }
+        return false;
     }
 
     // Converts an action index to its corresponding action string
@@ -350,20 +441,20 @@ public class RLWorld {
     }
 
     // Helper method to get the maximum Q-value for a given state's action values
-    private double getMaxQ(double[] qValues) {
-        double max = Double.NEGATIVE_INFINITY;
-        for (double q : qValues) {
-            if (q > max) {
-                max = q;
-            }
-        }
-        return max;
-    }
+    // private double getMaxQ(double[] qValues) {
+    //     double max = Double.NEGATIVE_INFINITY;
+    //     for (double q : qValues) {
+    //         if (q > max) {
+    //             max = q;
+    //         }
+    //     }
+    //     return max;
+    // }
 
     // Gets the current state ID of the agent
-    public int getCurrentStateId() {
-        return currentStateId;
-    }
+    // public int getCurrentStateId() {
+    //     return currentStateId;
+    // }
 
     // Resets the world to its initial state, clears puddle positions
     public void cleanup() {
@@ -373,23 +464,23 @@ public class RLWorld {
     }
 
     // Updates the Q-Table with the current state, action, reward, and next state as params
-    public synchronized void updateQTable(int stateId, int action, double reward, int nextStateId) {
-        double[] currentQ = qTable.get(stateId);
-        if (currentQ == null) {
-            System.err.println("Q-Table entry missing for stateId: " + stateId);
-            return;
-        }
-        double[] nextQ = qTable.get(nextStateId);
-        if (nextQ == null) {
-            System.err.println("Q-Table entry missing for nextStateId: " + nextStateId);
-            return;
-        }
-        double maxNextStateQ = getMaxQ(nextQ);
+    // public synchronized void updateQTable(int stateId, int action, double reward, int nextStateId) {
+    //     double[] currentQ = qTable.get(stateId);
+    //     if (currentQ == null) {
+    //         System.err.println("Q-Table entry missing for stateId: " + stateId);
+    //         return;
+    //     }
+    //     double[] nextQ = qTable.get(nextStateId);
+    //     if (nextQ == null) {
+    //         System.err.println("Q-Table entry missing for nextStateId: " + nextStateId);
+    //         return;
+    //     }
+    //     double maxNextStateQ = getMaxQ(nextQ);
         
-        // Update Q-value for current state-action pair
-        currentQ[action] = currentQ[action] + alpha * (reward + gamma * maxNextStateQ - currentQ[action]);
-        qTable.put(stateId, currentQ);
-    }
+    //     // Update Q-value for current state-action pair
+    //     currentQ[action] = currentQ[action] + alpha * (reward + gamma * maxNextStateQ - currentQ[action]);
+    //     qTable.put(stateId, currentQ);
+    // }
 
     // Check for puddle states overlapping with goal state
     private boolean isOverlappingGoal(int row, int col) {
@@ -451,5 +542,21 @@ public class RLWorld {
             // Adding the validated puddle position
             this.puddlePositions.add(new int[]{row, col});
         }
-    }        
+    }
+    
+    public double getLastReward() {
+        return lastReward;
+    }
+
+    public void setLastReward(double reward) {
+        this.lastReward = reward;
+    }
+
+    public boolean isTerminal() {
+        return isTerminal;
+    }
+
+    public void setTerminal(boolean terminal) {
+        this.isTerminal = terminal;
+    }
 }

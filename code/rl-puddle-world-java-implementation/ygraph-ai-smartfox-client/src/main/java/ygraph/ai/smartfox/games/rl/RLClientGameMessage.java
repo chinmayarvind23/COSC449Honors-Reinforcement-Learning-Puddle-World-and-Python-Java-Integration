@@ -29,6 +29,7 @@ public class RLClientGameMessage {
     public static final String GAME_ACTION_REWARD_RESPONSE = "GAME_ACTION_REWARD_RESPONSE";
     public static final String GAME_FINAL_STATE_RESPONSE = "GAME_FINAL_STATE_RESPONSE";
     public static final String GAME_RESET_RESPONSE = "GAME_RESET_RESPONSE";
+    public static final String GAME_INFO_RESPONSE = "GAME_INFO_RESPONSE";
     public static final String GAME_ERROR = "GAME_ERROR";
     
     // Message Fields

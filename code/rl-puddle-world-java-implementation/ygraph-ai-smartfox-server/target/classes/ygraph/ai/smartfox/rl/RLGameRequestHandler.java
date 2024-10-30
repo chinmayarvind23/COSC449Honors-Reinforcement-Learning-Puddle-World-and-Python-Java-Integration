@@ -297,7 +297,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         double reward = params.getDouble("reward");
         int nextStateId = params.getInt("nextStateId");
 
-        rlUser.updateQTable(action, reward, nextStateId);
+        // rlUser.updateQTable(action, reward, nextStateId);
 
         // Sends action reward back to the client
         ISFSObject response = new SFSObject();
@@ -310,55 +310,108 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     // Handles Q-Table updates from the client
     private void handleQUpdate(User user, ISFSObject params, RLGameManager gameManager) {
-        RLGameMessage msg = new RLGameMessage();
-        msg.fromSFSObject(params);
-        
-        int[] qStateIds = msg.getQStateIds();
-        int[] qActionIndices = msg.getQActionIndices();
-        double[] qValues = msg.getQValues();
-        
-        RLGameUser rlUser = gameManager.getUser(user);
-        if (rlUser == null) {
-            System.out.println("RLGameUser not found for user: " + user.getName());
-            sendErrorMessage(user, "User not found.");
-            return;
+        try {
+            RLGameMessage msg = new RLGameMessage();
+            msg.fromSFSObject(params);
+            
+            int[] qStateIds = msg.getQStateIds();
+            int[] qActionIndices = msg.getQActionIndices();
+            double[] qValues = msg.getQValues();
+            
+            if (qStateIds == null || qActionIndices == null || qValues == null ||
+                qStateIds.length != qActionIndices.length || qStateIds.length != qValues.length) {
+                sendErrorMessage(user, "Invalid Q-Update data received.");
+                return;
+            }
+            
+            RLGameUser rlUser = gameManager.getUser(user);
+            if (rlUser == null) {
+                System.out.println("RLGameUser not found for user: " + user.getName());
+                sendErrorMessage(user, "User not found.");
+                return;
+            }
+            
+            RLWorld world = rlUser.getWorld();
+            for (int i = 0; i < qStateIds.length; i++) {
+                int stateId = qStateIds[i];
+                int action = qActionIndices[i];
+                double qValue = qValues[i];
+                
+                if (!isValidStateAction(stateId, action, world)) {
+                    System.err.println("Invalid stateId or action index: StateId=" + stateId + ", Action=" + action);
+                    continue;
+                }
+                
+                world.setQValue(stateId, action, qValue);
+            }
+            
+            System.out.println("Applied Q-Table updates from user: " + user.getName());
+        } catch (Exception e) {
+            System.err.println("Exception in handleQUpdate: " + e.getMessage());
+            e.printStackTrace();
+            sendErrorMessage(user, "Failed to process Q-Update.");
         }
-        
-        RLWorld world = rlUser.getWorld();
-        for (int i = 0; i < qStateIds.length; i++) {
-            int stateId = qStateIds[i];
-            int action = qActionIndices[i];
-            double qValue = qValues[i];
-            world.setQValue(stateId, action, qValue);
-        }
-        
-        System.out.println("Received Q-Table updates from user: " + user.getName());
     }
+    
+    // Helper method to validate stateId and action index
+    private boolean isValidStateAction(int stateId, int action, RLWorld world) {
+        final int gridSize = 20;
+        if (stateId < 0 || stateId >= gridSize * gridSize) {
+            return false;
+        }
+        if (action < 0 || action >= 4) {
+            return false;
+        }
+        return true;
+    }    
 
     // Handles V-Table updates from the client
     private void handleVUpdate(User user, ISFSObject params, RLGameManager gameManager) {
-        RLGameMessage msg = new RLGameMessage();
-        msg.fromSFSObject(params);
-        
-        int[] vStateIds = msg.getVStateIds();
-        double[] vValues = msg.getVValues();
-        
-        RLGameUser rlUser = gameManager.getUser(user);
-        if (rlUser == null) {
-            System.out.println("RLGameUser not found for user: " + user.getName());
-            sendErrorMessage(user, "User not found.");
-            return;
+        try {
+            RLGameMessage msg = new RLGameMessage();
+            msg.fromSFSObject(params);
+            
+            int[] vStateIds = msg.getVStateIds();
+            double[] vValues = msg.getVValues();
+            
+            if (vStateIds == null || vValues == null || vStateIds.length != vValues.length) {
+                sendErrorMessage(user, "Invalid V-Update data received.");
+                return;
+            }
+            
+            RLGameUser rlUser = gameManager.getUser(user);
+            if (rlUser == null) {
+                System.out.println("RLGameUser not found for user: " + user.getName());
+                sendErrorMessage(user, "User not found.");
+                return;
+            }
+            
+            RLWorld world = rlUser.getWorld();
+            for (int i = 0; i < vStateIds.length; i++) {
+                int stateId = vStateIds[i];
+                double vValue = vValues[i];
+                
+                if (!isValidState(stateId, world)) {
+                    System.err.println("Invalid stateId: " + stateId);
+                    continue;
+                }
+                
+                world.setVValue(stateId, vValue);
+            }
+            
+            System.out.println("Applied V-Table updates from user: " + user.getName());
+        } catch (Exception e) {
+            System.err.println("Exception in handleVUpdate: " + e.getMessage());
+            e.printStackTrace();
+            sendErrorMessage(user, "Failed to process V-Update.");
         }
-        
-        RLWorld world = rlUser.getWorld();
-        for (int i = 0; i < vStateIds.length; i++) {
-            int stateId = vStateIds[i];
-            double vValue = vValues[i];
-            world.setVValue(stateId, vValue);
-        }
-        
-        System.out.println("Received V-Table updates from user: " + user.getName());
     }
+    
+    // Helper method to validate stateId
+    private boolean isValidState(int stateId, RLWorld world) {
+        final int gridSize = 20;
+        return stateId >= 0 && stateId < gridSize * gridSize;
+    }    
     
     private void handleFinalStateRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameMessage msg = new RLGameMessage();
@@ -433,6 +486,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     }
 
     // Handles the GAME_ACTION_MOVE request by performing the action, updating the state, calculating the reward and responding with the reward, state, available actions and available rewards
+    // RLGameRequestHandler.java
     private void handleActionMove(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
@@ -445,9 +499,9 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         int stateId = params.getInt("stateId");
 
         // Validate the state ID
-        if (stateId != rlUser.getWorld().getCurrentStateId()) {
+        if (stateId != rlUser.getCurrentStateId()) {
             System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
-                + rlUser.getWorld().getCurrentStateId() + ", Received: " + stateId);
+                + rlUser.getCurrentStateId() + ", Received: " + stateId);
             ISFSObject errorResponse = new SFSObject();
             errorResponse.putUtfString("messageType", RLGameMessage.GAME_ERROR);
             errorResponse.putUtfString("error", "State ID mismatch.");
@@ -455,7 +509,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             return;
         }
 
-        // Perform action
+        // Perform action based on client's currentStateId
         String actionStr = mapActionIndexToString(action);
         if (actionStr != null) {
             rlUser.takeAction(actionStr);
@@ -465,53 +519,58 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             return;
         }
 
-        // Sends GAME_ACTION_REWARD_RESPONSE
-        ISFSObject actionRewardResponse = new SFSObject();
-        actionRewardResponse.putUtfString("messageType", RLGameMessage.GAME_ACTION_REWARD_RESPONSE);
-        actionRewardResponse.putInt("action", action);
-        actionRewardResponse.putDouble("reward", rlUser.getLastReward());
-        actionRewardResponse.putInt("nextStateId", rlUser.getWorld().getCurrentStateId());
-        send("rl.action", actionRewardResponse, user);
-
-        // Sends GAME_STATE_RESPONSE
-        ISFSObject stateResponse = new SFSObject();
-        stateResponse.putUtfString("messageType", RLGameMessage.GAME_STATE_RESPONSE);
-        stateResponse.putInt("stateId", rlUser.getWorld().getCurrentStateId());
-        send("rl.action", stateResponse, user);
-
-        // Sends GAME_AVAILABLE_ACTIONS_RESPONSE
-        String[] availableActions = rlUser.getWorld().getAvailableActions(rlUser.getWorld().getCurrentStateId());
-        int[] actionIndices = new int[availableActions.length];
-        for (int i = 0; i < availableActions.length; i++) {
-            actionIndices[i] = mapActionStringToIndex(availableActions[i]);
-        }        
-        ISFSObject actionsResponse = new SFSObject();
-        actionsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE);
-        actionsResponse.putIntArray("availableActions", convertIntArrayToList(actionIndices));
-        send("rl.action", actionsResponse, user);
-
-        // Sends GAME_AVAILABLE_REWARDS_RESPONSE
-        double[] availableRewards = new double[availableActions.length];
-        for (int i = 0; i < availableActions.length; i++) {
-            String actionString = availableActions[i];
-            int nextStateId = rlUser.getWorld().simulateAction(rlUser.getWorld().getCurrentStateId(), actionString);
-            availableRewards[i] = rlUser.getWorld().getReward(rlUser.getWorld().getCurrentStateId(), actionString, nextStateId);
-
-        }
-
-        ISFSObject rewardsResponse = new SFSObject();
-        rewardsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE);
-        rewardsResponse.putDoubleArray("availableRewards", convertDoubleArrayToList(availableRewards));
-        send("rl.action", rewardsResponse, user);
+        // Retrieve updated state from server
+        int updatedStateId = rlUser.getCurrentStateId();
+        double reward = rlUser.getLastReward();
 
         // Goal state check
-        if (rlUser.isTerminal()) {
+        if (rlUser.getWorld().isTerminalState(updatedStateId)) {
             ISFSObject finalStateResponse = new SFSObject();
             finalStateResponse.putUtfString("messageType", RLGameMessage.GAME_FINAL_STATE_RESPONSE);
             finalStateResponse.putBool("isTerminal", true);
             finalStateResponse.putDouble("cumulativeReward", rlUser.getCumulativeReward());
             finalStateResponse.putInt("stepsThisEpisode", rlUser.getStepsThisEpisode()); 
             send("rl.action", finalStateResponse, user);
+            System.out.println("Sent GAME_FINAL_STATE_RESPONSE");
+            rlUser.getWorld().reset();
+            rlUser.concludeEpisode();
+        }
+        else
+        {
+            // Send GAME_ACTION_REWARD_RESPONSE
+            ISFSObject actionRewardResponse = new SFSObject();
+            actionRewardResponse.putUtfString("messageType", RLGameMessage.GAME_ACTION_REWARD_RESPONSE);
+            actionRewardResponse.putInt("action", action);
+            actionRewardResponse.putDouble("reward", reward);
+            actionRewardResponse.putInt("nextStateId", updatedStateId);
+            send("rl.action", actionRewardResponse, user);
+            System.out.println("Sent GAME_ACTION_REWARD_RESPONSE with action: " + action + ", reward: " + reward + ", nextStateId: " + updatedStateId);
+
+            // Send GAME_AVAILABLE_ACTIONS_RESPONSE
+            String[] availableActions = rlUser.getWorld().getAvailableActions(updatedStateId);
+            int[] actionIndices = new int[availableActions.length];
+            for (int i = 0; i < availableActions.length; i++) {
+                actionIndices[i] = mapActionStringToIndex(availableActions[i]);
+            }        
+            ISFSObject actionsResponse = new SFSObject();
+            actionsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE);
+            actionsResponse.putIntArray("availableActions", convertIntArrayToList(actionIndices));
+            send("rl.action", actionsResponse, user);
+            System.out.println("Sent GAME_AVAILABLE_ACTIONS_RESPONSE");
+
+            // Send GAME_AVAILABLE_REWARDS_RESPONSE
+            double[] availableRewards = new double[availableActions.length];
+            for (int i = 0; i < availableActions.length; i++) {
+                String actionString = availableActions[i];
+                int nextStateId = rlUser.getWorld().simulateAction(updatedStateId, actionString);
+                availableRewards[i] = rlUser.getWorld().getReward(updatedStateId, actionString, nextStateId);
+            }
+
+            ISFSObject rewardsResponse = new SFSObject();
+            rewardsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE);
+            rewardsResponse.putDoubleArray("availableRewards", convertDoubleArrayToList(availableRewards));
+            send("rl.action", rewardsResponse, user);
+            System.out.println("Sent GAME_AVAILABLE_REWARDS_RESPONSE");
         }        
     }
 
@@ -523,17 +582,52 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             sendErrorMessage(user, "User not found.");
             return;
         }
-
+    
         rlUser.resetGame();
-
-        // Respond with GAME_RESET_RESPONSE
+    
+        // Sent GAME_RESET_RESPONSE
         ISFSObject resetResponse = new SFSObject();
         resetResponse.putUtfString("messageType", RLGameMessage.GAME_RESET_RESPONSE);
+        resetResponse.putInt("stateId", rlUser.getCurrentStateId());
         send("rl.action", resetResponse, user);
+        System.out.println("Sent GAME_RESET_RESPONSE with stateId: " + rlUser.getCurrentStateId());
+    
+        // Sent GAME_AVAILABLE_ACTIONS_RESPONSE
+        String[] availableActions = rlUser.getWorld().getAvailableActions(rlUser.getCurrentStateId());
+        int[] actionIndices = new int[availableActions.length];
+        for (int i = 0; i < availableActions.length; i++) {
+            actionIndices[i] = mapActionStringToIndex(availableActions[i]);
+        }
+        ISFSObject actionsResponse = new SFSObject();
+        actionsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE);
+        actionsResponse.putIntArray("availableActions", convertIntArrayToList(actionIndices));
+        send("rl.action", actionsResponse, user);
+        System.out.println("Sent GAME_AVAILABLE_ACTIONS_RESPONSE");
+    
+        // Sent GAME_AVAILABLE_REWARDS_RESPONSE
+        double[] availableRewards = new double[availableActions.length];
+        for (int i = 0; i < availableActions.length; i++) {
+            String action = availableActions[i];
+            int nextStateId = rlUser.getWorld().simulateAction(rlUser.getCurrentStateId(), action);
+            availableRewards[i] = rlUser.getWorld().getReward(rlUser.getCurrentStateId(), action, nextStateId);
+        }
+        ISFSObject rewardsResponse = new SFSObject();
+        rewardsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE);
+        rewardsResponse.putDoubleArray("availableRewards", convertDoubleArrayToList(availableRewards));
+        send("rl.action", rewardsResponse, user);
+        System.out.println("Sent GAME_AVAILABLE_REWARDS_RESPONSE");
 
-        // Send initial state, available actions, and rewards back to client
-        handleGameStateRequest(user, params, gameManager);
+        RLGameMessage infoResponseMsg = new RLGameMessage();
+        infoResponseMsg.setMessageType(RLGameMessage.GAME_INFO_RESPONSE);
+        infoResponseMsg.setCumulativeReward(rlUser.getCumulativeReward());
+        infoResponseMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
+        infoResponseMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
+        infoResponseMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
+        ISFSObject infoResponse = infoResponseMsg.toSFSObject();
+        send("rl.action", infoResponse, user);
+        System.out.println("Sent GAME_INFO_RESPONSE");
     }
+    
 
     // Converts an integer array to a list of integers
     private List<Integer> convertIntArrayToList(int[] array) {
