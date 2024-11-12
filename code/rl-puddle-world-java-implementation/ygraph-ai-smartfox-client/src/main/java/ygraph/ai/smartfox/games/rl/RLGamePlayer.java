@@ -43,7 +43,7 @@ public class RLGamePlayer implements IEventListener {
     private Map<Integer, Double> vTable;
 
     private boolean isAwaitingResponse = false;
-    private final int gridSize = 20;
+    private final int gridSize = 5;
 
     // Learning Parameters: learning rate (prioritizes immediate over future rewards), discount factor (future rewards prioritized over immediate rewards), exploration rate (probability of choosing random action over best action given current knowledge of puddle world)
     // Set in server, so students don't need to worry about this
@@ -409,7 +409,9 @@ public class RLGamePlayer implements IEventListener {
         // Update the current state to the next state
         this.gameModel.updateState(nextStateId);
         System.out.println("Updated Current State ID to: " + nextStateId);
-        
+        this.gameModel.addToCumulativeReward(reward);
+        System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
+
         // Reset the awaiting response flag
         isAwaitingResponse = false;
         // requestAvailableActions(nextStateId);
@@ -472,6 +474,7 @@ public class RLGamePlayer implements IEventListener {
             resetEnvironment();
             sendGameInfoRequest();
             requestInitialState();
+            this.gameModel.resetCumulativeReward();
         }
     }
 
@@ -541,7 +544,7 @@ public class RLGamePlayer implements IEventListener {
             }
         }
         return bestAction;
-    }    
+    }
 
     // Sends the action chosen by the RL agent to the server via the extension request
     // Given to students

@@ -83,13 +83,13 @@ public class RLGameUser {
 
         int newStateId = world.moveAgentWithAction(currentStateId, actionIndex);
         lastReward = world.getReward(currentStateId, actionStr, newStateId);
-        cumulativeReward += lastReward;
+        addToCumulativeReward(lastReward);
         stepsThisEpisode++;
         // totalEpisodes++;
         currentStateId = newStateId;
 
         System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + newStateId + ", Reward: " + lastReward);
-        if (stepsThisEpisode >= maxStepsPerEpisode) {
+        if (stepsThisEpisode >= maxStepsPerEpisode || world.isTerminalState(newStateId)) {
             System.out.println("User " + user.getName() + " reached maximum steps per episode.");
             isTerminal = true;
             resetGame();
@@ -120,6 +120,10 @@ public class RLGameUser {
             isTerminal = true;
             concludeEpisode();
         }
+    }
+
+    public void addToCumulativeReward(double reward) {
+        this.cumulativeReward += reward;
     }
 
     public void concludeEpisode() {

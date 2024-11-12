@@ -22,8 +22,8 @@ public class RLWorld {
     // private double gamma = 0.9;
     private double epsilon = 1;
 
-    private final int gridSize = 20;
-    private final int maxPuddles = 4;
+    private final int gridSize = 5;
+    private final int maxPuddles = 2;
     private final int puddleSize = 2;
 
     // List of puddle top-left positions to stretch by 2x2 squares for the puddles
@@ -36,9 +36,9 @@ public class RLWorld {
     private final Random random;
 
     // Rewards for each state
-    private final double defaultReward = 0.01;
+    private final double defaultReward = -0.01;
     private final double puddleReward = -1.0;
-    private final double goalReward = 1.0;
+    private final double goalReward = 10.0;
 
     // Possible actions are up, down, left, and right
     private final String[] actions = {"UP", "DOWN", "LEFT", "RIGHT"};
@@ -73,19 +73,19 @@ public class RLWorld {
 
     // Initializes the master Q-table with random values for each state-action pair
     private void initializeQTable() {
-        for (int i = 0; i < gridSize * gridSize; i++) {
-            double[] actionValues = new double[actions.length];
-            for (int j = 0; j < actions.length; j++) {
-                actionValues[j] = random.nextDouble();
+        for (int state = 0; state < gridSize * gridSize; state++) {
+            double[] actions = new double[4];
+            for (int a = 0; a < 4; a++) {
+                actions[a] = Math.random();
             }
-            qTable.put(i, actionValues);
+            qTable.put(state, actions);
         }
     }
 
     // Initialize the master V-table with default values of 0
     private void initializeVTable() {
-        for (int i = 0; i < gridSize * gridSize; i++) {
-            vTable.put(i, 0.0);
+        for (int state = 0; state < gridSize * gridSize; state++) {
+            vTable.put(state, 0.0);
         }
     }
 

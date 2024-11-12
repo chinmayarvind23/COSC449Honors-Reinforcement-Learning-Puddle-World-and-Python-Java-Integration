@@ -355,7 +355,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
     // Helper method to validate stateId and action index
     private boolean isValidStateAction(int stateId, int action, RLWorld world) {
-        final int gridSize = 20;
+        final int gridSize = 5;
         if (stateId < 0 || stateId >= gridSize * gridSize) {
             return false;
         }
@@ -409,7 +409,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
     // Helper method to validate stateId
     private boolean isValidState(int stateId, RLWorld world) {
-        final int gridSize = 20;
+        final int gridSize = 5;
         return stateId >= 0 && stateId < gridSize * gridSize;
     }    
     

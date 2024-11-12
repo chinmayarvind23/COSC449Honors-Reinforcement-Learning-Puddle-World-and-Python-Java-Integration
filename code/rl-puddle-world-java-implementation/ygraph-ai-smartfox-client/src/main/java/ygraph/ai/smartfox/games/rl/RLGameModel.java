@@ -89,6 +89,10 @@ public class RLGameModel {
         return cumulativeReward;
     }
 
+    public void addToCumulativeReward(double reward) {
+        this.cumulativeReward += reward;
+    }
+
     // Check for terminal state
     public boolean isTerminal() {
         return isTerminal;

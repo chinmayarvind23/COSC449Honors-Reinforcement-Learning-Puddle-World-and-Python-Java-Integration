@@ -25,60 +25,79 @@ public class RLWorldTest {
 
     @Test
     public void testPerformActionUp() {
-        int nextState = world.simulateAction(25, "UP");
-        assertEquals("State should decrement row by 1", 5, nextState);
+        int currentStateId = 10; // Corresponds to (2,0) in a 5x5 grid
+        int expectedNextState = 5; // Corresponds to (1,0)
+        int nextState = world.simulateAction(currentStateId, "UP");
+        assertEquals("State should decrement row by 1", expectedNextState, nextState);
     }
+
 
     @Test
     public void testPerformActionDown() {
-        int nextState = world.simulateAction(5, "DOWN");
-        assertEquals("State should increment row by 1", 5 + 20, nextState);
+        int currentStateId = 5; // Corresponds to (1,0)
+        int expectedNextState = 10; // Corresponds to (2,0)
+        int nextState = world.simulateAction(currentStateId, "DOWN");
+        assertEquals("State should increment row by 1", expectedNextState, nextState);
     }
+
 
     @Test
     public void testPerformActionLeft() {
-        int nextState = world.simulateAction(5, "LEFT");
-        assertEquals("State should decrement column by 1", 5 - 1, nextState);
+        int currentStateId = 6; // Corresponds to (1,1)
+        int expectedNextState = 5; // Corresponds to (1,0)
+        int nextState = world.simulateAction(currentStateId, "LEFT");
+        assertEquals("State should decrement column by 1", expectedNextState, nextState);
     }
+
 
     @Test
     public void testPerformActionRight() {
-        int nextState = world.simulateAction(5, "RIGHT");
-        assertEquals("State should increment column by 1", 5 + 1, nextState);
+        int currentStateId = 5; // Corresponds to (1,0)
+        int expectedNextState = 6; // Corresponds to (1,1)
+        int nextState = world.simulateAction(currentStateId, "RIGHT");
+        assertEquals("State should increment column by 1", expectedNextState, nextState);
     }
+
 
     @Test
     public void testIsPuddle() {
         // Manually set a puddle at (1,1)
         world.setPuddlePositions(Arrays.asList(new int[]{1, 1}));
         
-        // State ID for (1,1) assuming gridSize = 20
-        int puddleStateId = 1 * 20 + 1; // 21
+        // In a 5x5 grid, a 2x2 puddle at (1,1) covers state IDs 6, 7, 11, 12
+        int[] puddleStateIds = {6, 7, 11, 12};
         
-        // State ID for (1,2) assuming gridSize = 20
-        int nonPuddleStateId = 1 * 20 + 2; // 22
+        for(int id : puddleStateIds){
+            assertTrue("State " + id + " should be a puddle", world.isPuddle(id));
+        }
         
-        assertTrue("State 21 should be a puddle", world.isPuddle(puddleStateId));
-        assertTrue("State 22 should also be a puddle (part of 2x2 puddle)", world.isPuddle(nonPuddleStateId));
+        // Check a state not in the puddle
+        int nonPuddleStateId = 8; // Corresponds to (1,3)
+        assertFalse("State " + nonPuddleStateId + " should not be a puddle", world.isPuddle(nonPuddleStateId));
     }
+
 
 
     @Test
     public void testGetReward() {
-        // Terminal state
-        assertEquals("Goal state reward should be 1.0", 1.0, world.getReward(0, "DOWN", 399), 0.001);
-        // Puddle state
+        // Terminal state: (4,4) corresponds to stateId=24
+        assertEquals("Goal state reward should be 10.0", 10.0, world.getReward(19, "DOWN", 24), 0.001);
+        
+        // Puddle state: (1,1) corresponds to stateId=6, action "RIGHT" leads to stateId=7
         world.setPuddlePositions(Arrays.asList(new int[]{1, 1}));
-        assertEquals("Puddle state reward should be -1.0", -1.0, world.getReward(21, "RIGHT", 22), 0.001);
-        // Normal state
-        assertEquals("Normal state reward should be 0.01", 0.01, world.getReward(0, "RIGHT", 1), 0.001);
+        assertEquals("Puddle state reward should be -1.0", -1.0, world.getReward(6, "RIGHT", 7), 0.001);
+        
+        // Normal state: (0,0) corresponds to stateId=0, action "RIGHT" leads to stateId=1
+        assertEquals("Normal state reward should be -0.01", -0.01, world.getReward(0, "RIGHT", 1), 0.001);
     }
+
 
     @Test
     public void testIsTerminalState() {
-        assertTrue("State 399 should be terminal", world.isTerminalState(399));
+        assertTrue("State 24 should be terminal", world.isTerminalState(24));
         assertFalse("State 0 should not be terminal", world.isTerminalState(0));
     }
+
 
     @Test
     public void testApplyQUpdate() {
@@ -118,13 +137,11 @@ public class RLWorldTest {
 
     @Test
     public void testApplyQUpdateAlignmentWithClient() {
-        // Simulate a client-side Q-learning update and verify server applies it correctly
-
-        int stateId = 30;
+        int stateId = 10; // Valid stateId within 0-24
         int action = 1; // DOWN
         double initialQ = world.getMasterQValue(stateId, action);
         double reward = 1.0;
-        int nextStateId = 50;
+        int nextStateId = 15; // Simulate "DOWN" from stateId=10 -> stateId=15
         double maxNextQ = 0.0; // Assume next state's max Q-value is 0.0 for simplicity
 
         double expectedQ = initialQ + alpha * (reward + gamma * maxNextQ - initialQ);
@@ -137,33 +154,21 @@ public class RLWorldTest {
         assertEquals("Server Q-table should reflect the updated Q-value", expectedQ, serverQ, 1e-6);
 
         // Utilize nextStateId to ensure it's within valid range
-        assertTrue("Next state ID should be within valid range (0-399)", 
-                nextStateId >= 0 && nextStateId < 400);
+        assertTrue("Next state ID should be within valid range (0-24)", 
+                nextStateId >= 0 && nextStateId < 25);
     }
+
 
     @Test
     public void testApplyVUpdateAlignmentWithClient() {
-        // Simulate a client-side TD(0) update and verify server applies it correctly
+        int stateId = 10; // Valid stateId within 0-24
+        double updatedVValue = 0.3;
 
-        int stateId = 40;
-        double initialV = world.getMasterVValue(stateId);
-        double reward = 0.5;
-        int nextStateId = 60;
-        double nextV = world.getMasterVValue(nextStateId); // Assume 0.0 for simplicity
-
-        double expectedV = initialV + alpha * (reward + gamma * nextV - initialV);
-
-        // Client computes updated V-value and sends to server
-        world.setVValue(stateId, expectedV);
-
-        // Verify server's master V-table
-        double serverV = world.getMasterVValue(stateId);
-        assertEquals("Server V-table should reflect the updated V-value", expectedV, serverV, 1e-6);
-
-        // Utilize nextStateId to ensure it's within valid range
-        assertTrue("Next state ID should be within valid range (0-399)", 
-                nextStateId >= 0 && nextStateId < 400);
+        world.setVValue(stateId, updatedVValue);
+        double retrievedV = world.getMasterVValue(stateId);
+        assertEquals("Server V-table should reflect the updated V-value", 0.3, retrievedV, 1e-6);
     }
+
 
 
     @Test
