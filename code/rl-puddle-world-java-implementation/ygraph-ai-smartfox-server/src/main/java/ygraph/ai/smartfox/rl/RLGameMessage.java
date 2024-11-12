@@ -30,6 +30,7 @@ public class RLGameMessage {
     public static final String GAME_RESET_RESPONSE = "GAME_RESET_RESPONSE";
     public static final String GAME_ERROR = "GAME_ERROR";
     public static final String GAME_INFO_RESPONSE = "GAME_INFO_RESPONSE";
+    public static final String GAME_TRAINING_COMPLETE = "GAME_TRAINING_COMPLETE";
 
     // Fields for Q-Table updates
     private int[] qStateIds;

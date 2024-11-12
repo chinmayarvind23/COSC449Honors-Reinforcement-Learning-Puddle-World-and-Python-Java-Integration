@@ -13,7 +13,11 @@ public class RLGameModel {
     // For testing purposes
     private double cumulativeReward;
     private int stepsThisEpisode;
+    private int maxStepsPerEpisode = 50;
     private boolean success;
+    private int totalEpisodes = 0;
+    private int maxEpisodes = 10;
+    private int successfulEpisodes = 0;
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
     private double successRewardThreshold = 6.0;
@@ -101,6 +105,39 @@ public class RLGameModel {
     // Determines success/failure of episode
     public boolean isSuccess() {
         return success;
+    }
+
+    public int getTotalEpisodes() { return totalEpisodes; }
+    public void incrementTotalEpisodes() { totalEpisodes++; }
+
+    public int getMaxEpisodes() { return maxEpisodes; }
+    public void setMaxEpisodes(int maxEpisodes) { this.maxEpisodes = maxEpisodes; }
+
+    public int getSuccessfulEpisodes() { return successfulEpisodes; }
+    public void incrementSuccessfulEpisodes() { successfulEpisodes++; }
+
+    public double getSuccessRewardThreshold() { 
+        return successRewardThreshold; 
+    }
+
+    public void setSuccessRewardThreshold(double successRewardThreshold) { 
+        this.successRewardThreshold = successRewardThreshold; 
+    }
+
+    public void incrementStepsThisEpisode() {
+        this.stepsThisEpisode++;
+    }
+
+    public void resetStepsThisEpisode() {
+        this.stepsThisEpisode = 0;
+    }
+
+    public int getMaxStepsPerEpisode() {
+        return maxStepsPerEpisode;
+    }
+
+    public void setMaxStepsPerEpisode(int maxSteps) {
+        this.maxStepsPerEpisode = maxSteps;
     }
 
     // Debugging purposes only

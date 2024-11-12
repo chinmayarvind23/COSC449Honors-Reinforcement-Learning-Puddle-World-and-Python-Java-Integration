@@ -21,6 +21,7 @@ public class RLClientGameMessage {
     public static final String GAME_Q_UPDATE = "GAME_Q_UPDATE";
     public static final String GAME_V_UPDATE = "GAME_V_UPDATE";
     public static final String GAME_INFO = "GAME_INFO";
+    public static final String GAME_TRAINING_COMPLETE = "GAME_TRAINING_COMPLETE";
 
     // Server to Client messages
     public static final String GAME_STATE_RESPONSE = "GAME_STATE_RESPONSE";

@@ -222,39 +222,43 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Received EXTENSION_RESPONSE: cmd=" + cmd);
     
         String messageType = params.getUtfString("messageType");
+        System.out.println("Received messageType: " + messageType);
     
         if ("rl.action".equals(cmd)) {
             // Handle RLGameRequestHandler responses
             switch (messageType) {
-                case "GAME_STATE_RESPONSE":
+                case RLClientGameMessage.GAME_STATE_RESPONSE:
                     processGameState(params);
                     break;
-                case "GAME_AVAILABLE_ACTIONS_RESPONSE":
+                case RLClientGameMessage.GAME_AVAILABLE_ACTIONS_RESPONSE:
                     processAvailableActions(params);
                     break;
-                case "GAME_AVAILABLE_REWARDS_RESPONSE":
+                case RLClientGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE:
                     processAvailableRewards(params);
                     break;
-                case "GAME_ACTION_REWARD_RESPONSE":
+                case RLClientGameMessage.GAME_ACTION_REWARD_RESPONSE:
                     processActionReward(params);
                     break;
-                case "GAME_FINAL_STATE_RESPONSE":
+                case RLClientGameMessage.GAME_FINAL_STATE_RESPONSE:
                     processFinalState(params);
                     break;
-                case "GAME_RESET_RESPONSE":
+                case RLClientGameMessage.GAME_RESET_RESPONSE:
                     processReset(params);
                     break;
-                case "GAME_ERROR":
+                case RLClientGameMessage.GAME_ERROR:
                     processError(params);
                     break;
-                case "GAME_INFO_RESPONSE":
+                case RLClientGameMessage.GAME_INFO_RESPONSE:
                     processInfo(params);
+                    break;
+                case RLClientGameMessage.GAME_TRAINING_COMPLETE:
+                    processTrainingComplete(params);
                     break;
                 default:
                     System.out.println("Unknown messageType: " + messageType);
                     break;
             }
-        }else if ("rl.multi".equals(cmd)) {
+        } else if ("rl.multi".equals(cmd)) {
             // Handle RLMultiHandler responses
             switch (messageType) {
                 case "join.success":
@@ -272,7 +276,7 @@ public class RLGamePlayer implements IEventListener {
         } else {
             System.out.println("Unknown cmd: " + cmd);
         }
-    }
+    }    
     
     private void processDisconnectResponse(ISFSObject params) {
         System.out.println("Processed disconnect response.");
@@ -283,7 +287,20 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Processed join response.");
         System.out.println("Requesting initial state...");
         requestInitialState();
-    }    
+    }  
+    
+    private void processTrainingComplete(ISFSObject params) {
+        System.out.println("Received training complete message from server.");
+        String message = params.getUtfString("message");
+        System.out.println(message);
+    
+        // Disconnect from the server
+        disconnect();
+    
+        // Optionally, exit the program or stop the agent's loop
+        System.exit(0);
+    }
+    
 
     // Handles error messages from the server
     // Given to students
@@ -410,11 +427,11 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.updateState(nextStateId);
         System.out.println("Updated Current State ID to: " + nextStateId);
         this.gameModel.addToCumulativeReward(reward);
+        this.gameModel.incrementStepsThisEpisode(); // Increment steps here
         System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
-
+    
         // Reset the awaiting response flag
         isAwaitingResponse = false;
-        // requestAvailableActions(nextStateId);
         
         // Send Q and V updates for the previous state, not the new state
         sendQUpdate(
@@ -429,6 +446,15 @@ public class RLGamePlayer implements IEventListener {
         updateEpsilon();
         logStateMapping(previousStateId);
         logStateMapping(nextStateId);
+    
+        // Check if the episode has reached maximum steps
+        if (this.gameModel.getStepsThisEpisode() >= this.gameModel.getMaxStepsPerEpisode()) {
+            // Do not send further actions; wait for GAME_FINAL_STATE_RESPONSE
+            System.out.println("Maximum steps reached in episode.");
+        } else {
+            // Continue by requesting available actions
+            requestAvailableActions(nextStateId);
+        }
     }
 
     private void updateEpsilon() {
@@ -459,24 +485,41 @@ public class RLGamePlayer implements IEventListener {
     protected void processFinalState(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
+    
         boolean isTerminal = msg.isTerminal();
-        double cumulativeReward = msg.getCumulativeReward();
-        int stepsThisEpisode = msg.getStepsThisEpisode();
-
+        // Do not overwrite cumulative reward; use the one calculated on the client side
+        int stepsThisEpisode = this.gameModel.getStepsThisEpisode(); // Use steps from gameModel
+    
         this.gameModel.setTerminal(isTerminal);
-        this.gameModel.setCumulativeReward(cumulativeReward);
-        this.gameModel.setStepsThisEpisode(stepsThisEpisode);
-        System.out.println("Is Terminal State: " + isTerminal);
-        System.out.println("Received Cumulative Reward: " + cumulativeReward + ", Steps Taken: " + stepsThisEpisode);
-
-        if (isTerminal) {
-            System.out.println("Episode terminated. Resetting environment...");
-            resetEnvironment();
-            sendGameInfoRequest();
+        // this.gameModel.setCumulativeReward(cumulativeReward); // Commented out to avoid overwriting
+    
+        // Increment total episodes
+        this.gameModel.incrementTotalEpisodes();
+    
+        // Track successful episodes based on cumulative reward
+        if (this.gameModel.getCumulativeReward() >= this.gameModel.getSuccessRewardThreshold()) {
+            this.gameModel.incrementSuccessfulEpisodes();
+        }
+    
+        // Print Episode Summary
+        System.out.println("End of Episode Summary:");
+        System.out.println(" - Total Episodes: " + this.gameModel.getTotalEpisodes());
+        System.out.println(" - Successful Episodes: " + this.gameModel.getSuccessfulEpisodes());
+        System.out.println(" - Steps Taken: " + stepsThisEpisode);
+        System.out.println(" - Cumulative Reward: " + this.gameModel.getCumulativeReward());
+    
+        // Check if the total number of episodes has reached the maximum allowed
+        if (this.gameModel.getTotalEpisodes() < this.gameModel.getMaxEpisodes()) {
+            System.out.println("Starting new episode...");
             requestInitialState();
             this.gameModel.resetCumulativeReward();
+            this.gameModel.resetStepsThisEpisode();
+            this.gameModel.setTerminal(false);
+        } else {
+            System.out.println("Training completed after " + this.gameModel.getTotalEpisodes() + " episodes.");
+            disconnect();
         }
-    }
+    }        
 
     // Processes the GAME_RESET message from the server by requesting the initial state of the game
     // Given to students

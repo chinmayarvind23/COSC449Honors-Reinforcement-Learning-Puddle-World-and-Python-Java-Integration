@@ -223,21 +223,58 @@ public class RLWorld {
         String actionStr = getActionString(action);
         if (actionStr == null) {
             System.err.println("Invalid action index: " + action);
-            return stateId;
+            // Assign a penalty for invalid actions
+            setLastReward(-0.1);
+            setTerminal(true);
+            return stateId; // State remains unchanged
         }
-
-        int newStateId = simulateAction(stateId, actionStr);
-
-        // Check if the new state is a puddle
-        if (isPuddle(newStateId)) {
-            // Apply penalty but don't move
-            System.out.println("Puddle encountered at state " + newStateId + ". Agent remains in state " + stateId);
-            return stateId;  // Agent remains in the same state
+    
+        // Map stateId to (row, col)
+        int row = stateId / gridSize;
+        int col = stateId % gridSize;
+    
+        // Determine new position based on action
+        switch (actionStr) {
+            case "UP":
+                row = Math.max(row - 1, 0);
+                break;
+            case "DOWN":
+                row = Math.min(row + 1, gridSize - 1);
+                break;
+            case "LEFT":
+                col = Math.max(col - 1, 0);
+                break;
+            case "RIGHT":
+                col = Math.min(col + 1, gridSize - 1);
+                break;
+        }
+    
+        // Compute new stateId
+        int newStateId = row * gridSize + col;
+    
+        // Assign reward based on the new state
+        double reward = defaultReward; // Default reward for normal transitions
+    
+        if (newStateId == goalStateId) {
+            reward = goalReward; // Reward for reaching the goal
+        } else if (isPuddle(newStateId)) {
+            reward = puddleReward; // Penalty for entering a puddle
+        }
+    
+        // Update lastReward
+        setLastReward(reward);
+    
+        // Check for terminal state
+        if (isTerminalState(newStateId)) {
+            setTerminal(true);
         } else {
-            System.out.println("Agent would move to state " + newStateId + " with default reward " + defaultReward);
-            return newStateId;
+            setTerminal(false);
         }
-    }
+    
+        System.out.println("Moved to state ID: " + newStateId + " with Reward: " + reward);
+    
+        return newStateId;
+    }    
     
     public int moveAgentWithAction(int stateId, String actionStr) {
         // Validate action

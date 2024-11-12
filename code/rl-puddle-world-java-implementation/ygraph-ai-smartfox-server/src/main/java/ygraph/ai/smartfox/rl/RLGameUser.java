@@ -2,10 +2,10 @@ package ygraph.ai.smartfox.rl;
 
 import com.smartfoxserver.v2.entities.User;
 
-// This class represents a user within in an RL game, and holds their current state, final reward, and terminal state check
+// This class represents a user within an RL game and holds their current state, final reward, and terminal state check
 public class RLGameUser {
 
-    // User and RLWorlds defined
+    // User and RLWorld defined
     private final User user;
     private final RLWorld world;
 
@@ -13,8 +13,8 @@ public class RLGameUser {
     private int currentStateId;
     private double lastReward;
     private boolean isTerminal;
-    private final int maxEpisodes = 100;
-    private final int maxStepsPerEpisode = 200; 
+    private final int maxEpisodes = 10;
+    private final int maxStepsPerEpisode = 50; 
 
     private int totalEpisodes = 0;
     private int successfulEpisodes = 0;
@@ -23,6 +23,9 @@ public class RLGameUser {
 
     // Thresholds for evaluation
     private double successRewardThreshold = 1.0;
+
+    // Grid size (assuming a 5x5 grid)
+    private final int gridSize = 5;
 
     // Constructor that associates a User object with an RL world and starts the game
     public RLGameUser(User user, RLWorld world) {
@@ -35,7 +38,7 @@ public class RLGameUser {
         System.out.println("RLGameUser initialized for user: " + user.getName() + " with RLWorld instance: " + System.identityHashCode(world));
     }
 
-    // Starts the game by resetting the world and sets the initial state for the user in the RL world, a final reward and a terminal state check to false
+    // Starts the game by resetting the world and sets the initial state for the user in the RL world, a final reward, and a terminal state check to false
     public void initializeGame() {
         world.reset();
         currentStateId = 0;
@@ -53,7 +56,6 @@ public class RLGameUser {
         }
         return world;
     }
-    
 
     // Gets a user instance
     public User getUser() {
@@ -62,63 +64,67 @@ public class RLGameUser {
 
     // Processes an action taken by a user for the following actions: "UP", "DOWN", "LEFT", "RIGHT".
     public void takeAction(String actionStr) {
-        // Terminal state check, no further processing needed
-        if (isTerminal) {
-            System.out.println("User " + user.getName() + " attempted to take action in a terminal state.");
-            return;
-        }
-
-        // Check if the action string is one of the 4 actions possible in the puddle world
-        if (!isValidAction(actionStr)) {
-            System.out.println("Invalid action '" + actionStr + "' received from user: " + user.getName());
-            return;
-        }
-
-        System.out.println("User " + user.getName() + " is taking action: " + actionStr + " from state: " + currentStateId);
-        int actionIndex = world.getActionIndex(actionStr);
-        if (actionIndex == -1) {
-            System.err.println("Invalid action string: " + actionStr);
-            return;
-        }
-
+        // Get the current world instance
+        RLWorld world = this.world;
+    
+        // Map action string to index
+        int actionIndex = mapActionStringToIndex(actionStr);
+    
+        // Perform the action in the world
         int newStateId = world.moveAgentWithAction(currentStateId, actionIndex);
-        lastReward = world.getReward(currentStateId, actionStr, newStateId);
-        addToCumulativeReward(lastReward);
-        stepsThisEpisode++;
-        // totalEpisodes++;
-        currentStateId = newStateId;
-
-        System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + newStateId + ", Reward: " + lastReward);
-        if (stepsThisEpisode >= maxStepsPerEpisode || world.isTerminalState(newStateId)) {
-            System.out.println("User " + user.getName() + " reached maximum steps per episode.");
-            isTerminal = true;
-            resetGame();
-            return;
+    
+        // Update last reward
+        double reward = world.getLastReward();
+    
+        // Update user's state and reward
+        this.currentStateId = newStateId;
+        this.lastReward = reward;
+    
+        // **Use gridSize to compute the agent's row and column**
+        int agentRow = currentStateId / gridSize;
+        int agentCol = currentStateId % gridSize;
+    
+        // **Optionally, check if the agent is within grid bounds**
+        if (agentRow < 0 || agentRow >= gridSize || agentCol < 0 || agentCol >= gridSize) {
+            System.err.println("Agent moved out of grid bounds! Row: " + agentRow + ", Col: " + agentCol);
+            // Handle error or reset agent's position if necessary
         }
-        // System.out.println("Current state before action: " + currentStateId);
-        // int nextStateId = world.simulateAction(currentStateId, actionStr);
-        // System.out.println("New state after action: " + nextStateId);
-        // lastReward = world.getReward(currentStateId, actionStr, nextStateId);
-        // currentStateId = nextStateId;
-
-        System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + currentStateId + ", Reward: " + lastReward);
-
-        // // New state terminal check
-        // if (world.isTerminalState(currentStateId)) {
-        //     isTerminal = true;
-        //     System.out.println("User " + user.getName() + " has reached a terminal state.");
-        //     resetGame();
-        // }
-        // Terminal state check
-        if (world.isTerminalState(newStateId)) {
+    
+        // Increment steps and cumulative reward
+        stepsThisEpisode++;
+        cumulativeReward += lastReward;
+    
+        // Check for terminal state
+        if (world.isTerminalState(currentStateId)) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " has reached a terminal state.");
             concludeEpisode();
-        }
-        if (totalEpisodes >= maxEpisodes) {
-            System.out.println("User " + user.getName() + " reached maximum episodes.");
+        } else if (stepsThisEpisode >= maxStepsPerEpisode) {
             isTerminal = true;
+            System.out.println("User " + user.getName() + " reached maximum steps per episode.");
             concludeEpisode();
+        }
+    
+        // **Print agent's position using gridSize**
+        System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + currentStateId +
+                           " (Row: " + agentRow + ", Col: " + agentCol + "), Reward: " + lastReward);
+    }
+    
+    
+
+    // Helper method to map action strings to indices
+    private int mapActionStringToIndex(String actionStr) {
+        switch (actionStr) {
+            case "UP":
+                return 0;
+            case "DOWN":
+                return 1;
+            case "LEFT":
+                return 2;
+            case "RIGHT":
+                return 3;
+            default:
+                throw new IllegalArgumentException("Invalid action string: " + actionStr);
         }
     }
 
@@ -132,12 +138,19 @@ public class RLGameUser {
             System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
         }
         totalEpisodes++;
-        resetGame();
-    }
-
-    // Checks if the action string is valid and one of the 4 possible actions in the puddle world
-    private boolean isValidAction(String action) {
-        return action.equals("UP") || action.equals("DOWN") || action.equals("LEFT") || action.equals("RIGHT");
+        System.out.println("End of Episode Summary:");
+        System.out.println(" - Total Episodes: " + totalEpisodes);
+        System.out.println(" - Successful Episodes: " + successfulEpisodes);
+        System.out.println(" - Steps Taken: " + stepsThisEpisode);
+        System.out.println(" - Cumulative Reward: " + cumulativeReward);
+    
+        // Check if the maximum number of episodes has been reached
+        if (isTrainingComplete()) {
+            System.out.println("Maximum number of episodes reached. Ending training.");
+            // Do not reset the game; training is complete
+        } else {
+            resetGame();
+        }
     }
 
     // Gets the ID of the current state the RL agent is in
@@ -149,11 +162,6 @@ public class RLGameUser {
     public double getLastReward() {
         return lastReward;
     }
-
-    // Updates the Q-Table based on action, reward, and next state
-    // public void updateQTable(int action, double reward, int nextStateId) {
-    //     world.updateQTable(currentStateId, action, reward, nextStateId);
-    // }
 
     // Set if the current state is the goal state
     public void setTerminal(boolean isTerminal) {
@@ -184,6 +192,10 @@ public class RLGameUser {
     public void incrementEpisodes() {
         this.totalEpisodes++;
     }
+
+    public boolean isTrainingComplete() {
+        return totalEpisodes >= maxEpisodes;
+    }    
 
     // Update cumulative rewards
     public void updateRewards(double reward) {

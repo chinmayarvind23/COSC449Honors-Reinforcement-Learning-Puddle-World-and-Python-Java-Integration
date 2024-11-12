@@ -51,6 +51,12 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             }
         }  
 
+        if (rlUser.isTrainingComplete()) {
+            System.out.println("User " + user.getName() + " has completed training.");
+            sendTrainingCompleteMessage(user);
+            return; // Do not process further requests
+        }
+
         synchronized (rlUser) {
             switch (messageType) {
                 case RLGameMessage.GAME_STATE:
@@ -90,6 +96,14 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             }
         }
     }
+
+    private void sendTrainingCompleteMessage(User user) {
+        ISFSObject response = new SFSObject();
+        response.putUtfString("messageType", RLGameMessage.GAME_TRAINING_COMPLETE);
+        response.putUtfString("message", "Training completed. Maximum number of episodes reached.");
+        send("rl.action", response, user);
+    }
+    
 
     // Handles the GAME_STATE request from the client by sending back the current state, available actions and available rewards
     private void handleGameStateRequest(User user, ISFSObject params, RLGameManager gameManager) {
@@ -494,49 +508,49 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             sendErrorMessage(user, "User not found.");
             return;
         }
-
+    
         int action = params.getInt("action");
         int stateId = params.getInt("stateId");
-
+    
         // Validate the state ID
         if (stateId != rlUser.getCurrentStateId()) {
             System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
                 + rlUser.getCurrentStateId() + ", Received: " + stateId);
-            ISFSObject errorResponse = new SFSObject();
-            errorResponse.putUtfString("messageType", RLGameMessage.GAME_ERROR);
-            errorResponse.putUtfString("error", "State ID mismatch.");
-            send("rl.action", errorResponse, user);
+            sendErrorMessage(user, "State ID mismatch.");
             return;
         }
-
-        // Perform action based on client's currentStateId
+    
+        // Perform the action
         String actionStr = mapActionIndexToString(action);
-        if (actionStr != null) {
-            rlUser.takeAction(actionStr);
-        } else {
+        if (actionStr == null) {
             System.out.println("Invalid action index received: " + action);
             sendErrorMessage(user, "Invalid action index: " + action);
             return;
         }
-
-        // Retrieve updated state from server
+        rlUser.takeAction(actionStr);
+    
+        // Retrieve updated state and reward
         int updatedStateId = rlUser.getCurrentStateId();
         double reward = rlUser.getLastReward();
-
-        // Goal state check
-        if (rlUser.getWorld().isTerminalState(updatedStateId)) {
+    
+        // Check if the episode has ended
+        if (rlUser.isTerminal()) {
+            // Capture metrics before resetting
+            double cumulativeReward = rlUser.getCumulativeReward();
+            int stepsThisEpisode = rlUser.getStepsThisEpisode();
+    
+            // Send GAME_FINAL_STATE_RESPONSE
             ISFSObject finalStateResponse = new SFSObject();
             finalStateResponse.putUtfString("messageType", RLGameMessage.GAME_FINAL_STATE_RESPONSE);
             finalStateResponse.putBool("isTerminal", true);
-            finalStateResponse.putDouble("cumulativeReward", rlUser.getCumulativeReward());
-            finalStateResponse.putInt("stepsThisEpisode", rlUser.getStepsThisEpisode()); 
+            finalStateResponse.putDouble("cumulativeReward", cumulativeReward);
+            finalStateResponse.putInt("stepsThisEpisode", stepsThisEpisode); 
             send("rl.action", finalStateResponse, user);
             System.out.println("Sent GAME_FINAL_STATE_RESPONSE");
-            rlUser.getWorld().reset();
+    
+            // Conclude the episode
             rlUser.concludeEpisode();
-        }
-        else
-        {
+        } else {
             // Send GAME_ACTION_REWARD_RESPONSE
             ISFSObject actionRewardResponse = new SFSObject();
             actionRewardResponse.putUtfString("messageType", RLGameMessage.GAME_ACTION_REWARD_RESPONSE);
@@ -545,7 +559,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             actionRewardResponse.putInt("nextStateId", updatedStateId);
             send("rl.action", actionRewardResponse, user);
             System.out.println("Sent GAME_ACTION_REWARD_RESPONSE with action: " + action + ", reward: " + reward + ", nextStateId: " + updatedStateId);
-
+    
             // Send GAME_AVAILABLE_ACTIONS_RESPONSE
             String[] availableActions = rlUser.getWorld().getAvailableActions(updatedStateId);
             int[] actionIndices = new int[availableActions.length];
@@ -557,7 +571,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             actionsResponse.putIntArray("availableActions", convertIntArrayToList(actionIndices));
             send("rl.action", actionsResponse, user);
             System.out.println("Sent GAME_AVAILABLE_ACTIONS_RESPONSE");
-
+    
             // Send GAME_AVAILABLE_REWARDS_RESPONSE
             double[] availableRewards = new double[availableActions.length];
             for (int i = 0; i < availableActions.length; i++) {
@@ -565,14 +579,14 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 int nextStateId = rlUser.getWorld().simulateAction(updatedStateId, actionString);
                 availableRewards[i] = rlUser.getWorld().getReward(updatedStateId, actionString, nextStateId);
             }
-
+    
             ISFSObject rewardsResponse = new SFSObject();
             rewardsResponse.putUtfString("messageType", RLGameMessage.GAME_AVAILABLE_REWARDS_RESPONSE);
             rewardsResponse.putDoubleArray("availableRewards", convertDoubleArrayToList(availableRewards));
             send("rl.action", rewardsResponse, user);
             System.out.println("Sent GAME_AVAILABLE_REWARDS_RESPONSE");
         }        
-    }
+    }    
 
     // Handles GAME_RESET request by client by resetting RL world
     private void handleGameReset(User user, ISFSObject params, RLGameManager gameManager) {
