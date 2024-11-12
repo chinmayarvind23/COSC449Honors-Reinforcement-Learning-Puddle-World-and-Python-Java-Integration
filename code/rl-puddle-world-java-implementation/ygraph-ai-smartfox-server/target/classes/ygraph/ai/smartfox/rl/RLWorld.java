@@ -203,6 +203,21 @@ public class RLWorld {
         return bestAction;
     }
 
+    // Gets the Q-value for a specific state-action pair
+    public double getMasterQValue(int stateId, int actionIndex) {
+        double[] qValues = qTable.get(stateId);
+        if (qValues != null && actionIndex >= 0 && actionIndex < qValues.length) {
+            return qValues[actionIndex];
+        }
+        System.err.println("Invalid stateId or actionIndex in getMasterQValue: stateId=" + stateId + ", actionIndex=" + actionIndex);
+        return 0.0;
+    }
+
+    // Gets the V-value for a specific state
+    public double getMasterVValue(int stateId) {
+        return vTable.getOrDefault(stateId, 0.0);
+    }
+
     // Performs an action and updates the current state to the next state
     public int moveAgentWithAction(int stateId, int action) {
         String actionStr = getActionString(action);
