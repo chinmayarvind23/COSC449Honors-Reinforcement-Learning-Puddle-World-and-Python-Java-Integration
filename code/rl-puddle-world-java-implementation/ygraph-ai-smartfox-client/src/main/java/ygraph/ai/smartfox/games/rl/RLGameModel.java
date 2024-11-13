@@ -24,7 +24,7 @@ public class RLGameModel {
     }
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
-    private double successRewardThreshold = 6.0;
+    private double successRewardThreshold = 1.0;
 
     // Initialize game model with state, available actions, rewards, and final state check
     public RLGameModel() {

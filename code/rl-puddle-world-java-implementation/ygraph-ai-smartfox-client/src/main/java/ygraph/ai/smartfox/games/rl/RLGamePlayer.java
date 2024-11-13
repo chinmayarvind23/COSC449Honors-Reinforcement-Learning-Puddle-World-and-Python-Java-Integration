@@ -86,7 +86,7 @@ public class RLGamePlayer implements IEventListener {
     // actions => 0=UP, 1=DOWN, 2=LEFT, 3=RIGHT
     // Given to students
     private void initializeQTable() {
-        for (int state = 0; state < 400; state++) {
+        for (int state = 0; state < gridSize * gridSize; state++) {
             double[] actions = new double[4];
             for (int a = 0; a < 4; a++) {
                 actions[a] = Math.random();
@@ -98,7 +98,7 @@ public class RLGamePlayer implements IEventListener {
     // V-table initialized with 0 values
     // Given to students
     private void initializeVTable() {
-        for (int state = 0; state < 400; state++) {
+        for (int state = 0; state < gridSize * gridSize; state++) {
             vTable.put(state, 0.0);
         }
     }
@@ -427,9 +427,9 @@ public class RLGamePlayer implements IEventListener {
         // Update the current state to the next state
         this.gameModel.updateState(nextStateId);
         System.out.println("Updated Current State ID to: " + nextStateId);
-        // this.gameModel.addToCumulativeReward(reward);
+        this.gameModel.addToCumulativeReward(reward);
         // this.gameModel.incrementStepsThisEpisode(); // Increment steps here
-        // System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
+        System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
 
         // Reset the awaiting response flag
         isAwaitingResponse = false;
@@ -494,10 +494,15 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.setSuccessfulEpisodes(successfulEpisodes);
     
         // Log episode summary
-        System.out.println("End of Episode " + totalEpisodes + " Summary:");
-        System.out.println(" - Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
-        System.out.println(" - Cumulative Reward: " + cumulativeReward);
-        System.out.println(" - Successful Episodes: " + successfulEpisodes);
+        System.out.println("=== End of Episode " + totalEpisodes + " Summary ===");
+        System.out.println("Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
+        System.out.println("Cumulative Reward: " + cumulativeReward);
+        System.out.println("Successful Episodes: " + successfulEpisodes + "/" + totalEpisodes);
+        System.out.println("===============================================");
+    
+        // Reset episode-specific variables for the next episode
+        this.gameModel.resetCumulativeReward();
+        this.gameModel.resetStepsThisEpisode();
     
         // Decide to start a new episode or end training
         if (totalEpisodes < this.gameModel.getMaxEpisodes()) {
@@ -506,7 +511,6 @@ public class RLGamePlayer implements IEventListener {
         } else {
             System.out.println("Training completed after " + totalEpisodes + " episodes.");
             sendTrainingCompleteMessage();
-            disconnect();
         }
     }          
     

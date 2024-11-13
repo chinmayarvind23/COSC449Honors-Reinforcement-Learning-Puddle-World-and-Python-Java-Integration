@@ -80,9 +80,9 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 case RLGameMessage.GAME_ACTION_REWARD:
                     handleActionRewardRequest(user, params, gameManager);
                     break;
-                case RLGameMessage.GAME_FINAL_STATE:
-                    handleFinalStateRequest(user, params, gameManager);
-                    break;
+                // case RLGameMessage.GAME_FINAL_STATE:
+                //     handleFinalStateRequest(user, params, gameManager);
+                //     break;
                 case RLGameMessage.GAME_Q_UPDATE:
                     handleQUpdate(user, params, gameManager);
                     break;
@@ -442,50 +442,50 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         return stateId >= 0 && stateId < gridSize * gridSize;
     }    
     
-    private void handleFinalStateRequest(User user, ISFSObject params, RLGameManager gameManager) {
-        RLGameMessage msg = new RLGameMessage();
-        msg.fromSFSObject(params);
-        boolean isTerminal = msg.isTerminal();
-        double cumulativeReward = msg.getCumulativeReward();
-        int stepsThisEpisode = msg.getStepsThisEpisode();
+    // private void handleFinalStateRequest(User user, ISFSObject params, RLGameManager gameManager) {
+    //     RLGameMessage msg = new RLGameMessage();
+    //     msg.fromSFSObject(params);
+    //     boolean isTerminal = msg.isTerminal();
+    //     double cumulativeReward = msg.getCumulativeReward();
+    //     int stepsThisEpisode = msg.getStepsThisEpisode();
     
-        RLGameUser rlUser = gameManager.getUser(user);
-        if (rlUser == null) {
-            System.out.println("RLGameUser not found for user: " + user.getName());
-            sendErrorMessage(user, "User not found.");
-            return;
-        }
+    //     RLGameUser rlUser = gameManager.getUser(user);
+    //     if (rlUser == null) {
+    //         System.out.println("RLGameUser not found for user: " + user.getName());
+    //         sendErrorMessage(user, "User not found.");
+    //         return;
+    //     }
     
-        rlUser.setTerminal(isTerminal);
-        rlUser.updateRewards(cumulativeReward);
-        rlUser.updateStepsThisEpisode(stepsThisEpisode);
+    //     rlUser.setTerminal(isTerminal);
+    //     rlUser.updateRewards(cumulativeReward);
+    //     rlUser.updateStepsThisEpisode(stepsThisEpisode);
     
-        if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
-            rlUser.incrementSuccessfulEpisodes();
-            System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
-        }
+    //     if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
+    //         rlUser.incrementSuccessfulEpisodes();
+    //         System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
+    //     }
     
-        rlUser.concludeEpisode();
+    //     rlUser.concludeEpisode();
     
-        // Construct GAME_FINAL_STATE_RESPONSE using RLGameMessage
-        RLGameMessage finalStateMsg = new RLGameMessage();
-        finalStateMsg.setMessageType(RLGameMessage.GAME_FINAL_STATE_RESPONSE);
-        finalStateMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
-        finalStateMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
-        finalStateMsg.setCumulativeReward(rlUser.getCumulativeReward());
-        finalStateMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
-        finalStateMsg.setTerminal(rlUser.isTerminal());
+    //     // Construct GAME_FINAL_STATE_RESPONSE using RLGameMessage
+    //     RLGameMessage finalStateMsg = new RLGameMessage();
+    //     finalStateMsg.setMessageType(RLGameMessage.GAME_FINAL_STATE_RESPONSE);
+    //     finalStateMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
+    //     finalStateMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
+    //     finalStateMsg.setCumulativeReward(rlUser.getCumulativeReward());
+    //     finalStateMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
+    //     finalStateMsg.setTerminal(rlUser.isTerminal());
     
-        // Send GAME_FINAL_STATE_RESPONSE to the client
-        ISFSObject finalStateResponse = finalStateMsg.toSFSObject();
-        send("rl.action", finalStateResponse, user);
-        System.out.println("Sent GAME_FINAL_STATE_RESPONSE to user: " + user.getName());
+    //     // Send GAME_FINAL_STATE_RESPONSE to the client
+    //     ISFSObject finalStateResponse = finalStateMsg.toSFSObject();
+    //     send("rl.action", finalStateResponse, user);
+    //     System.out.println("Sent GAME_FINAL_STATE_RESPONSE to user: " + user.getName());
     
-        // Check if training is complete
-        if (rlUser.isTrainingComplete()) {
-            sendTrainingCompleteMessage(user);
-        }
-    }            
+    //     // Check if training is complete
+    //     if (rlUser.isTrainingComplete()) {
+    //         sendTrainingCompleteMessage(user);
+    //     }
+    // }            
 
     // Handles the GAME_INFO request by sending a summary of the RL agent's training over x episodes
     private void handleInfoRequest(User user, ISFSObject params, RLGameManager gameManager) {
