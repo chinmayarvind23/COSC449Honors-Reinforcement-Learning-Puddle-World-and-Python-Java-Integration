@@ -19,6 +19,10 @@ public class RLGameModel {
     private int maxEpisodes = 10;
     private int successfulEpisodes = 0;
 
+    public void setSuccessfulEpisodes(int successfulEpisodes) {
+        this.successfulEpisodes = successfulEpisodes;
+    }
+
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
     private double successRewardThreshold = 6.0;
 
@@ -69,6 +73,9 @@ public class RLGameModel {
         return stepsThisEpisode;
     }
 
+    public void setTotalEpisodes(int totalEpisodes) {
+        this.totalEpisodes = totalEpisodes;
+    }
 
     // Resets cumulative reward and success boolean for next episode
     public void resetCumulativeReward() {

@@ -388,6 +388,10 @@ public class RLClientGameMessage {
     public void setQStateIds(int[] qStateIds) {
         this.qStateIds = qStateIds;
     }
+
+    public int getEpisodeNumber() {
+        return this.totalEpisodes;
+    }
     
     public int[] getQActionIndices() {
         return qActionIndices;

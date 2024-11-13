@@ -17,6 +17,7 @@ import com.smartfoxserver.v2.exceptions.SFSException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+//import java.util.Random;
 
 // This class represents an RL agent's core logic and interactions with the Puddle World environment along with handling the connection and message processing to and from the server.
 // This would be provided to the students with the connection details filled in, but the core logic would be left to them to implement
@@ -426,10 +427,10 @@ public class RLGamePlayer implements IEventListener {
         // Update the current state to the next state
         this.gameModel.updateState(nextStateId);
         System.out.println("Updated Current State ID to: " + nextStateId);
-        this.gameModel.addToCumulativeReward(reward);
-        this.gameModel.incrementStepsThisEpisode(); // Increment steps here
-        System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
-    
+        // this.gameModel.addToCumulativeReward(reward);
+        // this.gameModel.incrementStepsThisEpisode(); // Increment steps here
+        // System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
+
         // Reset the awaiting response flag
         isAwaitingResponse = false;
         
@@ -446,16 +447,11 @@ public class RLGamePlayer implements IEventListener {
         updateEpsilon();
         logStateMapping(previousStateId);
         logStateMapping(nextStateId);
-    
-        // Check if the episode has reached maximum steps
-        if (this.gameModel.getStepsThisEpisode() >= this.gameModel.getMaxStepsPerEpisode()) {
-            // Do not send further actions; wait for GAME_FINAL_STATE_RESPONSE
-            System.out.println("Maximum steps reached in episode.");
-        } else {
-            // Continue by requesting available actions
-            requestAvailableActions(nextStateId);
-        }
+
+        // Always request available actions
+        requestAvailableActions(nextStateId);
     }
+
 
     private void updateEpsilon() {
         if (epsilon > 0.01) {
@@ -482,44 +478,48 @@ public class RLGamePlayer implements IEventListener {
 
     // Processes the GAME_FINAL_STATE message from the server by resetting the environment by checking if the final state has been reached
     // Given to students
-    protected void processFinalState(ISFSObject params) {
+    private void processFinalState(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
     
-        boolean isTerminal = msg.isTerminal();
-        // Do not overwrite cumulative reward; use the one calculated on the client side
-        int stepsThisEpisode = this.gameModel.getStepsThisEpisode(); // Use steps from gameModel
+        int totalEpisodes = msg.getTotalEpisodes();
+        int stepsTaken = msg.getStepsThisEpisode();
+        double cumulativeReward = msg.getCumulativeReward();
+        int successfulEpisodes = msg.getSuccessfulEpisodes();
     
-        this.gameModel.setTerminal(isTerminal);
-        // this.gameModel.setCumulativeReward(cumulativeReward); // Commented out to avoid overwriting
+        // Update client-side game model
+        this.gameModel.setTotalEpisodes(totalEpisodes);
+        this.gameModel.setStepsThisEpisode(stepsTaken);
+        this.gameModel.setCumulativeReward(cumulativeReward);
+        this.gameModel.setSuccessfulEpisodes(successfulEpisodes);
     
-        // Increment total episodes
-        this.gameModel.incrementTotalEpisodes();
+        // Log episode summary
+        System.out.println("End of Episode " + totalEpisodes + " Summary:");
+        System.out.println(" - Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
+        System.out.println(" - Cumulative Reward: " + cumulativeReward);
+        System.out.println(" - Successful Episodes: " + successfulEpisodes);
     
-        // Track successful episodes based on cumulative reward
-        if (this.gameModel.getCumulativeReward() >= this.gameModel.getSuccessRewardThreshold()) {
-            this.gameModel.incrementSuccessfulEpisodes();
-        }
-    
-        // Print Episode Summary
-        System.out.println("End of Episode Summary:");
-        System.out.println(" - Total Episodes: " + this.gameModel.getTotalEpisodes());
-        System.out.println(" - Successful Episodes: " + this.gameModel.getSuccessfulEpisodes());
-        System.out.println(" - Steps Taken: " + stepsThisEpisode);
-        System.out.println(" - Cumulative Reward: " + this.gameModel.getCumulativeReward());
-    
-        // Check if the total number of episodes has reached the maximum allowed
-        if (this.gameModel.getTotalEpisodes() < this.gameModel.getMaxEpisodes()) {
+        // Decide to start a new episode or end training
+        if (totalEpisodes < this.gameModel.getMaxEpisodes()) {
             System.out.println("Starting new episode...");
             requestInitialState();
-            this.gameModel.resetCumulativeReward();
-            this.gameModel.resetStepsThisEpisode();
-            this.gameModel.setTerminal(false);
         } else {
-            System.out.println("Training completed after " + this.gameModel.getTotalEpisodes() + " episodes.");
+            System.out.println("Training completed after " + totalEpisodes + " episodes.");
+            sendTrainingCompleteMessage();
             disconnect();
         }
-    }        
+    }          
+    
+    private void sendTrainingCompleteMessage() {
+        RLClientGameMessage trainingCompleteMsg = new RLClientGameMessage(RLClientGameMessage.GAME_TRAINING_COMPLETE);
+        trainingCompleteMsg.setUserName(this.userName);
+        ISFSObject params = trainingCompleteMsg.toSFSObject();
+        ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
+        smartFox.send(req);
+        System.out.println("Sent GAME_TRAINING_COMPLETE message to the server.");
+        disconnect();
+    }
+    
 
     // Processes the GAME_RESET message from the server by requesting the initial state of the game
     // Given to students
@@ -539,15 +539,19 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Deciding action for state: " + stateId + " with available actions: " + Arrays.toString(availableActions));
         if (availableActions == null || availableActions.length == 0) {
             System.err.println("No available actions for the current state.");
-            // Handle case where no available actions exist (perhaps return a default or throw an error)
+            // Handle case where no available actions exist
             resetEnvironment();
             throw new IllegalArgumentException("No available actions for the current state.");
         }
-        if (Math.random() > epsilon) {
+    
+        double randomValue = Math.random();
+        if (randomValue < epsilon) {
+            // Exploration: choose a random available action
             int randomAction = getRandomAvailableAction(availableActions);
-            System.out.println("Epsilon condition met. Exploring with random action: " + randomAction);
+            System.out.println("Exploring with random action: " + randomAction);
             return randomAction;
         } else {
+            // Exploitation: choose the best available action based on Q-table
             int bestAction = getBestAvailableAction(stateId, availableActions);
             System.out.println("Exploiting with best action: " + bestAction);
             return bestAction;
@@ -696,6 +700,18 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.resetCumulativeReward();
         this.gameModel.setTerminal(false);
     }
+
+    // private void sendFinalStateMessage() {
+    //     RLClientGameMessage finalStateMsg = new RLClientGameMessage(RLClientGameMessage.GAME_FINAL_STATE);
+    //     finalStateMsg.setUserName(this.userName);
+    //     finalStateMsg.setTerminal(true);
+    //     finalStateMsg.setCumulativeReward(this.gameModel.getCumulativeReward());
+    //     finalStateMsg.setStepsThisEpisode(this.gameModel.getStepsThisEpisode());
+    //     ISFSObject params = finalStateMsg.toSFSObject();
+    //     ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
+    //     smartFox.send(req);
+    //     System.out.println("Sent GAME_FINAL_STATE message to the server.");
+    // }    
 
     // Disconnect client from the SmartFoxServer
     // Given to students

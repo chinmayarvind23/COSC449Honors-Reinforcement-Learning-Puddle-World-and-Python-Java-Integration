@@ -443,4 +443,6 @@ public class RLGameMessage {
     public void setSuccessfulEpisodes(int successfulEpisodes) {
         this.successfulEpisodes = successfulEpisodes;
     }
+
+    
 }

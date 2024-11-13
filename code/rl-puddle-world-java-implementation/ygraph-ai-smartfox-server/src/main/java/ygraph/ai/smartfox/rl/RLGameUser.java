@@ -64,53 +64,68 @@ public class RLGameUser {
 
     // Processes an action taken by a user for the following actions: "UP", "DOWN", "LEFT", "RIGHT".
     public void takeAction(String actionStr) {
-        // Get the current world instance
-        RLWorld world = this.world;
+        if (isTerminal) {
+            return; // Episode already terminated
+        }
     
         // Map action string to index
         int actionIndex = mapActionStringToIndex(actionStr);
+        
+        // Use gridSize to map stateId to (row, col)
+        int row = currentStateId / gridSize;
+        int col = currentStateId % gridSize;
     
-        // Perform the action in the world
+        // Validate current position
+        if (!isValidPosition(row, col)) {
+            System.err.println("Invalid current position: (" + row + ", " + col + ") for user: " + user.getName());
+            concludeEpisode();
+            return;
+        }
+    
+        // Perform the action in the world using actionIndex
         int newStateId = world.moveAgentWithAction(currentStateId, actionIndex);
-    
+        
         // Update last reward
         double reward = world.getLastReward();
-    
+        
         // Update user's state and reward
         this.currentStateId = newStateId;
         this.lastReward = reward;
-    
-        // **Use gridSize to compute the agent's row and column**
-        int agentRow = currentStateId / gridSize;
-        int agentCol = currentStateId % gridSize;
-    
-        // **Optionally, check if the agent is within grid bounds**
-        if (agentRow < 0 || agentRow >= gridSize || agentCol < 0 || agentCol >= gridSize) {
-            System.err.println("Agent moved out of grid bounds! Row: " + agentRow + ", Col: " + agentCol);
-            // Handle error or reset agent's position if necessary
-        }
-    
+        
         // Increment steps and cumulative reward
         stepsThisEpisode++;
         cumulativeReward += lastReward;
+        
+        // Calculate new row and col after action
+        int newRow = newStateId / gridSize;
+        int newCol = newStateId % gridSize;
+    
+        // Validate new position
+        if (!isValidPosition(newRow, newCol)) {
+            System.err.println("Invalid new position: (" + newRow + ", " + newCol + ") for user: " + user.getName());
+            concludeEpisode();
+            return;
+        }
     
         // Check for terminal state
         if (world.isTerminalState(currentStateId)) {
             isTerminal = true;
-            System.out.println("User " + user.getName() + " has reached a terminal state.");
+            System.out.println("User " + user.getName() + " has reached the terminal state: " + currentStateId);
             concludeEpisode();
         } else if (stepsThisEpisode >= maxStepsPerEpisode) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " reached maximum steps per episode.");
             concludeEpisode();
         }
-    
-        // **Print agent's position using gridSize**
-        System.out.println("User " + user.getName() + " performed action '" + actionStr + "'. New state: " + currentStateId +
-                           " (Row: " + agentRow + ", Col: " + agentCol + "), Reward: " + lastReward);
+        
+        // Log the state transition and reward
+        System.out.println("Action Taken: " + actionStr + ", New State: " + newStateId + ", Reward: " + reward);
     }
     
-    
+    // Helper method to validate position
+    private boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < gridSize && col >= 0 && col < gridSize;
+    }    
 
     // Helper method to map action strings to indices
     private int mapActionStringToIndex(String actionStr) {
@@ -133,17 +148,18 @@ public class RLGameUser {
     }
 
     public void concludeEpisode() {
+        totalEpisodes++; // Increment only once
         if (cumulativeReward >= successRewardThreshold) {
             successfulEpisodes++;
             System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
         }
-        totalEpisodes++;
+        
         System.out.println("End of Episode Summary:");
         System.out.println(" - Total Episodes: " + totalEpisodes);
         System.out.println(" - Successful Episodes: " + successfulEpisodes);
         System.out.println(" - Steps Taken: " + stepsThisEpisode);
         System.out.println(" - Cumulative Reward: " + cumulativeReward);
-    
+        
         // Check if the maximum number of episodes has been reached
         if (isTrainingComplete()) {
             System.out.println("Maximum number of episodes reached. Ending training.");
@@ -151,6 +167,11 @@ public class RLGameUser {
         } else {
             resetGame();
         }
+
+        // Reset episode-specific variables
+        stepsThisEpisode = 0;
+        cumulativeReward = 0.0;
+        isTerminal = false;
     }
 
     // Gets the ID of the current state the RL agent is in

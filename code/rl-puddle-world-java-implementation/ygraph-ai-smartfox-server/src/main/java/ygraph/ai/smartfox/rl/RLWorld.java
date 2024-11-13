@@ -283,7 +283,7 @@ public class RLWorld {
             System.err.println("Invalid action received: " + actionStr);
             // Assign a penalty for invalid actions
             setLastReward(-0.1);
-            setTerminal(true);
+            setTerminal(false); // Do not mark as terminal
             return stateId; // State remains unchanged
         }
         
@@ -329,19 +329,16 @@ public class RLWorld {
         // Check for terminal state
         if (isTerminalState(newStateId)) {
             setTerminal(true);
-            if (newStateId == goalStateId) {
-                System.out.println("Agent has reached the terminal goal state: " + newStateId);
-            } else {
-                System.out.println("Agent has entered a puddle state: " + newStateId);
-            }
+            System.out.println("Agent has reached the terminal goal state: " + newStateId);
         } else {
             setTerminal(false);
         }
         
         System.out.println("Moved to state ID: " + newStateId + " (Row: " + row + ", Col: " + col + ") with Reward: " + reward);
         
-        return newStateId;
+        return stateId;
     }
+
 
     private boolean isValidAction(String actionStr) {
         for (String action : actions) {
@@ -473,15 +470,8 @@ public class RLWorld {
 
     // Checks if a given state is a terminal state
     public boolean isTerminalState(int stateId) {
-        if (stateId == goalStateId) {
-            System.out.println("State ID " + stateId + " is terminal (Goal).");
-            return true;
-        }
-        if (isPuddle(stateId)) {
-            System.out.println("State ID " + stateId + " is terminal (Puddle).");
-            return true;
-        }
-        return false;
+        int terminalStateId = (gridSize * gridSize) - 1;
+        return stateId == terminalStateId;
     }
 
     // Converts an action index to its corresponding action string

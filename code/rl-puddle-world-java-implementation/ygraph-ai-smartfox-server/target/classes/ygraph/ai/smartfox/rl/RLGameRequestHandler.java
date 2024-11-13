@@ -74,6 +74,9 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 case RLGameMessage.GAME_AVAILABLE_REWARDS:
                     handleAvailableRewardsRequest(user, params, gameManager);
                     break;
+                case RLGameMessage.GAME_TRAINING_COMPLETE:
+                    handleTrainingComplete(user, params, gameManager);
+                    break;
                 case RLGameMessage.GAME_ACTION_REWARD:
                     handleActionRewardRequest(user, params, gameManager);
                     break;
@@ -322,6 +325,18 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         send("rl.action", response, user);
     }
 
+    private void handleTrainingComplete(User user, ISFSObject params, RLGameManager gameManager) {
+        RLGameUser rlUser = gameManager.getUser(user);
+        if (rlUser != null) {
+            System.out.println("Received GAME_TRAINING_COMPLETE from user: " + user.getName());
+            // Perform any necessary cleanup
+            rlUser.cleanup();
+            gameManager.removeUser(user);
+        } else {
+            System.out.println("RLGameUser not found for user: " + user.getName());
+        }
+    }    
+
     // Handles Q-Table updates from the client
     private void handleQUpdate(User user, ISFSObject params, RLGameManager gameManager) {
         try {
@@ -442,29 +457,35 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         }
     
         rlUser.setTerminal(isTerminal);
-        if (isTerminal) {
-            rlUser.incrementEpisodes();
-            rlUser.updateRewards(cumulativeReward);
-            rlUser.updateStepsThisEpisode(stepsThisEpisode);
+        rlUser.updateRewards(cumulativeReward);
+        rlUser.updateStepsThisEpisode(stepsThisEpisode);
     
-            if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
-                rlUser.incrementSuccessfulEpisodes();
-                System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
-            }
-    
-            rlUser.concludeEpisode();
-    
-            // Respond with GAME_INFO_RESPONSE
-            RLGameMessage infoResponseMsg = new RLGameMessage();
-            infoResponseMsg.setMessageType(RLGameMessage.GAME_INFO_RESPONSE);
-            infoResponseMsg.setCumulativeReward(rlUser.getCumulativeReward());
-            infoResponseMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
-            infoResponseMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
-            infoResponseMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
-            ISFSObject infoResponse = infoResponseMsg.toSFSObject();
-            send("rl.action", infoResponse, user);
+        if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
+            rlUser.incrementSuccessfulEpisodes();
+            System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
         }
-    }    
+    
+        rlUser.concludeEpisode();
+    
+        // Construct GAME_FINAL_STATE_RESPONSE using RLGameMessage
+        RLGameMessage finalStateMsg = new RLGameMessage();
+        finalStateMsg.setMessageType(RLGameMessage.GAME_FINAL_STATE_RESPONSE);
+        finalStateMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
+        finalStateMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
+        finalStateMsg.setCumulativeReward(rlUser.getCumulativeReward());
+        finalStateMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
+        finalStateMsg.setTerminal(rlUser.isTerminal());
+    
+        // Send GAME_FINAL_STATE_RESPONSE to the client
+        ISFSObject finalStateResponse = finalStateMsg.toSFSObject();
+        send("rl.action", finalStateResponse, user);
+        System.out.println("Sent GAME_FINAL_STATE_RESPONSE to user: " + user.getName());
+    
+        // Check if training is complete
+        if (rlUser.isTrainingComplete()) {
+            sendTrainingCompleteMessage(user);
+        }
+    }            
 
     // Handles the GAME_INFO request by sending a summary of the RL agent's training over x episodes
     private void handleInfoRequest(User user, ISFSObject params, RLGameManager gameManager) {
