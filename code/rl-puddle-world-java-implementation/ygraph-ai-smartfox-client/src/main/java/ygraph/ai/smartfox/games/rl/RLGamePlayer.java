@@ -18,6 +18,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 //import java.util.Random;
+//import java.util.Queue;
+//import java.util.concurrent.ConcurrentLinkedQueue;
 
 // This class represents an RL agent's core logic and interactions with the Puddle World environment along with handling the connection and message processing to and from the server.
 // This would be provided to the students with the connection details filled in, but the core logic would be left to them to implement
@@ -63,6 +65,7 @@ public class RLGamePlayer implements IEventListener {
 
         // Initializes RL game model, Q-Table, and V-Table
         this.gameModel = new RLGameModel();
+        this.gameModel.setGamePlayer(this);
         this.qTable = new HashMap<>();
         this.vTable = new HashMap<>();
         initializeQTable();
@@ -335,13 +338,12 @@ public class RLGamePlayer implements IEventListener {
 
     // Asks for the initial state of the game from the server through an extension request
     // Given to students
-    private void requestInitialState() {
-        RLClientGameMessage initialStateReq = new RLClientGameMessage(RLClientGameMessage.GAME_STATE);
-        initialStateReq.setUserName(this.userName);
-        ISFSObject params = initialStateReq.toSFSObject();
+    public void requestInitialState() {
+        RLClientGameMessage stateMsg = new RLClientGameMessage(RLClientGameMessage.GAME_STATE);
+        ISFSObject params = stateMsg.toSFSObject();
         ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(req);
-        System.out.println("Requested initial state.");
+        System.out.println("Requesting initial state for new episode...");
     }
 
     // Processes the GAME_STATE message by calling the requestAvailable actions method to get the possible states from the current state
@@ -415,26 +417,31 @@ public class RLGamePlayer implements IEventListener {
         double reward = msg.getReward();
         int nextStateId = msg.getNextStateId();
         int action = msg.getAction();
-        System.out.println("Received Reward: " + reward + ", Next State ID: " + nextStateId);
         
-        // Store the previous state ID before updating
+        // Store previous state
         int previousStateId = this.gameModel.getStateId();
         
-        // Update Q and V tables based on the previous state
+        // Validate reward and state
+        if (Double.isNaN(reward) || Double.isInfinite(reward)) {
+            System.err.println("Invalid reward received: " + reward);
+            return;
+        }
+        
+        if (nextStateId < 0 || nextStateId >= gridSize * gridSize) {
+            System.err.println("Invalid next state ID received: " + nextStateId);
+            return;
+        }
+
+        // Update state and reward
+        this.gameModel.updateState(nextStateId);
+        this.gameModel.addToCumulativeReward(reward);
+        this.gameModel.incrementStepsThisEpisode();
+
+        // Update Q and V tables
         updateQTable(previousStateId, action, reward, nextStateId);
         updateVTable(previousStateId, reward, nextStateId);
         
-        // Update the current state to the next state
-        this.gameModel.updateState(nextStateId);
-        System.out.println("Updated Current State ID to: " + nextStateId);
-        this.gameModel.addToCumulativeReward(reward);
-        // this.gameModel.incrementStepsThisEpisode(); // Increment steps here
-        System.out.println("Cumulative Reward after action: " + this.gameModel.getCumulativeReward());
-
-        // Reset the awaiting response flag
-        isAwaitingResponse = false;
-        
-        // Send Q and V updates for the previous state, not the new state
+        // Send updates to server
         sendQUpdate(
             new int[]{previousStateId},
             new int[]{action},
@@ -444,14 +451,19 @@ public class RLGamePlayer implements IEventListener {
             new int[]{previousStateId},
             new double[]{this.vTable.get(previousStateId)}
         );
+
+        // Update exploration rate
         updateEpsilon();
-        logStateMapping(previousStateId);
-        logStateMapping(nextStateId);
+        
+        isAwaitingResponse = false;
 
-        // Always request available actions
-        requestAvailableActions(nextStateId);
+        // Continue if not complete
+        if (!this.gameModel.isTrainingComplete()) {
+            requestAvailableActions(nextStateId);
+        } else {
+            sendTrainingCompleteMessage();
+        }
     }
-
 
     private void updateEpsilon() {
         if (epsilon > 0.01) {
@@ -461,20 +473,11 @@ public class RLGamePlayer implements IEventListener {
     }    
 
     // Helper method to log state mapping
-    private void logStateMapping(int stateId) {
-        int row = getRow(stateId);
-        int col = getCol(stateId);
-        System.out.println("State ID: " + stateId + " corresponds to Grid Position: (" + row + ", " + col + ")");
+    public void logStateMapping(int stateId) {
+        int row = stateId / gridSize;
+        int col = stateId % gridSize;
+        System.out.println("State " + stateId + " -> Grid(" + row + "," + col + ")");
     }
-
-    // Helper methods to get row and column from stateId
-    private int getRow(int stateId) {
-        return stateId / gridSize;
-    }
-    
-    private int getCol(int stateId) {
-        return stateId % gridSize;
-    }   
 
     // Processes the GAME_FINAL_STATE message from the server by resetting the environment by checking if the final state has been reached
     // Given to students
@@ -514,13 +517,22 @@ public class RLGamePlayer implements IEventListener {
         }
     }          
     
-    private void sendTrainingCompleteMessage() {
+    public void sendTrainingCompleteMessage() {
         RLClientGameMessage trainingCompleteMsg = new RLClientGameMessage(RLClientGameMessage.GAME_TRAINING_COMPLETE);
         trainingCompleteMsg.setUserName(this.userName);
         ISFSObject params = trainingCompleteMsg.toSFSObject();
         ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(req);
         System.out.println("Sent GAME_TRAINING_COMPLETE message to the server.");
+        
+        // Print final training summary
+        System.out.println("\n=== Final Training Summary ===");
+        System.out.println("Total Episodes: " + this.gameModel.getCurrentEpisode());
+        System.out.println("Total Steps: " + this.gameModel.getStepsThisEpisode());
+        System.out.println("Final Total Reward: " + this.gameModel.getTotalReward());
+        System.out.println("Successful Episodes: " + this.gameModel.getSuccessfulEpisodes());
+        System.out.println("===========================\n");
+        
         disconnect();
     }
     
@@ -604,6 +616,7 @@ public class RLGamePlayer implements IEventListener {
             System.out.println("Awaiting server response. Action not sent.");
             return;
         }
+        
         isAwaitingResponse = true;
         RLClientGameMessage actionMsg = new RLClientGameMessage(RLClientGameMessage.GAME_ACTION_MOVE);
         actionMsg.setAction(action);

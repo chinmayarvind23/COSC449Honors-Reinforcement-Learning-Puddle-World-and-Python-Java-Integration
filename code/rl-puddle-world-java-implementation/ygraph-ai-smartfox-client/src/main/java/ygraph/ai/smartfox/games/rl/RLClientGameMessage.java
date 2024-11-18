@@ -255,7 +255,8 @@ public class RLClientGameMessage {
                 this.cumulativeReward = params.getDouble("cumulativeReward");
                 this.stepsThisEpisode = params.getInt("stepsThisEpisode");
                 break;
-            case GAME_RESET:
+            case GAME_RESET_RESPONSE:
+                // Handle reset response if necessary
                 break;
             case GAME_Q_UPDATE:
                 List<Integer> qStateList = (List<Integer>) params.getIntArray("qStateIds");
@@ -294,20 +295,21 @@ public class RLClientGameMessage {
                     this.vValues = new double[0];
                 }
                 break;
-            case GAME_INFO:
+            case GAME_INFO_RESPONSE:
                 this.cumulativeReward = params.getDouble("cumulativeReward");
                 this.stepsThisEpisode = params.getInt("stepsThisEpisode");
                 this.totalEpisodes = params.getInt("totalEpisodes");
                 this.successfulEpisodes = params.getInt("successfulEpisodes");
                 break;
             case GAME_ERROR:
-                if (params.containsKey("error")) {
-                    this.userName = params.getUtfString("error");
+                if (params.containsKey("errorMessage")) {
+                    this.userName = params.getUtfString("errorMessage");
                 } else {
-                    System.err.println("Missing 'error' field in GAME_ERROR message.");
+                    System.err.println("Missing 'errorMessage' field in GAME_ERROR message.");
                 }
                 break;
             default:
+                System.err.println("Unhandled message type in fromSFSObject: " + this.messageType);
                 break;
         }
     } 

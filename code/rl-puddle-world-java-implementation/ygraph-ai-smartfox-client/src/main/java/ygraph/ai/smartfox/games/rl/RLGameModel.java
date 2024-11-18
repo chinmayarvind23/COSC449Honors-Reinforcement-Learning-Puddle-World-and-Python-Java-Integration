@@ -9,8 +9,6 @@ public class RLGameModel {
     private double[] availableRewards;
     private boolean isTerminal;
     
-
-    // For testing purposes
     private double cumulativeReward;
     private int stepsThisEpisode;
     private int maxStepsPerEpisode = 50;
@@ -18,13 +16,23 @@ public class RLGameModel {
     private int totalEpisodes = 0;
     private int maxEpisodes = 10;
     private int successfulEpisodes = 0;
-
     public void setSuccessfulEpisodes(int successfulEpisodes) {
         this.successfulEpisodes = successfulEpisodes;
     }
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
     private double successRewardThreshold = 1.0;
+    
+    private double episodeReward = 0.0;
+    private double totalReward = 0.0;
+    private int currentEpisode = 0;
+    private boolean episodeComplete = false;
+
+    private RLGamePlayer gamePlayer;
+
+    public void setGamePlayer(RLGamePlayer player) {
+        this.gamePlayer = player;
+    }
 
     // Initialize game model with state, available actions, rewards, and final state check
     public RLGameModel() {
@@ -79,8 +87,10 @@ public class RLGameModel {
 
     // Resets cumulative reward and success boolean for next episode
     public void resetCumulativeReward() {
+        double oldReward = this.cumulativeReward;
         this.cumulativeReward = 0.0;
-        this.success = false;
+        this.stepsThisEpisode = 0;
+        System.out.println("Reset cumulative reward from " + oldReward + " to 0.0");
     }
 
     // Getters for all the attributes
@@ -101,7 +111,16 @@ public class RLGameModel {
     }
 
     public void addToCumulativeReward(double reward) {
-        this.cumulativeReward += reward;
+        if (!Double.isNaN(reward) && !Double.isInfinite(reward)) {
+            this.episodeReward += reward;
+            
+            System.out.println(String.format(
+                "Episode %d/%d - Step %d/%d - Reward: %.2f (Episode Total: %.2f)", 
+                currentEpisode, maxEpisodes,
+                stepsThisEpisode, maxStepsPerEpisode, 
+                reward, episodeReward
+            ));
+        }
     }
 
     // Check for terminal state
@@ -133,6 +152,9 @@ public class RLGameModel {
 
     public void incrementStepsThisEpisode() {
         this.stepsThisEpisode++;
+        if (this.stepsThisEpisode >= maxStepsPerEpisode && !episodeComplete) {
+            completeEpisode("Max steps reached");
+        }
     }
 
     public void resetStepsThisEpisode() {
@@ -158,5 +180,109 @@ public class RLGameModel {
                 ", cumulativeReward=" + cumulativeReward +
                 ", success=" + success +
                 '}';
+    }
+
+    public void resetForNewEpisode() {
+        this.stateId = 0;
+        this.episodeReward = 0.0;
+        this.stepsThisEpisode = 0;
+        this.isTerminal = false;
+        this.currentEpisode++;
+        this.episodeComplete = false;
+
+        System.out.println("\n=== Starting Episode " + currentEpisode + "/" + maxEpisodes + " ===");
+        System.out.println("Initial State: " + stateId);
+        System.out.println("Steps: 0/" + maxStepsPerEpisode);
+        System.out.println("Episode Reward: 0.0");
+        System.out.println("Total Reward: " + totalReward);
+        System.out.println("===========================\n");
+
+        if (gamePlayer != null) {
+            gamePlayer.requestInitialState();
+        }
+    }
+
+    public void resetEpisodeStats() {
+        this.totalEpisodes = 0;
+        this.successfulEpisodes = 0;
+        this.cumulativeReward = 0.0;
+        this.stepsThisEpisode = 0;
+        System.out.println("Reset all episode statistics");
+    }
+
+    private void completeEpisode(String reason) {
+        if (!episodeComplete) {
+            this.episodeComplete = true;
+            System.out.println("\n=== Episode " + currentEpisode + "/" + maxEpisodes + " Complete ===");
+            System.out.println("Reason: " + reason);
+            System.out.println("Steps Taken: " + stepsThisEpisode + "/" + maxStepsPerEpisode);
+            System.out.println("Episode Reward: " + episodeReward);
+            System.out.println("Total Reward: " + totalReward);
+            System.out.println("Successful Episodes: " + successfulEpisodes + "/" + currentEpisode);
+            System.out.println("================================\n");
+
+            if (currentEpisode < maxEpisodes) {
+                resetForNewEpisode();
+            } else {
+                System.out.println("\n=== Training Complete ===");
+                System.out.println("Total Episodes: " + currentEpisode);
+                System.out.println("Final Total Reward: " + totalReward);
+                System.out.println("Successful Episodes: " + successfulEpisodes);
+                System.out.println("======================\n");
+                
+                if (gamePlayer != null) {
+                    gamePlayer.sendTrainingCompleteMessage();
+                }
+            }
+        }
+    }
+
+    public void handleTerminalState(double finalReward, boolean success) {
+        if (!episodeComplete) {
+            this.addToCumulativeReward(finalReward);
+            if (success) {
+                this.successfulEpisodes++;
+            }
+            completeEpisode(success ? "Goal reached" : "Terminal state reached");
+        }
+    }
+
+    // Update getters and setters
+    public double getEpisodeReward() {
+        return episodeReward;
+    }
+
+    public double getTotalReward() {
+        return totalReward;
+    }
+
+    public int getCurrentEpisode() {
+        return currentEpisode;
+    }
+
+    public void resetAllStats() {
+        this.currentEpisode = 0;
+        this.successfulEpisodes = 0;
+        this.totalReward = 0.0;
+        this.episodeReward = 0.0;
+        this.stepsThisEpisode = 0;
+        this.episodeComplete = false;
+        System.out.println("Reset all statistics");
+        resetForNewEpisode();
+    }
+
+    public boolean isEpisodeComplete() {
+        return episodeComplete;
+    }
+
+    public boolean isTrainingComplete() {
+        return currentEpisode >= maxEpisodes;
+    }
+
+    public void handleStateError() {
+        if (gamePlayer != null) {
+            System.out.println("State error detected, requesting new initial state...");
+            gamePlayer.requestInitialState();
+        }
     }
 }

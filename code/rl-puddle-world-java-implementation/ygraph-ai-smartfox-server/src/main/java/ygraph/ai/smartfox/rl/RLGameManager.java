@@ -36,28 +36,27 @@ public class RLGameManager {
     public boolean addUser(User user) {
         String userName = user.getName().trim().toLowerCase();
         System.out.println("Adding User: " + userName + " with memory reference: " + System.identityHashCode(user));
-
+    
         if (userMap.containsKey(userName)) {
             System.out.println("Attempted to add user who already exists: " + userName);
             return false;
         }
-
+    
         RLWorld world = new RLWorld(user, alpha, gamma, epsilon);
         RLGameUser rlUser = new RLGameUser(user, world);
-        userMap.put(userName, rlUser);
-
+        RLGameUser existing = userMap.putIfAbsent(userName, rlUser);
+    
+        if (existing != null) {
+            System.out.println("User already exists after putIfAbsent: " + userName);
+            return false;
+        }
+    
         System.out.println("RLGameUser created for user: " + userName);
         System.out.println("User map contents after adding:");
         for (String name : userMap.keySet()) {
             System.out.println(" - " + name + " (equals agent1? " + name.equals("agent1") + ")");
         }
-
-        RLGameUser addedUser = userMap.get(userName);
-        if (addedUser == null) {
-            System.out.println("User addition failed unexpectedly: " + userName);
-            return false;
-        }
-
+    
         System.out.println("Current number of active users: " + userMap.size());
         return true;
     }    

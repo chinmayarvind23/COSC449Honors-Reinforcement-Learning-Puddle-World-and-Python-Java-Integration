@@ -14,7 +14,42 @@ public class RLGameUser {
     private double lastReward;
     private boolean isTerminal;
     private final int maxEpisodes = 10;
-    private final int maxStepsPerEpisode = 50; 
+    private int maxStepsPerEpisode = 50; 
+    public int getMaxEpisodes() {
+        return maxEpisodes;
+    }
+
+    public int getMaxStepsPerEpisode() {
+        return maxStepsPerEpisode;
+    }
+
+    public void setMaxStepsPerEpisode(int maxStepsPerEpisode) {
+        this.maxStepsPerEpisode = maxStepsPerEpisode;
+    }
+
+    public void setTotalEpisodes(int totalEpisodes) {
+        this.totalEpisodes = totalEpisodes;
+    }
+
+    public void setSuccessfulEpisodes(int successfulEpisodes) {
+        this.successfulEpisodes = successfulEpisodes;
+    }
+
+    public void setCumulativeReward(double cumulativeReward) {
+        this.cumulativeReward = cumulativeReward;
+    }
+
+    public void setStepsThisEpisode(int stepsThisEpisode) {
+        this.stepsThisEpisode = stepsThisEpisode;
+    }
+
+    public void setSuccessRewardThreshold(double successRewardThreshold) {
+        this.successRewardThreshold = successRewardThreshold;
+    }
+
+    public int getGridSize() {
+        return gridSize;
+    }
 
     private int totalEpisodes = 0;
     private int successfulEpisodes = 0;
