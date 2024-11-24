@@ -79,6 +79,7 @@ public class RLGameModel {
     }
 
     // Setting terminal state and success of the episode
+    // TODO: add a method that checks for final state correctly based on number of steps, prob stopping, and # of steps
     public void setTerminal(boolean isTerminal) {
         this.isTerminal = isTerminal;
         if (isTerminal) {
