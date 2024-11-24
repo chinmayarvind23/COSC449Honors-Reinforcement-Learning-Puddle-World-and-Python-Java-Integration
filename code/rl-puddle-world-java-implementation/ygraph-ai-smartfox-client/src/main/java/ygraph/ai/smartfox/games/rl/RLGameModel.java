@@ -11,9 +11,9 @@ public class RLGameModel {
     
     private double cumulativeReward;
     private int stepsThisEpisode;
-    private int maxStepsPerEpisode = 50;
+    private int maxStepsPerEpisode = 30;
     private boolean success;
-    private int totalEpisodes = 0;
+    private int totalEpisodes = 2;
     private int maxEpisodes = 10;
     private int successfulEpisodes = 0;
     public void setSuccessfulEpisodes(int successfulEpisodes) {
@@ -22,16 +22,16 @@ public class RLGameModel {
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
     private double successRewardThreshold = 1.0;
-    
+    private int gridSize = 5;
     private double episodeReward = 0.0;
     private double totalReward = 0.0;
     private int currentEpisode = 0;
     private boolean episodeComplete = false;
     private boolean trainingComplete = false;
-    private static final int MAX_EPISODES = 10;
-    private static final int MAX_STEPS = 50;
+    private static final int MAX_EPISODES = 2;
+    private static final int MAX_STEPS = 10;
     private boolean isGoalReached = false;
-    private static final int GOAL_STATE = 24;
+    private int GOAL_STATE = (gridSize * gridSize) - 1;
     private static final double GOAL_REWARD = 10.0;
 
     private RLGamePlayer gamePlayer;
@@ -212,7 +212,7 @@ public class RLGameModel {
             return;
         }
         
-        this.stateId = 0;
+        // this.stateId = 0;
         this.episodeReward = 0.0;
         this.stepsThisEpisode = 0;
         this.isTerminal = false;
@@ -221,7 +221,7 @@ public class RLGameModel {
         this.isGoalReached = false;
 
         System.out.println("\n=== Starting Episode " + (currentEpisode + 1) + "/" + MAX_EPISODES + " ===");
-        System.out.println("Initial State: " + stateId);
+        // System.out.println("Initial State: " + stateId);
         System.out.println("Steps: 0/" + MAX_STEPS);
         System.out.println("Episode Reward: 0.0");
         System.out.println("===========================\n");

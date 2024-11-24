@@ -31,7 +31,8 @@ public class RLWorld {
 
     private final int goalStateId = gridSize * gridSize - 1; //399 is the terminal state ID
 
-    // private int currentStateId;
+    @SuppressWarnings("unused")
+    private int currentStateId;
 
     private final Random random;
 
@@ -135,12 +136,12 @@ public class RLWorld {
 
     // Resets the RLWorld to the initial state with current state starting with state ID = 0 and initialize the puddles
     public void reset() {
-        // currentStateId = 0;
         initializePuddles();
         System.out.println("World reset. Current state set to 0.");
         for (int[] puddle : puddlePositions) {
             System.out.println("Puddle at row: " + puddle[0] + ", col: " + puddle[1]);
         }
+        this.currentStateId = 0;
     }
 
     // Sets Q-value for a given state-action pair for managing client updates to Q-table
@@ -272,7 +273,7 @@ public class RLWorld {
         }
     
         System.out.println("Moved to state ID: " + newStateId + " with Reward: " + reward);
-    
+        this.currentStateId = newStateId;
         return newStateId;
     }    
     

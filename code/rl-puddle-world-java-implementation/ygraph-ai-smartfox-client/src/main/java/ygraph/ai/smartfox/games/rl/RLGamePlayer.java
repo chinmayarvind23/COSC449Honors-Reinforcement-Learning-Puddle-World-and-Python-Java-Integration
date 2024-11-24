@@ -47,6 +47,8 @@ public class RLGamePlayer implements IEventListener {
 
     private boolean isAwaitingResponse = false;
     private final int gridSize = 5;
+    @SuppressWarnings("unused")
+    private boolean trainingComplete = false;
 
     // Learning Parameters: learning rate (prioritizes immediate over future rewards), discount factor (future rewards prioritized over immediate rewards), exploration rate (probability of choosing random action over best action given current knowledge of puddle world)
     // Set in server, so students don't need to worry about this
@@ -297,11 +299,9 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Received training complete message from server.");
         String message = params.getUtfString("message");
         System.out.println(message);
-    
+        this.trainingComplete = true;
         // Disconnect from the server
         disconnect();
-    
-        // Optionally, exit the program or stop the agent's loop
         System.exit(0);
     }
     
@@ -330,10 +330,7 @@ public class RLGamePlayer implements IEventListener {
         System.out.println(" - Steps Taken: " + stepsThisEpisode);
         System.out.println(" - Successful Episodes: " + successfulEpisodes);
         System.out.println(" - Total Episodes: " + totalEpisodes);
-
-        if (totalEpisodes % 100 == 0) {
-            sendGameInfoRequest();
-        }
+        sendGameInfoRequest();
     }    
 
     // Asks for the initial state of the game from the server through an extension request
@@ -351,12 +348,19 @@ public class RLGamePlayer implements IEventListener {
     private void processGameState(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
+        
+        if (msg.getStateId() < 0) {
+            System.err.println("Invalid stateId received. Requesting resynchronization.");
+            requestInitialState();
+            return;
+        }
+        
         this.gameModel.updateState(msg.getStateId());
-        System.out.println("Current State ID: " + msg.getStateId());
+        System.out.println("Updated Internal State ID to: " + this.gameModel.getStateId());
         System.out.println("Requesting available actions for state: " + msg.getStateId());
         isAwaitingResponse = false;
         requestAvailableActions(msg.getStateId());
-    }
+    }    
 
     // Asks for the available states from the current state through an extension request
     // Partially given to students
@@ -544,8 +548,8 @@ public class RLGamePlayer implements IEventListener {
         msg.fromSFSObject(params);
         String resetUserName = msg.userName;
         System.out.println("Environment reset for user: " + resetUserName);
-        // requestInitialState();
-        // System.out.println("Sent GAME_INFO request to fetch new state.");
+        requestInitialState();
+        System.out.println("Sent GAME_INFO request to fetch new state.");
     }
 
     // Method that decides the next action to be taken based on an epsilon-greedy policy
@@ -608,6 +612,21 @@ public class RLGamePlayer implements IEventListener {
         }
         return bestAction;
     }
+    
+    private String getActionString(int actionIndex) {
+        switch (actionIndex) {
+            case 0:
+                return "UP";
+            case 1:
+                return "DOWN";
+            case 2:
+                return "LEFT";
+            case 3:
+                return "RIGHT";
+            default:
+                return "UNKNOWN";
+        }
+    }    
 
     // Sends the action chosen by the RL agent to the server via the extension request
     // Given to students
@@ -625,7 +644,8 @@ public class RLGamePlayer implements IEventListener {
         ISFSObject params = actionMsg.toSFSObject();
         ExtensionRequest actionReq = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(actionReq);
-        System.out.println("Sent Action: " + action + " for State: " + stateId);
+        String actionStr = getActionString(action);
+        System.out.println("Sent Action: " + action + " (" + actionStr + ") for State: " + stateId);
     }
 
     // Sends Q-Table updates to the server

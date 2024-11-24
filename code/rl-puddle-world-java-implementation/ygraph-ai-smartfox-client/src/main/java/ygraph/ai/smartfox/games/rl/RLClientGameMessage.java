@@ -206,7 +206,7 @@ public class RLClientGameMessage {
                 break;
             case GAME_ERROR:
                 if (this.userName != null && !this.userName.isEmpty()) {
-                    params.putUtfString("error", this.userName);
+                    params.putUtfString("errorMessage", this.userName);
                 }
                 break;
             default:
@@ -221,9 +221,21 @@ public class RLClientGameMessage {
         this.messageType = params.getUtfString("messageType");
         this.userName = params.getUtfString("userName");
     
+        System.out.println("Parsing messageType: " + this.messageType);
+        System.out.println("All received keys: " + Arrays.toString(params.getKeys().toArray()));
+    
         switch (this.messageType) {
             case GAME_STATE_RESPONSE:
-                this.stateId = params.getInt("stateId");
+                if (params.containsKey("stateId")) {
+                    this.stateId = params.getInt("stateId");
+                    System.out.println("Parsed stateId: " + this.stateId);
+                } else if (params.containsKey("state_id")) {
+                    this.stateId = params.getInt("state_id");
+                    System.out.println("Parsed state_id: " + this.stateId);
+                } else {
+                    System.err.println("stateId not found in GAME_STATE_RESPONSE.");
+                    this.stateId = -1;
+                }
                 break;
             case GAME_AVAILABLE_ACTIONS_RESPONSE:
                 List<Integer> availableActionsList = (List<Integer>) params.getIntArray("availableActions");

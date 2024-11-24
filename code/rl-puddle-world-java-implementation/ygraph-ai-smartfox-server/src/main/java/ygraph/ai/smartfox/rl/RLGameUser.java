@@ -13,8 +13,8 @@ public class RLGameUser {
     private int currentStateId;
     private double lastReward;
     private boolean isTerminal;
-    private final int maxEpisodes = 10;
-    private int maxStepsPerEpisode = 50; 
+    private final int maxEpisodes = 2;
+    private int maxStepsPerEpisode = 10; 
     public int getMaxEpisodes() {
         return maxEpisodes;
     }

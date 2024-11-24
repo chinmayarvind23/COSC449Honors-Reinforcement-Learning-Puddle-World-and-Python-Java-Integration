@@ -770,7 +770,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     private void sendErrorMessage(User user, String message) {
         ISFSObject response = new SFSObject();
         response.putUtfString("messageType", RLGameMessage.GAME_ERROR);
-        response.putUtfString("error", message);
+        response.putUtfString("errorMessage", message);
         send("rl.error", response, user);
     }
 }
