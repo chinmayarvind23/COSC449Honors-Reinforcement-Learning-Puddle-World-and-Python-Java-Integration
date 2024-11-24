@@ -1,6 +1,7 @@
 package ygraph.ai.smartfox.rl;
 
 import com.smartfoxserver.v2.entities.User;
+import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
@@ -21,6 +22,14 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     public void handleClientRequest(User user, ISFSObject params) {
         if (params == null) {
             sendErrorMessage(user, "No parameters provided.");
+            return;
+        }
+
+        Room rlRoom = getParentExtension().getParentZone().getRoomByName("RLRoom");
+
+        // Check if the Room exists and if the user is joined in the Room
+        if (rlRoom == null || !user.isJoinedInRoom(rlRoom)) {
+            sendErrorMessage(user, "User is not in RLRoom.");
             return;
         }
     
@@ -577,8 +586,8 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
         // Validate the state ID
         if (stateId != rlUser.getCurrentStateId()) {
-            System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
-                + rlUser.getCurrentStateId() + ", Received: " + stateId);
+            // System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
+            //     + rlUser.getCurrentStateId() + ", Received: " + stateId);
             sendErrorMessage(user, "State ID mismatch.");
             return;
         }

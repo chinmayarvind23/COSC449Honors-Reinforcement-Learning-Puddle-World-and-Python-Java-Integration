@@ -532,7 +532,7 @@ public class RLGamePlayer implements IEventListener {
         // Print final training summary
         System.out.println("\n=== Final Training Summary ===");
         System.out.println("Total Episodes: " + this.gameModel.getTotalEpisodes());
-        System.out.println("Total Steps: " + this.gameModel.getStepsThisEpisode());
+        System.out.println("Total Steps: " + (this.gameModel.getStepsThisEpisode() * this.gameModel.getTotalEpisodes()));
         System.out.println("Successful Episodes: " + this.gameModel.getSuccessfulEpisodes());
         System.out.println("===========================\n");
         disconnect();

@@ -31,9 +31,9 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             case "join":
                 handleJoinRequest(sender, params);
                 break;
-            case "disconnect":
-                handleDisconnectRequest(sender, params);
-                break;
+            // case "disconnect":
+            //     handleDisconnectRequest(sender, params);
+            //     break;
             default:
                 System.out.println("Unknown message type received in RLMultiHandler: " + messageType);
                 sendErrorMessage(sender, "Unknown message type: " + messageType);
@@ -90,14 +90,14 @@ public class RLMultiHandler extends BaseClientRequestHandler {
     }            
 
     // Handles the disconnect command from the client by removing the user from their game and disconnecting them from the server by notifiying the game manager
-    private void handleDisconnectRequest(User user, ISFSObject params) {
-        System.out.println("User " + user.getName() + " requests to disconnect.");
-        if (gameManager != null) {
-            gameManager.removeUser(user);
-        }
-        getApi().logout(user);
-        System.out.println("User " + user.getName() + " has been disconnected.");
-    }
+    // private void handleDisconnectRequest(User user, ISFSObject params) {
+    //     System.out.println("User " + user.getName() + " requests to disconnect.");
+    //     if (gameManager != null) {
+    //         gameManager.removeUser(user);
+    //     }
+    //     getApi().logout(user);
+    //     System.out.println("User " + user.getName() + " has been disconnected.");
+    // }
 
     // Sends an error message to the user
     private void sendErrorMessage(User user, String message) {

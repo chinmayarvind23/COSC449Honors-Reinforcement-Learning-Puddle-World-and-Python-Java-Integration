@@ -33,7 +33,7 @@ public class RLGameManager {
 
     // Adds a user to an RL puddle world game by creating an RL world and binding the RLGameUser to it
     // Then inserting the pair into the hashmap
-    public boolean addUser(User user) {
+    public synchronized boolean addUser(User user) {
         String userName = user.getName().trim().toLowerCase();
         System.out.println("Adding User: " + userName + " with memory reference: " + System.identityHashCode(user));
     
@@ -67,7 +67,7 @@ public class RLGameManager {
     }
 
     // Removes a user from an RL puddle world game and cleans up the user removed
-    public boolean removeUser(User user) {
+    public synchronized boolean removeUser(User user) {
         String userName = user.getName().trim().toLowerCase();
         RLGameUser removedUser = userMap.remove(userName);
         if (removedUser != null) {
