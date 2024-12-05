@@ -44,6 +44,8 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <sfs.extensions.dir>/Applications/SmartFoxServer_2X/SFS2X/extensions/</sfs.extensions.dir>
+        <sfs.working.dir>/Applications/SmartFoxServer_2X/SFS2X/</sfs.working.dir>
     </properties>
     
     <build>
@@ -52,6 +54,50 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
             <version>2.22.2</version>
+        </plugin>
+            <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+                <execution>
+                    <id>copy-env-to-sfs-extensions</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${sfs.extensions.dir}</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>${project.basedir}</directory>
+                                <includes>
+                                    <include>.env</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                        <overwrite>true</overwrite>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>copy-env-to-sfs-working-dir</id>
+                    <phase>prepare-package</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${sfs.working.dir}</outputDirectory>
+                        <resources>
+                            <resource>
+                                <directory>${project.basedir}</directory>
+                                <includes>
+                                    <include>.env</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                        <overwrite>true</overwrite>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
     </plugins>
     <resources>

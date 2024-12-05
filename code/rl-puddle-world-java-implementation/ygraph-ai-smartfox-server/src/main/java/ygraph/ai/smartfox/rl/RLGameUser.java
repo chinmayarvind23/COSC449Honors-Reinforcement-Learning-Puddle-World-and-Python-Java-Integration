@@ -1,5 +1,10 @@
 package ygraph.ai.smartfox.rl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+
 import com.smartfoxserver.v2.entities.User;
 
 // This class represents a user within an RL game and holds their current state, final reward, and terminal state check
@@ -9,14 +14,37 @@ public class RLGameUser {
     private final User user;
     private final RLWorld world;
 
+    private static final HashMap<String, String> ENV = loadEnv();
+
     // Creating a state ID, a final reward, and a terminal state check
     private int currentStateId;
     private double lastReward;
     private boolean isTerminal;
-    private final int maxEpisodes = 2;
-    private int maxStepsPerEpisode = 10; 
+    private final int maxEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
+    private int maxStepsPerEpisode = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     public int getMaxEpisodes() {
         return maxEpisodes;
+    }
+
+    private static HashMap<String, String> loadEnv() {
+        HashMap<String, String> env = new HashMap<>();
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current Working Directory: " + workingDir);
+        try (BufferedReader br = new BufferedReader(new FileReader(".env"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    env.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read .env file: " + e.getMessage());
+        }
+        return env;
     }
 
     public int getMaxStepsPerEpisode() {

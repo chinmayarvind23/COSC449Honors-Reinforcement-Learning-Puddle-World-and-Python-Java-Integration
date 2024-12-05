@@ -2,6 +2,10 @@ package ygraph.ai.smartfox.rl;
 
 import com.smartfoxserver.v2.entities.User;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 // import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,7 +14,7 @@ import java.util.stream.Collectors;
 
 // This class takes RLGameUser instances and binds them with RLWorld intances allowing for concurrent access
 public class RLGameManager {
-
+    private static final HashMap<String, String> ENV = loadEnv();
     // Thread-safe map to store username and their corresponding RLGameUser
     private final ConcurrentMap<String, RLGameUser> userMap = new ConcurrentHashMap<>();
     private double alpha;
@@ -19,16 +23,37 @@ public class RLGameManager {
 
     // RLGameManager constructor that initializes a concurrent hashmap to store the user and their corresponding world instances distinctly from other users' instances
     public RLGameManager() {
-        this.alpha = 0.1;
-        this.gamma = 0.9;
-        this.epsilon = 1.0;
+        this.alpha = Double.parseDouble(ENV.getOrDefault("ALPHA", "0.1"));
+        this.gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
+        this.epsilon = Double.parseDouble(ENV.getOrDefault("EPSILON", "1"));
     }
 
     public RLGameManager(double alpha, double gamma, double epsilon) {
-        this.alpha = alpha;
-        this.gamma = gamma;
-        this.epsilon = epsilon;
+        this.alpha = Double.parseDouble(ENV.getOrDefault("ALPHA", "0.1"));
+        this.gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
+        this.epsilon = Double.parseDouble(ENV.getOrDefault("EPSILON", "1"));
         System.out.println("RLGameManager instantiated. Instance ID: " + System.identityHashCode(this));
+    }
+
+    private static HashMap<String, String> loadEnv() {
+        HashMap<String, String> env = new HashMap<>();
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current Working Directory: " + workingDir);
+        try (BufferedReader br = new BufferedReader(new FileReader(".env"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    env.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read .env file: " + e.getMessage());
+        }
+        return env;
     }
 
     // Adds a user to an RL puddle world game by creating an RL world and binding the RLGameUser to it

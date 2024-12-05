@@ -1,7 +1,11 @@
 package ygraph.ai.smartfox.rl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 // import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,15 +20,16 @@ import com.smartfoxserver.v2.entities.User;
 public class RLWorld {
     private final Map<Integer, double[]> qTable = new ConcurrentHashMap<>();
     private final Map<Integer, Double> vTable = new ConcurrentHashMap<>();
+    private static final HashMap<String, String> ENV = loadEnv();
 
     // Learning parameters: learning rate, discount factor, and exploration rate
     // private double alpha = 0.1;
     // private double gamma = 0.9;
-    private double epsilon = 1;
+    private double epsilon;
 
-    private final int gridSize = 5;
-    private final int maxPuddles = 2;
-    private final int puddleSize = 2;
+    private final int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
+    private final int maxPuddles;
+    private final int puddleSize;
 
     // List of puddle top-left positions to stretch by 2x2 squares for the puddles
     private final List<int[]> puddlePositions;
@@ -37,9 +42,9 @@ public class RLWorld {
     private final Random random;
 
     // Rewards for each state
-    private final double defaultReward = -0.01;
-    private final double puddleReward = -1.0;
-    private final double goalReward = 10.0;
+    private final double defaultReward;
+    private final double puddleReward;
+    private final double goalReward;
 
     // Possible actions are up, down, left, and right
     private final String[] actions = {"UP", "DOWN", "LEFT", "RIGHT"};
@@ -50,7 +55,12 @@ public class RLWorld {
     // Constructor for RLWorld that initializes the puddle locations, Q and V tables, and resets the environment
     public RLWorld() {
         random = new Random();
-        // this.currentStateId = 0;
+        this.maxPuddles = Integer.parseInt(ENV.getOrDefault("MAX_PUDDLES", "2"));
+        this.puddleSize = Integer.parseInt(ENV.getOrDefault("PUDDLE_SIZE", "2"));
+        this.epsilon = Double.parseDouble(ENV.getOrDefault("EPSILON", "1"));
+        this.defaultReward = Double.parseDouble(ENV.getOrDefault("DEFAULT_REWARD", "-0.01"));
+        this.puddleReward = Double.parseDouble(ENV.getOrDefault("PUDDLE_REWARD", "-1.0"));
+        this.goalReward = Double.parseDouble(ENV.getOrDefault("GOAL_REWARD", "10.0"));
         puddlePositions = new ArrayList<>();
         initializeQTable();
         initializeVTable();
@@ -60,9 +70,13 @@ public class RLWorld {
 
     // Constructor for RLWorld that sets the user, and the learning parameters from defined values, as well as initializing the puddle locations, Q and V tables, and resetting the environment
     public RLWorld(User user, double alpha, double gamma, double epsilon) {
-        // this.alpha = alpha;
-        // this.gamma = gamma;
         this.epsilon = epsilon;
+        this.maxPuddles = Integer.parseInt(ENV.getOrDefault("MAX_PUDDLES", "2"));
+        this.puddleSize = Integer.parseInt(ENV.getOrDefault("PUDDLE_SIZE", "2"));
+        this.epsilon = Double.parseDouble(ENV.getOrDefault("EPSILON", "1"));
+        this.defaultReward = Double.parseDouble(ENV.getOrDefault("DEFAULT_REWARD", "-0.01"));
+        this.puddleReward = Double.parseDouble(ENV.getOrDefault("PUDDLE_REWARD", "-1.0"));
+        this.goalReward = Double.parseDouble(ENV.getOrDefault("GOAL_REWARD", "10.0"));
         this.random = new Random();
         this.puddlePositions = new ArrayList<>();
         initializeQTable();
@@ -70,6 +84,27 @@ public class RLWorld {
         initializePuddles();
         reset();
         System.out.println("RLWorld initialized with actions: " + String.join(", ", actions));
+    }
+
+    private static HashMap<String, String> loadEnv() {
+        HashMap<String, String> env = new HashMap<>();
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current Working Directory: " + workingDir);
+        try (BufferedReader br = new BufferedReader(new FileReader(".env"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    env.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read .env file: " + e.getMessage());
+        }
+        return env;
     }
 
     // Initializes the master Q-table with random values for each state-action pair

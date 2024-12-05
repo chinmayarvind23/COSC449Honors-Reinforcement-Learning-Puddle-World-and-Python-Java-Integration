@@ -1,6 +1,10 @@
 package ygraph.ai.smartfox.games.rl;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 // This class holds the game's state specific to RL puddle world parameters like: state, available actions, rewards and the final state check.
 public class RLGameModel {
@@ -8,12 +12,12 @@ public class RLGameModel {
     private int[] availableActions;
     private double[] availableRewards;
     private boolean isTerminal;
-    
+    private static final HashMap<String, String> ENV = loadEnv();
     private double cumulativeReward;
     private int stepsThisEpisode;
-    private int maxStepsPerEpisode = 30;
+    private int maxStepsPerEpisode = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean success;
-    private int totalEpisodes = 2;
+    private int totalEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
     private int maxEpisodes = 10;
     private int successfulEpisodes = 0;
     public void setSuccessfulEpisodes(int successfulEpisodes) {
@@ -21,18 +25,18 @@ public class RLGameModel {
     }
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
-    private double successRewardThreshold = 1.0;
+    private double successRewardThreshold = Double.parseDouble(ENV.getOrDefault("SUCCESS_REWARD_THRESHOLD", "1.0"));;
     private int gridSize = 5;
     private double episodeReward = 0.0;
     private double totalReward = 0.0;
     private int currentEpisode = 0;
     private boolean episodeComplete = false;
     private boolean trainingComplete = false;
-    private static final int MAX_EPISODES = 2;
-    private static final int MAX_STEPS = 10;
+    private static final int MAX_EPISODES = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
+    private static final int MAX_STEPS = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean isGoalReached = false;
     private int GOAL_STATE = (gridSize * gridSize) - 1;
-    private static final double GOAL_REWARD = 10.0;
+    private static final double GOAL_REWARD = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));;
 
     private RLGamePlayer gamePlayer;
 
@@ -48,6 +52,27 @@ public class RLGameModel {
         this.isTerminal = false;
         this.cumulativeReward = 0.0;
         this.success = false;
+    }
+
+    private static HashMap<String, String> loadEnv() {
+        HashMap<String, String> env = new HashMap<>();
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current Working Directory: " + workingDir);
+        try (BufferedReader br = new BufferedReader(new FileReader(".env"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    env.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read .env file: " + e.getMessage());
+        }
+        return env;
     }
 
     // Update methods for all the attributes
