@@ -6,15 +6,41 @@ import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 // This class handles RL-specific client-side requests like making actions and resets of a game
 public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     private RLGameManager gameManager;
+    private static final HashMap<String, String> ENV = loadEnv();
     
     public RLGameRequestHandler(RLGameManager gameManager) {
         this.gameManager = gameManager;
+    }
+
+     private static HashMap<String, String> loadEnv() {
+        HashMap<String, String> env = new HashMap<>();
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current Working Directory: " + workingDir);
+        try (BufferedReader br = new BufferedReader(new FileReader(".env"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    env.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read .env file: " + e.getMessage());
+        }
+        return env;
     }
 
     // Handles various client requests like state, action, reset, available actions, available rewards, reward of action chosen, and final state
@@ -435,7 +461,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
     // Helper method to validate stateId and action index
     private boolean isValidStateAction(int stateId, int action, RLWorld world) {
-        final int gridSize = 5;
+        final int gridSize =  Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
         if (stateId < 0 || stateId >= gridSize * gridSize) {
             return false;
         }
@@ -489,7 +515,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
     // Helper method to validate stateId
     private boolean isValidState(int stateId, RLWorld world) {
-        final int gridSize = 5;
+        final int gridSize =  Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
         return stateId >= 0 && stateId < gridSize * gridSize;
     }    
     

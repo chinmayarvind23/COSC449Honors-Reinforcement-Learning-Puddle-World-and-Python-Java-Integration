@@ -87,8 +87,8 @@ public class RLGameUser {
     // Thresholds for evaluation
     private double successRewardThreshold = 1.0;
 
-    // Grid size (assuming a 5x5 grid)
-    private final int gridSize = 5;
+    // Grid size
+    private final int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
 
     // Constructor that associates a User object with an RL world and starts the game
     public RLGameUser(User user, RLWorld world) {

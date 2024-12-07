@@ -14,6 +14,10 @@ import sfs2x.client.requests.ExtensionRequest;
 import sfs2x.client.requests.LoginRequest;
 import sfs2x.client.requests.LogoutRequest;
 import com.smartfoxserver.v2.exceptions.SFSException;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +37,8 @@ public class RLGamePlayer implements IEventListener {
     private String zoneName;
     private String roomName;
 
+    private static final HashMap<String, String> ENV = loadEnv();
+
     // Creating a smartfox instance to connect to the server
     private SmartFox smartFox;
 
@@ -46,7 +52,7 @@ public class RLGamePlayer implements IEventListener {
     private Map<Integer, Double> vTable;
 
     private boolean isAwaitingResponse = false;
-    private final int gridSize = 5;
+    private final int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
     @SuppressWarnings("unused")
     private boolean trainingComplete = false;
 
@@ -84,6 +90,27 @@ public class RLGamePlayer implements IEventListener {
 
         // Connects to the server
         this.smartFox.connect(this.serverIP, this.serverPort);
+    }
+
+    private static HashMap<String, String> loadEnv() {
+        HashMap<String, String> env = new HashMap<>();
+        String workingDir = System.getProperty("user.dir");
+        System.out.println("Current Working Directory: " + workingDir);
+        try (BufferedReader br = new BufferedReader(new FileReader(".env"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                // Skip empty lines and comments
+                if (line.isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length == 2) {
+                    env.put(parts[0].trim(), parts[1].trim());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Failed to read .env file: " + e.getMessage());
+        }
+        return env;
     }
 
     // Q-table initialization with random values
@@ -461,13 +488,17 @@ public class RLGamePlayer implements IEventListener {
         
         isAwaitingResponse = false;
 
-        // Continue if not complete
-        if (!this.gameModel.isTrainingComplete()) {
+        // **Check if the episode is complete before requesting further actions**
+        if (!this.gameModel.isEpisodeComplete() && !this.gameModel.isTrainingComplete()) {
             requestAvailableActions(nextStateId);
         } else {
-            sendTrainingCompleteMessage();
+            // Do not request actions, episode is complete
+            if (this.gameModel.isTrainingComplete()) {
+                sendTrainingCompleteMessage();
+            }
         }
     }
+
 
     private void updateEpsilon() {
         if (epsilon > 0.01) {

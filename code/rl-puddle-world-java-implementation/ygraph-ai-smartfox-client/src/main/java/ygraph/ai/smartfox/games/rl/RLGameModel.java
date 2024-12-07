@@ -25,8 +25,8 @@ public class RLGameModel {
     }
 
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
-    private double successRewardThreshold = Double.parseDouble(ENV.getOrDefault("SUCCESS_REWARD_THRESHOLD", "1.0"));;
-    private int gridSize = 5;
+    private double successRewardThreshold = Double.parseDouble(ENV.getOrDefault("SUCCESS_REWARD_THRESHOLD", "1.0"));
+    private int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
     private double episodeReward = 0.0;
     private double totalReward = 0.0;
     private int currentEpisode = 0;
@@ -36,7 +36,7 @@ public class RLGameModel {
     private static final int MAX_STEPS = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean isGoalReached = false;
     private int GOAL_STATE = (gridSize * gridSize) - 1;
-    private static final double GOAL_REWARD = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));;
+    private static final double GOAL_REWARD = Double.parseDouble(ENV.getOrDefault("GOAL_REWARD", "10.0"));;
 
     private RLGamePlayer gamePlayer;
 

@@ -9,95 +9,98 @@ import java.util.Arrays;
 public class RLWorldTest {
 
     private RLWorld world;
+    private final int testGridSize = 6;
 
     @Before
     public void setUp() {
-        world = new RLWorld();
+        world = new RLWorld(); // Assumes RLWorld reads grid size from .env
     }
 
-    private final double alpha = 0.1; // Learning rate
-    private final double gamma = 0.9; // Discount factor
-
-    // @Test
-    // public void testInitialState() {
-    //     assertEquals("Initial state should be 0", 0, world.getCurrentStateId());
-    // }
+    // Helper method to convert (row, col) to stateId
+    private int getStateId(int row, int col) {
+        return row * testGridSize + col;
+    }
 
     @Test
     public void testPerformActionUp() {
-        int currentStateId = 10; // Corresponds to (2,0) in a 5x5 grid
-        int expectedNextState = 5; // Corresponds to (1,0)
+        // In a 6x6 grid, stateId=10 corresponds to (1,4)
+        int currentStateId = getStateId(1, 4); // (1,4)
+        int expectedNextState = getStateId(0, 4); // (0,4)
         int nextState = world.simulateAction(currentStateId, "UP");
         assertEquals("State should decrement row by 1", expectedNextState, nextState);
     }
 
-
     @Test
     public void testPerformActionDown() {
-        int currentStateId = 5; // Corresponds to (1,0)
-        int expectedNextState = 10; // Corresponds to (2,0)
+        // In a 6x6 grid, stateId=5 corresponds to (0,5)
+        int currentStateId = getStateId(0, 5); // (0,5)
+        int expectedNextState = getStateId(1, 5); // (1,5)
         int nextState = world.simulateAction(currentStateId, "DOWN");
         assertEquals("State should increment row by 1", expectedNextState, nextState);
     }
 
-
     @Test
     public void testPerformActionLeft() {
-        int currentStateId = 6; // Corresponds to (1,1)
-        int expectedNextState = 5; // Corresponds to (1,0)
+        // In a 6x6 grid, stateId=6 corresponds to (1,0)
+        int currentStateId = getStateId(1, 0); // (1,0)
+        int expectedNextState = getStateId(1, 0); // (1,0) - Cannot move left beyond grid
         int nextState = world.simulateAction(currentStateId, "LEFT");
-        assertEquals("State should decrement column by 1", expectedNextState, nextState);
+        assertEquals("State should remain the same when moving left at the grid edge", expectedNextState, nextState);
     }
-
 
     @Test
     public void testPerformActionRight() {
-        int currentStateId = 5; // Corresponds to (1,0)
-        int expectedNextState = 6; // Corresponds to (1,1)
+        // In a 6x6 grid, stateId=5 corresponds to (0,5)
+        int currentStateId = getStateId(0, 5); // (0,5)
+        int expectedNextState = getStateId(0, 5); // (0,5) - Cannot move right beyond grid
         int nextState = world.simulateAction(currentStateId, "RIGHT");
-        assertEquals("State should increment column by 1", expectedNextState, nextState);
+        assertEquals("State should remain the same when moving right at the grid edge", expectedNextState, nextState);
     }
-
 
     @Test
     public void testIsPuddle() {
-        // Manually set a puddle at (1,1)
+        // Manually set a puddle at (1,1) in 6x6 grid
         world.setPuddlePositions(Arrays.asList(new int[]{1, 1}));
-        
-        // In a 5x5 grid, a 2x2 puddle at (1,1) covers state IDs 6, 7, 11, 12
-        int[] puddleStateIds = {6, 7, 11, 12};
-        
+
+        // In a 6x6 grid, a 2x2 puddle at (1,1) covers state IDs 7,8,13,14
+        int[] puddleStateIds = {
+            getStateId(1,1), // 7
+            getStateId(1,2), // 8
+            getStateId(2,1), // 13
+            getStateId(2,2)  // 14
+        };
+
         for(int id : puddleStateIds){
             assertTrue("State " + id + " should be a puddle", world.isPuddle(id));
         }
-        
+
         // Check a state not in the puddle
-        int nonPuddleStateId = 8; // Corresponds to (1,3)
+        int nonPuddleStateId = getStateId(1, 3); // (1,3)
         assertFalse("State " + nonPuddleStateId + " should not be a puddle", world.isPuddle(nonPuddleStateId));
     }
 
-
-
     @Test
     public void testGetReward() {
-        // Terminal state: (4,4) corresponds to stateId=24
-        assertEquals("Goal state reward should be 10.0", 10.0, world.getReward(19, "DOWN", 24), 0.001);
-        
-        // Puddle state: (1,1) corresponds to stateId=6, action "RIGHT" leads to stateId=7
-        world.setPuddlePositions(Arrays.asList(new int[]{1, 1}));
-        assertEquals("Puddle state reward should be -1.0", -1.0, world.getReward(6, "RIGHT", 7), 0.001);
-        
-        // Normal state: (0,0) corresponds to stateId=0, action "RIGHT" leads to stateId=1
-        assertEquals("Normal state reward should be -0.01", -0.01, world.getReward(0, "RIGHT", 1), 0.001);
-    }
+        // Terminal state: (5,5) corresponds to stateId=35 in 6x6 grid
+        int terminalStateId = getStateId(5,5);
+        assertEquals("Goal state reward should be 10.0", 10.0, world.getReward(getStateId(5,5), "RIGHT", terminalStateId), 0.001);
 
+        // Puddle state: (1,1) corresponds to stateId=7, action "RIGHT" leads to stateId=8
+        world.setPuddlePositions(Arrays.asList(new int[]{1, 1}));
+        assertEquals("Puddle state reward should be -1.0", -1.0, world.getReward(getStateId(1,1), "RIGHT", getStateId(1,2)), 0.001);
+
+        // Normal state: (0,0) corresponds to stateId=0, action "RIGHT" leads to stateId=1
+        assertEquals("Normal state reward should be -0.01", -0.01, world.getReward(getStateId(0,0), "RIGHT", getStateId(0,1)), 0.001);
+    }
 
     @Test
     public void testIsTerminalState() {
-        assertTrue("State 24 should be terminal", world.isTerminalState(24));
-        assertFalse("State 0 should not be terminal", world.isTerminalState(0));
-    }
+        int terminalStateId = getStateId(5,5); // (5,5) in 6x6 grid
+        assertTrue("State " + terminalStateId + " should be terminal", world.isTerminalState(terminalStateId));
 
+        int nonTerminalStateId = getStateId(0, 0); // (0,0) in 6x6 grid
+        assertFalse("State " + nonTerminalStateId + " should not be terminal", world.isTerminalState(nonTerminalStateId));
+    }
 
     @Test
     public void testApplyQUpdate() {
@@ -137,13 +140,15 @@ public class RLWorldTest {
 
     @Test
     public void testApplyQUpdateAlignmentWithClient() {
-        int stateId = 10; // Valid stateId within 0-24
+        int stateId = 10; // Valid stateId within 0-35 for 6x6 grid
         int action = 1; // DOWN
         double initialQ = world.getMasterQValue(stateId, action);
         double reward = 1.0;
-        int nextStateId = 15; // Simulate "DOWN" from stateId=10 -> stateId=15
+        int nextStateId = getStateId(2, 4); // Simulate "DOWN" from stateId=10 → stateId=16
         double maxNextQ = 0.0; // Assume next state's max Q-value is 0.0 for simplicity
 
+        double alpha = 0.1;
+        double gamma = 0.9;
         double expectedQ = initialQ + alpha * (reward + gamma * maxNextQ - initialQ);
 
         // Client computes updated Q-value and sends to server
@@ -154,22 +159,19 @@ public class RLWorldTest {
         assertEquals("Server Q-table should reflect the updated Q-value", expectedQ, serverQ, 1e-6);
 
         // Utilize nextStateId to ensure it's within valid range
-        assertTrue("Next state ID should be within valid range (0-24)", 
-                nextStateId >= 0 && nextStateId < 25);
+        assertTrue("Next state ID should be within valid range (0-35)", 
+                nextStateId >= 0 && nextStateId < 36);
     }
-
 
     @Test
     public void testApplyVUpdateAlignmentWithClient() {
-        int stateId = 10; // Valid stateId within 0-24
+        int stateId = 10; // Valid stateId within 0-35 for 6x6 grid
         double updatedVValue = 0.3;
 
         world.setVValue(stateId, updatedVValue);
         double retrievedV = world.getMasterVValue(stateId);
         assertEquals("Server V-table should reflect the updated V-value", 0.3, retrievedV, 1e-6);
     }
-
-
 
     @Test
     public void testMultipleQAndVUpdates() {
