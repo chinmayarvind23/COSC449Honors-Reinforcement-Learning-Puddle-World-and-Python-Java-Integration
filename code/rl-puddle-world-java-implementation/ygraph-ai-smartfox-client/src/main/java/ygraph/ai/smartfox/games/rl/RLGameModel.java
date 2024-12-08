@@ -30,6 +30,7 @@ public class RLGameModel {
     private double episodeReward = 0.0;
     private double totalReward = 0.0;
     private int currentEpisode = 0;
+    private int totalSteps = 0;
     private boolean episodeComplete = false;
     private boolean trainingComplete = false;
     private static final int MAX_EPISODES = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
@@ -345,5 +346,13 @@ public class RLGameModel {
 
     public boolean isGoalReached() {
         return isGoalReached;
+    }
+
+    public void addTotalSteps(int steps) {
+        this.totalSteps += steps;
+    }
+
+    public int getTotalSteps() {
+        return this.totalSteps;
     }
 }

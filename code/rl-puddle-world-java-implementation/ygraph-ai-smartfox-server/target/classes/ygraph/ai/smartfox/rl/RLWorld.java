@@ -36,7 +36,6 @@ public class RLWorld {
 
     private final int goalStateId = gridSize * gridSize - 1; //399 is the terminal state ID
 
-    @SuppressWarnings("unused")
     private int currentStateId;
 
     private final Random random;
@@ -66,6 +65,7 @@ public class RLWorld {
         initializeVTable();
         initializePuddles();
         reset();
+        System.out.println("RLWorld initialized with defaultReward: " + this.defaultReward);
     }
 
     // Constructor for RLWorld that sets the user, and the learning parameters from defined values, as well as initializing the puddle locations, Q and V tables, and resetting the environment
@@ -296,6 +296,10 @@ public class RLWorld {
         } else if (isPuddle(newStateId)) {
             reward = puddleReward; // Penalty for entering a puddle
         }
+
+        // Debugging Logs
+        System.out.println("moveAgentWithAction: stateId=" + stateId + ", action=" + action + " (" + actionStr + ")");
+        System.out.println("Action '" + actionStr + "' from (" + row + ", " + col + ") leads to newStateId=" + newStateId + " with reward=" + reward);
     
         // Update lastReward
         setLastReward(reward);
@@ -371,7 +375,11 @@ public class RLWorld {
         }
         
         System.out.println("Moved to state ID: " + newStateId + " (Row: " + row + ", Col: " + col + ") with Reward: " + reward);
-        
+        // Debugging Logs
+        System.out.println("moveAgentWithAction: stateId=" + stateId + ", action=" + actionStr + " (" + actionStr + ")");
+        System.out.println("Action '" + actionStr + "' from (" + row + ", " + col + ") leads to newStateId=" + newStateId + " with reward=" + reward);
+        System.out.println("Moved to state ID: " + newStateId + " with Reward: " + reward);
+        this.currentStateId = newStateId;
         return stateId;
     }
 
@@ -530,9 +538,9 @@ public class RLWorld {
     // }
 
     // Gets the current state ID of the agent
-    // public int getCurrentStateId() {
-    //     return currentStateId;
-    // }
+    public int getCurrentStateId() {
+        return currentStateId;
+    }
 
     // Resets the world to its initial state, clears puddle positions
     public void cleanup() {

@@ -630,6 +630,15 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         // Retrieve updated state and reward
         int updatedStateId = rlUser.getCurrentStateId();
         double reward = rlUser.getLastReward();
+
+        // Send GAME_ACTION_REWARD_RESPONSE
+        ISFSObject actionRewardResponse = new SFSObject();
+        actionRewardResponse.putUtfString("messageType", RLGameMessage.GAME_ACTION_REWARD_RESPONSE);
+        actionRewardResponse.putInt("action", action);
+        actionRewardResponse.putDouble("reward", reward);
+        actionRewardResponse.putInt("nextStateId", updatedStateId);
+        send("rl.action", actionRewardResponse, user);
+        System.out.println("Sent GAME_ACTION_REWARD_RESPONSE with action: " + action + ", reward: " + reward + ", nextStateId: " + updatedStateId);
     
         // Check if the episode has ended
         if (rlUser.isTerminal() || rlUser.getStepsThisEpisode() >= rlUser.getMaxStepsPerEpisode()) {
@@ -656,16 +665,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 // Start a new episode by sending initial state and available actions/rewards
                 sendInitialState(user, rlUser);
             }
-        } else {
-            // Send GAME_ACTION_REWARD_RESPONSE
-            ISFSObject actionRewardResponse = new SFSObject();
-            actionRewardResponse.putUtfString("messageType", RLGameMessage.GAME_ACTION_REWARD_RESPONSE);
-            actionRewardResponse.putInt("action", action);
-            actionRewardResponse.putDouble("reward", reward);
-            actionRewardResponse.putInt("nextStateId", updatedStateId);
-            send("rl.action", actionRewardResponse, user);
-            System.out.println("Sent GAME_ACTION_REWARD_RESPONSE with action: " + action + ", reward: " + reward + ", nextStateId: " + updatedStateId);
-    
+        } else {    
             // Send GAME_AVAILABLE_ACTIONS_RESPONSE
             String[] availableActions = rlUser.getWorld().getAvailableActions(updatedStateId);
             int[] actionIndices = new int[availableActions.length];

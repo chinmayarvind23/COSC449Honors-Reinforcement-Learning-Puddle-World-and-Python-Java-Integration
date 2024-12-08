@@ -141,7 +141,7 @@ public class RLGameUser {
         // Validate current position
         if (!isValidPosition(row, col)) {
             System.err.println("Invalid current position: (" + row + ", " + col + ") for user: " + user.getName());
-            concludeEpisode();
+            //concludeEpisode();
             return;
         }
     
@@ -166,7 +166,7 @@ public class RLGameUser {
         // Validate new position
         if (!isValidPosition(newRow, newCol)) {
             System.err.println("Invalid new position: (" + newRow + ", " + newCol + ") for user: " + user.getName());
-            concludeEpisode();
+            //concludeEpisode();
             return;
         }
     
@@ -174,11 +174,11 @@ public class RLGameUser {
         if (world.isTerminalState(currentStateId)) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " has reached the terminal state: " + currentStateId);
-            concludeEpisode();
+            //concludeEpisode();
         } else if (stepsThisEpisode >= maxStepsPerEpisode) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " reached maximum steps per episode.");
-            concludeEpisode();
+            //concludeEpisode();
         }
         
         // Log the state transition and reward
@@ -232,9 +232,13 @@ public class RLGameUser {
         }
 
         // Reset episode-specific variables
-        stepsThisEpisode = 0;
-        cumulativeReward = 0.0;
-        isTerminal = false;
+        this.stepsThisEpisode = 0;
+        this.cumulativeReward = 0.0;
+        this.isTerminal = false;
+
+        // Reset the world state
+        this.world.reset();
+        System.out.println("Episode concluded for user: " + user.getName());
     }
 
     // Gets the ID of the current state the RL agent is in
