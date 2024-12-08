@@ -352,7 +352,7 @@ public class RLGamePlayer implements IEventListener {
         int totalEpisodes = msg.getTotalEpisodes();
         int successfulEpisodes = msg.getSuccessfulEpisodes();
     
-        System.out.println("Episode " + totalEpisodes + " Summary:");
+        System.out.println("Episode" + totalEpisodes + " Summary:");
         System.out.println(" - Cumulative Reward: " + cumulativeReward);
         System.out.println(" - Steps Taken: " + stepsThisEpisode);
         System.out.println(" - Successful Episodes: " + successfulEpisodes);
@@ -437,6 +437,25 @@ public class RLGamePlayer implements IEventListener {
         msg.fromSFSObject(params);
         this.gameModel.updateAvailableRewards(msg.getAvailableRewards());
         System.out.println("Available Rewards: " + Arrays.toString(msg.getAvailableRewards()));
+    }
+
+    public void sendFinalStateMessage() {
+        boolean isTerminal = this.gameModel.isTerminal();
+        double cumulativeReward = this.gameModel.getCumulativeReward();
+        int stepsThisEpisode = this.gameModel.getStepsThisEpisode();
+    
+        // Create the final state message
+        RLClientGameMessage finalStateMsg = new RLClientGameMessage(isTerminal, cumulativeReward, stepsThisEpisode);
+        finalStateMsg.setUserName(this.userName);
+    
+        // Convert to ISFSObject
+        ISFSObject params = finalStateMsg.toSFSObject();
+    
+        // Create and send the extension request
+        ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
+        smartFox.send(req);
+    
+        System.out.println("Sent GAME_FINAL_STATE message to the server.");
     }
 
     // Processes the GAME_ACTION_REWARD message from the server by getting the reward, the next state, the action taken
@@ -531,11 +550,12 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.setSuccessfulEpisodes(successfulEpisodes);
     
         // Log episode summary
-        System.out.println("=== End of Episode "  + " Summary ===");
+        System.out.println("\n");
+        System.out.println("=== End of Episode" + " Summary ===");
         System.out.println("Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
-        System.out.println("Cumulative Reward: " + cumulativeReward);
-        System.out.println("Successful Episodes: " + successfulEpisodes + "/" + totalEpisodes);
-        System.out.println("===============================================");
+        System.out.println("Episode Reward: " + cumulativeReward);
+        System.out.println("Successful Episodes: " + successfulEpisodes + "/" + (totalEpisodes + 1));
+        System.out.println("===============================================\n");
     
         // Reset episode-specific variables for the next episode
         this.gameModel.resetCumulativeReward();

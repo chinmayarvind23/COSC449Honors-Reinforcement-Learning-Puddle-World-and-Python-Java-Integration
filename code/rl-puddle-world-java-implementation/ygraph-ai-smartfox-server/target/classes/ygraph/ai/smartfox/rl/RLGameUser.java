@@ -217,12 +217,12 @@ public class RLGameUser {
                 successfulEpisodes++;
                 System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
             }
-    
+            
             System.out.println("End of Episode Summary:");
             System.out.println(" - Total Episodes: " + totalEpisodes);
             System.out.println(" - Successful Episodes: " + successfulEpisodes);
             System.out.println(" - Steps Taken: " + stepsThisEpisode);
-            System.out.println(" - Cumulative Reward: " + cumulativeReward);
+            System.out.println(" - Episode Reward: " + cumulativeReward);
     
             // Check if the maximum number of episodes has been reached
             if (isTrainingComplete()) {

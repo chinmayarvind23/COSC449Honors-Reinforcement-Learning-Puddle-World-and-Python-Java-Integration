@@ -87,7 +87,7 @@ public class RLGameModel {
         if (newStateId == GOAL_STATE) {
             System.out.println("\n!!! GOAL STATE REACHED !!!");
             this.isGoalReached = true;
-            this.successfulEpisodes++;
+            //this.successfulEpisodes++;
             completeEpisode("Goal state reached!");
         }
     }
@@ -155,8 +155,8 @@ public class RLGameModel {
 
     public void addToCumulativeReward(double reward) {
         if (!Double.isNaN(reward) && !Double.isInfinite(reward)) {
+            this.cumulativeReward += reward;
             this.episodeReward += reward;
-            
             System.out.println(String.format(
                 "Episode %d/%d - Step %d/%d - Reward: %.2f (Episode Total: %.2f)", 
                 currentEpisode + 1, MAX_EPISODES,
@@ -168,7 +168,7 @@ public class RLGameModel {
             if (Math.abs(reward - GOAL_REWARD) < 0.0001) {
                 System.out.println("\n!!! GOAL REWARD RECEIVED !!!");
                 this.isGoalReached = true;
-                this.successfulEpisodes++;
+                //this.successfulEpisodes++;
                 completeEpisode("Goal reward received!");
             }
         }
@@ -268,14 +268,17 @@ public class RLGameModel {
     private void completeEpisode(String reason) {
         if (!episodeComplete) {
             this.episodeComplete = true;
+            //this.totalEpisodes++;
             
-            System.out.println("\n=== Episode " + (currentEpisode + 1) + "/" + MAX_EPISODES + " Complete ===");
+            System.out.println("\n=== Episode " + (currentEpisode + 1) + " Information ===");
             System.out.println("Reason: " + reason);
-            System.out.println("Steps Taken: " + stepsThisEpisode + "/" + MAX_STEPS);
-            System.out.println("Episode Reward: " + String.format("%.2f", episodeReward));
-            System.out.println("Successful Episodes: " + successfulEpisodes + "/" + (currentEpisode + 1));
             System.out.println("Goal Reached: " + (isGoalReached ? "Yes!" : "No"));
             System.out.println("================================\n");
+            
+            // Notify the server about the episode conclusion
+            if (gamePlayer != null) {
+                gamePlayer.sendFinalStateMessage();
+            }
 
             if (currentEpisode + 1 < MAX_EPISODES) {
                 resetForNewEpisode();
@@ -284,7 +287,6 @@ public class RLGameModel {
                 System.out.println("\n=== Training Complete ===");
                 System.out.println("Total Episodes: " + (currentEpisode + 1));
                 System.out.println("Successful Episodes: " + successfulEpisodes);
-                System.out.println("Final Episode Reward: " + String.format("%.2f", episodeReward));
                 System.out.println("======================\n");
                 
                 if (gamePlayer != null) {

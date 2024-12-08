@@ -135,6 +135,8 @@ public class RLGameMessage {
                 params.putBool("isTerminal", this.isTerminal);
                 params.putDouble("cumulativeReward", this.cumulativeReward);
                 params.putInt("stepsThisEpisode", this.stepsThisEpisode);
+                params.putInt("totalEpisodes", this.totalEpisodes);
+                params.putInt("successfulEpisodes", this.successfulEpisodes);
                 break;
             case GAME_RESET:
                 params.putUtfString("userName", this.userName);
@@ -227,10 +229,14 @@ public class RLGameMessage {
                 }
                 break;
             case GAME_FINAL_STATE_RESPONSE:
-                if (params.containsKey("isTerminal") && params.containsKey("cumulativeReward") && params.containsKey("stepsThisEpisode")) {
+                if (params.containsKey("isTerminal") && params.containsKey("cumulativeReward") 
+                    && params.containsKey("stepsThisEpisode") && params.containsKey("totalEpisodes") 
+                    && params.containsKey("successfulEpisodes")) {
                     this.isTerminal = params.getBool("isTerminal");
                     this.cumulativeReward = params.getDouble("cumulativeReward");
-                    this.steps = params.getInt("stepsThisEpisode");
+                    this.stepsThisEpisode = params.getInt("stepsThisEpisode");
+                    this.totalEpisodes = params.getInt("totalEpisodes"); // Added line
+                    this.successfulEpisodes = params.getInt("successfulEpisodes"); // Added line
                 } else {
                     System.err.println("Missing fields in GAME_FINAL_STATE_RESPONSE message.");
                 }

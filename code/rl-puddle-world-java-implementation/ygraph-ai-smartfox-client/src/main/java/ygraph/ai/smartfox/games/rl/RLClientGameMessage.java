@@ -263,9 +263,17 @@ public class RLClientGameMessage {
                 this.nextStateId = params.getInt("nextStateId");
                 break;
             case GAME_FINAL_STATE_RESPONSE:
-                this.isTerminal = params.getBool("isTerminal");
-                this.cumulativeReward = params.getDouble("cumulativeReward");
-                this.stepsThisEpisode = params.getInt("stepsThisEpisode");
+                if (params.containsKey("isTerminal") && params.containsKey("cumulativeReward") 
+                    && params.containsKey("stepsThisEpisode") && params.containsKey("totalEpisodes") 
+                    && params.containsKey("successfulEpisodes")) {
+                    this.isTerminal = params.getBool("isTerminal");
+                    this.cumulativeReward = params.getDouble("cumulativeReward");
+                    this.stepsThisEpisode = params.getInt("stepsThisEpisode");
+                    this.totalEpisodes = params.getInt("totalEpisodes");
+                    this.successfulEpisodes = params.getInt("successfulEpisodes");
+                } else {
+                    System.err.println("Missing fields in GAME_FINAL_STATE_RESPONSE message.");
+                }
                 break;
             case GAME_RESET_RESPONSE:
                 // Handle reset response if necessary
