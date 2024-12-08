@@ -9642,3 +9642,75 @@ User agent1 has completed training.
 
 03:09:09,021 INFO  [SocketReader] sessions.DefaultSessionManager     - Session removed: { Id: 1, Type: DEFAULT, Logged: No, IP: 127.0.0.1:49560 }
 03:09:09,022 INFO  [SocketReader] core.SocketReader     - Socket closed: java.nio.channels.SocketChannel[closed]
+
+
+CLIENT SIDE:
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, 10.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 29 -> 35
+
+!!! GOAL STATE REACHED !!!
+
+=== Episode 3/3 Complete ===
+Reason: Goal state reached!
+Steps Taken: 19/20
+Episode Reward: -4.15
+Successful Episodes: 1/3
+Goal Reached: Yes!
+================================
+
+
+=== Training Complete ===
+Total Episodes: 3
+Successful Episodes: 1
+Final Episode Reward: -4.15
+======================
+
+Sent GAME_TRAINING_COMPLETE message to the server.
+
+=== Final Training Summary ===
+Total Episodes: 0
+Total Steps: 0
+Successful Episodes: 1
+===========================
+
+Disconnected from SmartFoxServer.
+Episode 3/3 - Step 20/20 - Reward: 10.00 (Episode Total: 5.85)
+
+!!! GOAL REWARD RECEIVED !!!
+Updated Q-value for state 29, action 1: 1.2254593822647255
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7402609576967045
+Sent GAME_TRAINING_COMPLETE message to the server.
+
+=== Final Training Summary ===
+Total Episodes: 0
+Total Steps: 0
+Successful Episodes: 2
+===========================
+
+Disconnected from SmartFoxServer.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_FINAL_STATE_RESPONSE
+Parsing messageType: GAME_FINAL_STATE_RESPONSE
+All received keys: [stepsThisEpisode, messageType, cumulativeReward, isTerminal]
+=== End of Episode 0 Summary ===
+Steps Taken: 20/20
+Cumulative Reward: 5.850000000000002
+Successful Episodes: 0/0
+===============================================
+Reset cumulative reward from 5.850000000000002 to 0.0
+Starting new episode...
+Requesting initial state for new episode...
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_TRAINING_COMPLETE
+Received training complete message from server.
+Training completed. Maximum number of episodes reached.
+Disconnected from SmartFoxServer.
