@@ -465,7 +465,7 @@ public class RLGamePlayer implements IEventListener {
 
         // Update state and reward
         this.gameModel.updateState(nextStateId);
-        this.gameModel.addToCumulativeReward(reward);
+        //this.gameModel.addToCumulativeReward(reward);
         this.gameModel.incrementStepsThisEpisode();
 
         // Update Q and V tables
@@ -531,7 +531,7 @@ public class RLGamePlayer implements IEventListener {
         this.gameModel.setSuccessfulEpisodes(successfulEpisodes);
     
         // Log episode summary
-        System.out.println("=== End of Episode " + totalEpisodes + " Summary ===");
+        System.out.println("=== End of Episode "  + " Summary ===");
         System.out.println("Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
         System.out.println("Cumulative Reward: " + cumulativeReward);
         System.out.println("Successful Episodes: " + successfulEpisodes + "/" + totalEpisodes);
@@ -558,13 +558,6 @@ public class RLGamePlayer implements IEventListener {
         ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(req);
         System.out.println("Sent GAME_TRAINING_COMPLETE message to the server.");
-        
-        // Print final training summary
-        System.out.println("\n=== Final Training Summary ===");
-        System.out.println("Total Episodes: " + this.gameModel.getTotalEpisodes());
-        System.out.println("Total Steps: " + (this.gameModel.getStepsThisEpisode() * this.gameModel.getTotalEpisodes()));
-        System.out.println("Successful Episodes: " + this.gameModel.getSuccessfulEpisodes());
-        System.out.println("===========================\n");
         disconnect();
     }
     

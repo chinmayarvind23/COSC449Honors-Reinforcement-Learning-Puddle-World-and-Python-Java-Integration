@@ -803,9 +803,10 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     // Sends an error message to the user
     private void sendErrorMessage(User user, String message) {
-        ISFSObject response = new SFSObject();
-        response.putUtfString("messageType", RLGameMessage.GAME_ERROR);
-        response.putUtfString("errorMessage", message);
+        RLGameMessage msg = new RLGameMessage();
+        msg.setMessageType(RLGameMessage.GAME_ERROR);
+        msg.setErrorMessage(message);
+        ISFSObject response = msg.toSFSObject();
         send("rl.error", response, user);
-    }
+    }    
 }

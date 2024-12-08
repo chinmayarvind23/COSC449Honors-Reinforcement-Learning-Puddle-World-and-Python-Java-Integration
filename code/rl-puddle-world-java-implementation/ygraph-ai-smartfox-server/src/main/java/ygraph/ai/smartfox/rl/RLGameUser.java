@@ -211,34 +211,36 @@ public class RLGameUser {
     }
 
     public void concludeEpisode() {
-        totalEpisodes++; // Increment only once
-        if (cumulativeReward >= successRewardThreshold) {
-            successfulEpisodes++;
-            System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
+        if (!isTrainingComplete()) {
+            totalEpisodes++; // Increment only once
+            if (cumulativeReward >= successRewardThreshold) {
+                successfulEpisodes++;
+                System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
+            }
+    
+            System.out.println("End of Episode Summary:");
+            System.out.println(" - Total Episodes: " + totalEpisodes);
+            System.out.println(" - Successful Episodes: " + successfulEpisodes);
+            System.out.println(" - Steps Taken: " + stepsThisEpisode);
+            System.out.println(" - Cumulative Reward: " + cumulativeReward);
+    
+            // Check if the maximum number of episodes has been reached
+            if (isTrainingComplete()) {
+                System.out.println("Maximum number of episodes reached. Ending training.");
+                // Do not reset the game; training is complete
+            } else {
+                resetGame();
+            }
+    
+            // Reset episode-specific variables
+            this.stepsThisEpisode = 0;
+            this.cumulativeReward = 0.0;
+            this.isTerminal = false;
+    
+            // Reset the world state
+            this.world.reset();
+            System.out.println("Episode concluded for user: " + user.getName());
         }
-        
-        System.out.println("End of Episode Summary:");
-        System.out.println(" - Total Episodes: " + totalEpisodes);
-        System.out.println(" - Successful Episodes: " + successfulEpisodes);
-        System.out.println(" - Steps Taken: " + stepsThisEpisode);
-        System.out.println(" - Cumulative Reward: " + cumulativeReward);
-        
-        // Check if the maximum number of episodes has been reached
-        if (isTrainingComplete()) {
-            System.out.println("Maximum number of episodes reached. Ending training.");
-            // Do not reset the game; training is complete
-        } else {
-            resetGame();
-        }
-
-        // Reset episode-specific variables
-        this.stepsThisEpisode = 0;
-        this.cumulativeReward = 0.0;
-        this.isTerminal = false;
-
-        // Reset the world state
-        this.world.reset();
-        System.out.println("Episode concluded for user: " + user.getName());
     }
 
     // Gets the ID of the current state the RL agent is in

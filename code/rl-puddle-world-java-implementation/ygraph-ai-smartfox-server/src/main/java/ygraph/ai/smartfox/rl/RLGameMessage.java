@@ -55,6 +55,8 @@ public class RLGameMessage {
     private int[] vStateIds;
     private double[] vValues;
 
+    private String errorMessage;
+
     public RLGameMessage() {
         this.messageType = "";
         this.userName = "";
@@ -444,5 +446,11 @@ public class RLGameMessage {
         this.successfulEpisodes = successfulEpisodes;
     }
 
-    
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }

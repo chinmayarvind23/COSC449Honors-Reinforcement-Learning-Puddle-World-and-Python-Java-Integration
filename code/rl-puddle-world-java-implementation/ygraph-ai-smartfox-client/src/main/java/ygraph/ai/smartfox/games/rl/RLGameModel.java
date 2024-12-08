@@ -18,7 +18,7 @@ public class RLGameModel {
     private int maxStepsPerEpisode = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean success;
     private int totalEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
-    private int maxEpisodes = 10;
+    private int maxEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
     private int successfulEpisodes = 0;
     public void setSuccessfulEpisodes(int successfulEpisodes) {
         this.successfulEpisodes = successfulEpisodes;
