@@ -640,8 +640,10 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         send("rl.action", actionRewardResponse, user);
         System.out.println("Sent GAME_ACTION_REWARD_RESPONSE with action: " + action + ", reward: " + reward + ", nextStateId: " + updatedStateId);
     
+
+        int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
         // Check if the episode has ended
-        if (rlUser.isTerminal() || rlUser.getStepsThisEpisode() >= rlUser.getMaxStepsPerEpisode()) {
+        if (rlUser.isTerminal() || (stopMethod == 0 && rlUser.getStepsThisEpisode() >= rlUser.getMaxStepsPerEpisode())) {
             // Send GAME_FINAL_STATE_RESPONSE
             RLGameMessage finalStateMsg = new RLGameMessage();
             finalStateMsg.setMessageType(RLGameMessage.GAME_FINAL_STATE_RESPONSE);

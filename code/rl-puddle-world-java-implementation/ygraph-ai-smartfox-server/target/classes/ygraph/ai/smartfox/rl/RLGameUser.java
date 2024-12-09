@@ -133,7 +133,7 @@ public class RLGameUser {
     
         // Map action string to index
         int actionIndex = mapActionStringToIndex(actionStr);
-        
+    
         // Use gridSize to map stateId to (row, col)
         int row = currentStateId / gridSize;
         int col = currentStateId % gridSize;
@@ -147,18 +147,18 @@ public class RLGameUser {
     
         // Perform the action in the world using actionIndex
         int newStateId = world.moveAgentWithAction(currentStateId, actionIndex);
-        
+    
         // Update last reward
         double reward = world.getLastReward();
-        
+    
         // Update user's state and reward
         this.currentStateId = newStateId;
         this.lastReward = reward;
-        
+    
         // Increment steps and cumulative reward
         stepsThisEpisode++;
         cumulativeReward += lastReward;
-        
+    
         // Calculate new row and col after action
         int newRow = newStateId / gridSize;
         int newCol = newStateId % gridSize;
@@ -170,20 +170,33 @@ public class RLGameUser {
             return;
         }
     
-        // Check for terminal state
+        // ADDED CODE HERE: New stopping logic
+        int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
+        double stopProb = Double.parseDouble(ENV.getOrDefault("STOP_PROB", "0.1"));
+        System.out.println("DEBUG (Server): stopMethod=" + stopMethod);
+        // For STOP_METHOD=2, random stopping condition (apply after first step)
+        if (stopMethod == 2 && stepsThisEpisode > 1) {
+            double rnd = Math.random();
+            if (rnd < stopProb) {
+                isTerminal = true;
+                System.out.println("User " + user.getName() + " stopped due to STOP_METHOD=2 random stopping condition.");
+            }
+        }
+        // END OF ADDED CODE
+    
+        // Check for terminal state or stopping criteria
         if (world.isTerminalState(currentStateId)) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " has reached the terminal state: " + currentStateId);
-            //concludeEpisode();
-        } else if (stepsThisEpisode >= maxStepsPerEpisode) {
+        } else if (stopMethod == 0 && stepsThisEpisode >= maxStepsPerEpisode) {
+            // For STOP_METHOD=0 only, stop when max steps reached
             isTerminal = true;
             System.out.println("User " + user.getName() + " reached maximum steps per episode.");
-            //concludeEpisode();
         }
-        
+    
         // Log the state transition and reward
         System.out.println("Action Taken: " + actionStr + ", New State: " + newStateId + ", Reward: " + reward);
-    }
+    }    
     
     // Helper method to validate position
     private boolean isValidPosition(int row, int col) {

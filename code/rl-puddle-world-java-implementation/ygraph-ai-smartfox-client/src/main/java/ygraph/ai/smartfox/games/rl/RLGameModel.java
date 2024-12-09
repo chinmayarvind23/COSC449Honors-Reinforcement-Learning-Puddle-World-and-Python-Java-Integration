@@ -203,7 +203,9 @@ public class RLGameModel {
 
     public void incrementStepsThisEpisode() {
         this.stepsThisEpisode++;
-        if (this.stepsThisEpisode >= MAX_STEPS && !episodeComplete) {
+        int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
+        System.out.println("DEBUG: stopMethod=" + stopMethod);
+        if (stopMethod == 0 && this.stepsThisEpisode >= MAX_STEPS && !episodeComplete) {
             completeEpisode("Maximum steps (" + MAX_STEPS + ") reached");
         }
     }
@@ -266,6 +268,13 @@ public class RLGameModel {
     }
 
     private void completeEpisode(String reason) {
+        int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
+        // If STOP_METHOD=1 and the reason is max steps, ignore it
+        if (stopMethod == 1 && reason.contains("Maximum steps")) {
+            System.out.println("Ignoring max steps end condition for STOP_METHOD=1");
+            return;
+        }
+
         if (!episodeComplete) {
             this.episodeComplete = true;
             //this.totalEpisodes++;
@@ -334,9 +343,15 @@ public class RLGameModel {
     }
 
     public boolean isTrainingComplete() {
-        return trainingComplete || (currentEpisode + 1 >= MAX_EPISODES && 
-               (stepsThisEpisode >= MAX_STEPS || isGoalReached));
-    }
+        int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
+        if (stopMethod == 1) {
+            // For STOP_METHOD=1, ignore max steps. Only stop if trainingComplete or episodes done & goal reached
+            return trainingComplete || (currentEpisode + 1 >= MAX_EPISODES && isGoalReached);
+        } else {
+            // Original logic for STOP_METHOD=0 and STOP_METHOD=2
+            return trainingComplete || (currentEpisode + 1 >= MAX_EPISODES && (stepsThisEpisode >= MAX_STEPS || isGoalReached));
+        }
+    }        
 
     public void handleStateError() {
         System.out.println("State mismatch detected - Requesting resync...");
