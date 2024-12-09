@@ -554,7 +554,6 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("=== End of Episode" + " Summary ===");
         System.out.println("Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
         System.out.println("Episode Reward: " + cumulativeReward);
-        System.out.println("Successful Episodes: " + successfulEpisodes + "/" + (totalEpisodes + 1));
         System.out.println("===============================================\n");
     
         // Reset episode-specific variables for the next episode

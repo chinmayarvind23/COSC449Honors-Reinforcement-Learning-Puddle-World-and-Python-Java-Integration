@@ -286,7 +286,6 @@ public class RLGameModel {
                 trainingComplete = true;
                 System.out.println("\n=== Training Complete ===");
                 System.out.println("Total Episodes: " + (currentEpisode + 1));
-                System.out.println("Successful Episodes: " + successfulEpisodes);
                 System.out.println("======================\n");
                 
                 if (gamePlayer != null) {
