@@ -53,13 +53,11 @@ public class RLClientGameMessage {
     private int totalEpisodes;
     private int successfulEpisodes;
 
-    // Multiple constructors to make communication easier
+    // Constructors for RLClientGameMessage for multiple modes of access
     public RLClientGameMessage() {
         this.messageType = "";
         this.stateId = 0;
-        // this.action = -1;
         this.reward = 0.0;
-        // this.nextStateId = 0;
         this.availableActions = new int[0];
         this.availableRewards = new double[0];
         this.isTerminal = false;
@@ -83,44 +81,11 @@ public class RLClientGameMessage {
         this.messageType = messageType;
     }
 
-    public RLClientGameMessage(int stateId) {
-        this(GAME_STATE);
-        this.stateId = stateId;
-    }
-
-    public RLClientGameMessage(int[] availableActions) {
-        this(GAME_AVAILABLE_ACTIONS);
-        this.availableActions = availableActions;
-    }
-
-    public RLClientGameMessage(double[] availableRewards) {
-        this(GAME_AVAILABLE_REWARDS);
-        this.availableRewards = availableRewards;
-    }
-
-    public RLClientGameMessage(int action, int stateId) {
-        this(GAME_ACTION_MOVE);
-        this.action = action;
-        this.stateId = stateId;
-    }
-
-    public RLClientGameMessage(int action, double reward, int nextStateId) {
-        this(GAME_ACTION_REWARD);
-        this.action = action;
-        this.reward = reward;
-        this.nextStateId = nextStateId;
-    }
-
     public RLClientGameMessage(boolean isTerminal, double cumulativeReward, int stepsThisEpisode) {
         this.messageType = GAME_FINAL_STATE;
         this.isTerminal = isTerminal;
         this.cumulativeReward = cumulativeReward;
         this.stepsThisEpisode = stepsThisEpisode;
-    }
-
-    public RLClientGameMessage(boolean isTerminal) {
-        this(GAME_FINAL_STATE);
-        this.isTerminal = isTerminal;
     }
 
     public static RLClientGameMessage resetMessage(String userName) {
@@ -216,7 +181,7 @@ public class RLClientGameMessage {
         return params;
     }
 
-    // Populate the fields from an ISFSObject received from the server
+    // Getting fields sent from the server as an ISFSObject
     public void fromSFSObject(ISFSObject params) {
         this.messageType = params.getUtfString("messageType");
         this.userName = params.getUtfString("userName");
@@ -477,55 +442,5 @@ public class RLClientGameMessage {
 
     public void setSuccessfulEpisodes(int successfulEpisodes) {
         this.successfulEpisodes = successfulEpisodes;
-    }
-
-    // toString for debugging
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("RLClientGameMessage { ");
-        sb.append("messageType: ").append(messageType);
-
-        switch (messageType) {
-            case GAME_STATE:
-                sb.append(", stateId: ").append(stateId);
-                break;
-            case GAME_AVAILABLE_ACTIONS:
-                sb.append(", availableActions: ").append(Arrays.toString(availableActions));
-                break;
-            case GAME_AVAILABLE_REWARDS:
-                sb.append(", availableRewards: ").append(Arrays.toString(availableRewards));
-                break;
-            case GAME_ACTION_MOVE:
-                sb.append(", action: ").append(action);
-                sb.append(", stateId: ").append(stateId);
-                break;
-            case GAME_ACTION_REWARD:
-                sb.append(", action: ").append(action);
-                sb.append(", reward: ").append(reward);
-                sb.append(", nextStateId: ").append(nextStateId);
-                break;
-            case GAME_FINAL_STATE:
-                sb.append(", isTerminal: ").append(isTerminal);
-                break;
-            case GAME_RESET:
-                sb.append(", userName: ").append(userName);
-                break;
-            case GAME_INFO:
-                sb.append(", cumulativeReward: ").append(cumulativeReward);
-                sb.append(", stepsThisEpisode: ").append(stepsThisEpisode);
-                sb.append(", totalEpisodes: ").append(totalEpisodes);
-                sb.append(", successfulEpisodes: ").append(successfulEpisodes);
-                break;
-            case GAME_ERROR:
-                sb.append(", error: ").append(userName);
-                break;
-            default:
-                sb.append(", Unknown message type");
-                break;
-        }
-
-        sb.append(" }");
-        return sb.toString();
     }
 }
