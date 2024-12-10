@@ -7,12 +7,13 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-// import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
-// This class takes RLGameUser instances and binds them with RLWorld intances allowing for concurrent access
+// This class takes RLGameUser instances and binds them with RLWorld intances allowing for concurrent usage of the application
+// Key - username of RLGameUser
+// Value - RLGameUser object, which has an RLWorld linked to it in RLGameUser.java
 public class RLGameManager {
     private static final HashMap<String, String> ENV = loadEnv();
     // Thread-safe map to store username and their corresponding RLGameUser
@@ -35,6 +36,7 @@ public class RLGameManager {
         System.out.println("RLGameManager instantiated. Instance ID: " + System.identityHashCode(this));
     }
 
+    // Loading in .env file
     private static HashMap<String, String> loadEnv() {
         HashMap<String, String> env = new HashMap<>();
         String workingDir = System.getProperty("user.dir");
@@ -86,6 +88,7 @@ public class RLGameManager {
         return true;
     }    
 
+    // Getting a user by their username in the room
     public RLGameUser getUserByUsername(String userName) {
         if (userName == null) return null;
         return userMap.get(userName.trim().toLowerCase());
@@ -125,7 +128,7 @@ public class RLGameManager {
         return rlUser;
     }    
 
-    // Check if an RLWorld instance has a user
+    // Check if a hashmap has a user by their username
     public boolean hasUser(User user) {
         return userMap.containsKey(user.getName().trim().toLowerCase());
     }    
