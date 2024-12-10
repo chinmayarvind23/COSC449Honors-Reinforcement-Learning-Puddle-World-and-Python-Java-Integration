@@ -10,7 +10,6 @@ import sfs2x.client.core.BaseEvent;
 import sfs2x.client.core.IEventListener;
 import sfs2x.client.core.SFSEvent;
 import sfs2x.client.requests.ExtensionRequest;
-// import sfs2x.client.requests.JoinRoomRequest;
 import sfs2x.client.requests.LoginRequest;
 import sfs2x.client.requests.LogoutRequest;
 import com.smartfoxserver.v2.exceptions.SFSException;
@@ -21,9 +20,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-//import java.util.Random;
-//import java.util.Queue;
-//import java.util.concurrent.ConcurrentLinkedQueue;
 
 // This class represents an RL agent's core logic and interactions with the Puddle World environment along with handling the connection and message processing to and from the server.
 // This would be provided to the students with the connection details filled in, but the core logic would be left to them to implement
@@ -723,12 +719,6 @@ public class RLGamePlayer implements IEventListener {
         qTable.put(stateId, currentQ);
 
         System.out.println("Updated Q-value for state " + stateId + ", action " + action + ": " + currentQ[action]);
-
-        // Send Q-Table update to the server
-        // int[] qStateIds = {stateId};
-        // int[] qActionIndices = {action};
-        // double[] qValues = {currentQ[action]};
-        // sendQUpdate(qStateIds, qActionIndices, qValues);
     }
 
     // Updates the V-table based on TD error and sends updates to the server
@@ -737,11 +727,6 @@ public class RLGamePlayer implements IEventListener {
         double nextV = vTable.get(nextStateId);
         double updatedV = currentV + alpha * (reward + gamma * nextV - currentV);
         vTable.put(stateId, updatedV);
-
-        // Send V-Table update to the server
-        // int[] vStateIds = {stateId};
-        // double[] vValues = {updatedV};
-        // sendVUpdate(vStateIds, vValues);
     }
 
     // Sends a GAME_INFO request to the server
@@ -776,19 +761,7 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Sent GAME_RESET message to the server.");
         this.gameModel.resetCumulativeReward();
         this.gameModel.setTerminal(false);
-    }
-
-    // private void sendFinalStateMessage() {
-    //     RLClientGameMessage finalStateMsg = new RLClientGameMessage(RLClientGameMessage.GAME_FINAL_STATE);
-    //     finalStateMsg.setUserName(this.userName);
-    //     finalStateMsg.setTerminal(true);
-    //     finalStateMsg.setCumulativeReward(this.gameModel.getCumulativeReward());
-    //     finalStateMsg.setStepsThisEpisode(this.gameModel.getStepsThisEpisode());
-    //     ISFSObject params = finalStateMsg.toSFSObject();
-    //     ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
-    //     smartFox.send(req);
-    //     System.out.println("Sent GAME_FINAL_STATE message to the server.");
-    // }    
+    } 
 
     // Disconnect client from the SmartFoxServer
     // Given to students

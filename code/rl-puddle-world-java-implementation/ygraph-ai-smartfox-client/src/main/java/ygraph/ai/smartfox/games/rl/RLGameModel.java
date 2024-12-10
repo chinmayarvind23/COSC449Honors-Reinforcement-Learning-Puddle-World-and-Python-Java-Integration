@@ -17,8 +17,13 @@ public class RLGameModel {
     private int stepsThisEpisode;
     private int maxStepsPerEpisode = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean success;
+
+    // Number of episodes completed - for testing purposes, will be cleaned up soon
     private int totalEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
+
+    // Number of episodes possible - for testing purposes, will be cleaned up soon
     private int maxEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
+
     private int successfulEpisodes = 0;
     public void setSuccessfulEpisodes(int successfulEpisodes) {
         this.successfulEpisodes = successfulEpisodes;
@@ -27,13 +32,13 @@ public class RLGameModel {
     // Reward threshold to determine the agent succeeded in navigating the world efficiently
     private double successRewardThreshold = Double.parseDouble(ENV.getOrDefault("SUCCESS_REWARD_THRESHOLD", "1.0"));
     private int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
+    private static final int MAX_EPISODES = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
     private double episodeReward = 0.0;
     private double totalReward = 0.0;
     private int currentEpisode = 0;
     private int totalSteps = 0;
     private boolean episodeComplete = false;
     private boolean trainingComplete = false;
-    private static final int MAX_EPISODES = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
     private static final int MAX_STEPS = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean isGoalReached = false;
     private int GOAL_STATE = (gridSize * gridSize) - 1;
@@ -45,7 +50,7 @@ public class RLGameModel {
         this.gamePlayer = player;
     }
 
-    // Initialize game model with state, available actions, rewards, and final state check
+    // Initialize game model with state, available actions, rewards, final state check, cumulative reward, and success check
     public RLGameModel() {
         this.stateId = 0;
         this.availableActions = new int[0];
@@ -55,6 +60,7 @@ public class RLGameModel {
         this.success = false;
     }
 
+    // Loading in .env file into a hashmap for instance variables
     private static HashMap<String, String> loadEnv() {
         HashMap<String, String> env = new HashMap<>();
         String workingDir = System.getProperty("user.dir");
@@ -63,8 +69,8 @@ public class RLGameModel {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Skip empty lines and comments
-                if (line.isEmpty() || line.startsWith("#")) continue;
+                if (line.isEmpty() || line.startsWith("#")) 
+                    continue;
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     env.put(parts[0].trim(), parts[1].trim());
@@ -76,22 +82,22 @@ public class RLGameModel {
         return env;
     }
 
-    // Update methods for all the attributes
+    // Updates state of agent on client side
     public void updateState(int newStateId) {
         int oldState = this.stateId;
         this.stateId = newStateId;
         
         System.out.println("State transition: " + oldState + " -> " + newStateId);
         
-        // Check if goal state reached
+        // Goal state check
         if (newStateId == GOAL_STATE) {
             System.out.println("\n!!! GOAL STATE REACHED !!!");
             this.isGoalReached = true;
-            //this.successfulEpisodes++;
             completeEpisode("Goal state reached!");
         }
     }
 
+    // Updates for rewards and available action arrays
     public void updateAvailableActions(int[] availableActions) {
         this.availableActions = availableActions;
     }
@@ -100,6 +106,7 @@ public class RLGameModel {
         this.availableRewards = availableRewards;
     }
 
+    // Update cumulative reward for training
     public void updateReward(double reward) {
         this.cumulativeReward += reward;
     }
@@ -112,6 +119,7 @@ public class RLGameModel {
         }
     }
 
+    // Setters for cumulative reward, steps in this episode, total episodes and getter for steps in this episode
     public void setCumulativeReward(double cumulativeReward) {
         this.cumulativeReward = cumulativeReward;
     }
@@ -136,7 +144,7 @@ public class RLGameModel {
         System.out.println("Reset cumulative reward from " + oldReward + " to 0.0");
     }
 
-    // Getters for all the attributes
+    // Getters for state ID, available actions for the step, rewards for the step, and cumulative reward for an episode
     public int getStateId() {
         return stateId;
     }
@@ -153,6 +161,7 @@ public class RLGameModel {
         return cumulativeReward;
     }
 
+    // Add onto cumulative reward for an episode
     public void addToCumulativeReward(double reward) {
         if (!Double.isNaN(reward) && !Double.isInfinite(reward)) {
             this.cumulativeReward += reward;
@@ -164,22 +173,21 @@ public class RLGameModel {
                 reward, episodeReward
             ));
 
-            // Check for goal reward
+            // Check for goal state reward
             if (Math.abs(reward - GOAL_REWARD) < 0.0001) {
                 System.out.println("\n!!! GOAL REWARD RECEIVED !!!");
                 this.isGoalReached = true;
-                //this.successfulEpisodes++;
                 completeEpisode("Goal reward received!");
             }
         }
     }
 
-    // Check for terminal state
+    // Check if state is terminal
     public boolean isTerminal() {
         return isTerminal;
     }
 
-    // Determines success/failure of episode
+    // Check for episode success
     public boolean isSuccess() {
         return success;
     }
@@ -201,6 +209,7 @@ public class RLGameModel {
         this.successRewardThreshold = successRewardThreshold; 
     }
 
+    // Keeps the training of the agent going based on the stop method = 0 (max number of steps), 1 (goal state reached), 2 (probabilistic stopping)
     public void incrementStepsThisEpisode() {
         this.stepsThisEpisode++;
         int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
@@ -222,7 +231,7 @@ public class RLGameModel {
         this.maxStepsPerEpisode = maxSteps;
     }
 
-    // Debugging purposes only
+    // For debugging
     @Override
     public String toString() {
         return "RLGameModel{" +
@@ -235,12 +244,12 @@ public class RLGameModel {
                 '}';
     }
 
+    // Resetting episode variables for new episode
     public void resetForNewEpisode() {
         if (currentEpisode + 1 >= MAX_EPISODES) {
             return;
         }
         
-        // this.stateId = 0;
         this.episodeReward = 0.0;
         this.stepsThisEpisode = 0;
         this.isTerminal = false;
@@ -249,7 +258,6 @@ public class RLGameModel {
         this.isGoalReached = false;
 
         System.out.println("\n=== Starting Episode " + (currentEpisode + 1) + "/" + MAX_EPISODES + " ===");
-        // System.out.println("Initial State: " + stateId);
         System.out.println("Steps: 0/" + MAX_STEPS);
         System.out.println("Episode Reward: 0.0");
         System.out.println("===========================\n");
@@ -259,32 +267,22 @@ public class RLGameModel {
         }
     }
 
-    public void resetEpisodeStats() {
-        this.totalEpisodes = 0;
-        this.successfulEpisodes = 0;
-        this.cumulativeReward = 0.0;
-        this.stepsThisEpisode = 0;
-        System.out.println("Reset all episode statistics");
-    }
-
+    // Episode termination based on the stopping methods
     private void completeEpisode(String reason) {
         int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
-        // If STOP_METHOD=1 and the reason is max steps, ignore it
+        // If the termination condition is reaching goal state, then ignore the max steps and exit out of this code
         if (stopMethod == 1 && reason.contains("Maximum steps")) {
             System.out.println("Ignoring max steps end condition for STOP_METHOD=1");
             return;
         }
 
+        // Episode terminated and summary printed if the episode wasn't terminated
         if (!episodeComplete) {
             this.episodeComplete = true;
-            //this.totalEpisodes++;
-            
             System.out.println("\n=== Episode " + (currentEpisode + 1) + " Information ===");
             System.out.println("Reason: " + reason);
             System.out.println("Goal Reached: " + (isGoalReached ? "Yes!" : "No"));
             System.out.println("================================\n");
-            
-            // Notify the server about the episode conclusion
             if (gamePlayer != null) {
                 gamePlayer.sendFinalStateMessage();
             }
@@ -304,17 +302,6 @@ public class RLGameModel {
         }
     }
 
-    public void handleTerminalState(double finalReward, boolean success) {
-        if (!episodeComplete) {
-            this.addToCumulativeReward(finalReward);
-            if (success) {
-                this.successfulEpisodes++;
-            }
-            completeEpisode(success ? "Goal reached" : "Terminal state reached");
-        }
-    }
-
-    // Update getters and setters
     public double getEpisodeReward() {
         return episodeReward;
     }
@@ -327,36 +314,19 @@ public class RLGameModel {
         return currentEpisode;
     }
 
-    public void resetAllStats() {
-        this.currentEpisode = 0;
-        this.successfulEpisodes = 0;
-        this.totalReward = 0.0;
-        this.episodeReward = 0.0;
-        this.stepsThisEpisode = 0;
-        this.episodeComplete = false;
-        System.out.println("Reset all statistics");
-        resetForNewEpisode();
-    }
-
     public boolean isEpisodeComplete() {
         return episodeComplete;
     }
 
     public boolean isTrainingComplete() {
         int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
+        // Ignore max steps if stop method is 1, and stop if goal state is reached within the permitted number of episodes
         if (stopMethod == 1) {
-            // For STOP_METHOD=1, ignore max steps. Only stop if trainingComplete or episodes done & goal reached
             return trainingComplete || (currentEpisode + 1 >= MAX_EPISODES && isGoalReached);
-        } else {
-            // Original logic for STOP_METHOD=0 and STOP_METHOD=2
+        } 
+        // Else if stop methods are 0 or 2, then keep going till the goal state is reached or max number of steps (probabilistic stopping handled on server side)
+        else {
             return trainingComplete || (currentEpisode + 1 >= MAX_EPISODES && (stepsThisEpisode >= MAX_STEPS || isGoalReached));
-        }
-    }        
-
-    public void handleStateError() {
-        System.out.println("State mismatch detected - Requesting resync...");
-        if (gamePlayer != null) {
-            gamePlayer.requestInitialState();
         }
     }
 
@@ -364,6 +334,7 @@ public class RLGameModel {
         return isGoalReached;
     }
 
+    // Add to total steps in the episode and get the total steps in the episode that have been completed
     public void addTotalSteps(int steps) {
         this.totalSteps += steps;
     }
