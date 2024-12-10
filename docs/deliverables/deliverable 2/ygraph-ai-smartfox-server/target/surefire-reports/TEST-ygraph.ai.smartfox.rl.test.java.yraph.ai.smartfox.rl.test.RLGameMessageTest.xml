@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0" tests="12" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/test-classes:/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/classes:/Users/chinmayarvind/.m2/repository/com/smartfoxserver/sfs2x/2.0.0/sfs2x-2.0.0.jar:/Users/chinmayarvind/.m2/repository/com/smartfoxserver/sfs2x-core/2.1.1/sfs2x-core-2.1.1.jar:/Users/chinmayarvind/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/chinmayarvind/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="CA"/>
+    <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire/surefirebooter2044831849340457539.jar /Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire 2024-12-09T22-17-15_591-jvmRun1 surefire8543162856212220227tmp surefire_01323960377449207696tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/test-classes:/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/classes:/Users/chinmayarvind/.m2/repository/com/smartfoxserver/sfs2x/2.0.0/sfs2x-2.0.0.jar:/Users/chinmayarvind/.m2/repository/com/smartfoxserver/sfs2x-core/2.1.1/sfs2x-core-2.1.1.jar:/Users/chinmayarvind/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/chinmayarvind/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/chinmayarvind"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2023-07-18"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="surefire.real.class.path" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server/target/surefire/surefirebooter2044831849340457539.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="17.0.8+7"/>
+    <property name="user.name" value="chinmayarvind"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="15.1.1"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-17.0.8+7"/>
+    <property name="localRepository" value="/Users/chinmayarvind/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="/var/folders/wb/c3y29q6n6yl9cyg55q05bw140000gn/T/"/>
+    <property name="java.version" value="17.0.8"/>
+    <property name="user.dir" value="/Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-server"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/chinmayarvind/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="17.0.8+7"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="61.0"/>
+  </properties>
+  <testcase name="testSetAndGetReward" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetStepsThisEpisode" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetSuccessfulEpisodes" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetMessageType" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetIsTerminal" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetNextStateId" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetTotalEpisodes" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testVUpdateFields" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetStateId" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetCumulativeReward" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetAction" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testQUpdateFields" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+</testsuite>

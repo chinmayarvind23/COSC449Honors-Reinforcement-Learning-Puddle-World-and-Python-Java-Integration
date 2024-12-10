@@ -1,0 +1,3067 @@
+(base) chinmayarvind@Chinmays-MacBook-Air target % java -jar ygraph-ai-smartfox-client-2.1.jar agent1 password1 localhost 9933 cosc322-2 RLRoom
+Current Working Directory: /Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-client/target
+Current Working Directory: /Users/chinmayarvind/Documents/UBC/UBC Coursework/COSC 449/Reinforcement-Learning-Puddle-World-and-Python-Java-Integration/code/rl-puddle-world-java-implementation/ygraph-ai-smartfox-client/target
+Connected to SmartFoxServer.
+Logged in as: agent1
+Sent LOGIN request with password: password1
+Sent JOIN request for room: RLRoom
+Joined room: RLRoom
+Requesting initial state.....
+Requesting initial state for new episode...
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 0
+State transition: 0 -> 0
+Updated Internal State ID to: 0
+Requesting available actions for state: 0
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 6
+Updated Q-value for state 0, action 1: 0.3238105833413802
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.995
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 0
+Updated Q-value for state 6, action 0: 0.598867499323777
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.990025
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 1
+Updated Q-value for state 0, action 3: 0.8982681019294423
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.985074875
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 7
+Updated Q-value for state 1, action 1: 0.22138913220702797
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9801495006250001
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 13
+Updated Q-value for state 7, action 1: 0.6312599991476765
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9752487531218751
+Requested available actions for state 13
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 13
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 13 -> 7
+Updated Q-value for state 13, action 0: 0.8249902601121102
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9703725093562657
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 1
+Updated Q-value for state 7, action 0: 0.6553032349558403
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9655206468094844
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 0
+Updated Q-value for state 1, action 2: 0.09415178921851497
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.960693043575437
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 1
+Updated Q-value for state 0, action 3: 0.8430532162050556
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9558895783575597
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.18902392075938407
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9511101304657719
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 3
+Updated Q-value for state 2, action 3: 0.2952709986049168
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.946354579813443
+Requested available actions for state 3
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 3
+Deciding action for state: 3 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 3
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 3
+Deciding action for state: 3 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 3 -> 4
+Updated Q-value for state 3, action 3: 0.6270546163632028
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9416228069143757
+Requested available actions for state 4
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 4
+Deciding action for state: 4 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 4
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 4
+Deciding action for state: 4 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 4 -> 3
+Updated Q-value for state 4, action 2: 0.3114044692263917
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9369146928798039
+Requested available actions for state 3
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 3
+Deciding action for state: 3 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 3
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 3
+Deciding action for state: 3 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 3 -> 4
+Updated Q-value for state 3, action 3: 0.6499751475619039
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9322301194154049
+Requested available actions for state 4
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 4
+Deciding action for state: 4 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 4
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 4 -> 10
+Updated Q-value for state 4, action 1: 0.8063089709859185
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9275689688183278
+Requested available actions for state 10
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 10
+Deciding action for state: 10 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 10
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 10
+Deciding action for state: 10 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 10 -> 16
+Updated Q-value for state 10, action 1: 0.7282609144400014
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9229311239742362
+Requested available actions for state 16
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 16
+Deciding action for state: 16 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 16
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 16
+Deciding action for state: 16 with available actions: [0, 1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 16 -> 22
+Updated Q-value for state 16, action 1: 0.4007796689785269
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.918316468354365
+Requested available actions for state 22
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 22
+Deciding action for state: 22 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 22
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 22
+Deciding action for state: 22 with available actions: [0, 1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 22
+Deciding action for state: 22 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 22 -> 28
+Updated Q-value for state 22, action 1: 0.10983702550804744
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9137248860125932
+Requested available actions for state 28
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 28
+Deciding action for state: 28 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 28
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 28 -> 34
+Updated Q-value for state 28, action 1: 0.6123887504071804
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9091562615825302
+Requested available actions for state 34
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 2, 3]
+Requested available rewards for state 34
+Deciding action for state: 34 with available actions: [0, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 34
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, 10.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 34
+Deciding action for state: 34 with available actions: [0, 1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, 10.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 2, 3]
+Requested available rewards for state 34
+Deciding action for state: 34 with available actions: [0, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 34 -> 35
+
+!!! GOAL STATE REACHED !!!
+
+=== Episode 1 Information ===
+Reason: Goal state reached!
+Goal Reached: Yes!
+================================
+
+Sent GAME_FINAL_STATE message to the server.
+
+=== Starting Episode 2/3 ===
+Steps: 0/20
+Episode Reward: 0.0
+===========================
+
+Requesting initial state for new episode...
+Updated Q-value for state 34, action 3: 1.3863126766520404
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9046104802746175
+Requested available actions for state 35
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_FINAL_STATE_RESPONSE
+Parsing messageType: GAME_FINAL_STATE_RESPONSE
+All received keys: [stepsThisEpisode, messageType, successfulEpisodes, cumulativeReward, totalEpisodes, isTerminal]
+
+
+=== End of Episode Summary ===
+Steps Taken: 20/20
+Episode Reward: 6.840000000000002
+===============================================
+
+Reset cumulative reward from 6.840000000000002 to 0.0
+Starting new episode...
+Requesting initial state for new episode...
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 0
+State transition: 35 -> 0
+Updated Internal State ID to: 0
+Requesting available actions for state: 0
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, 10.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, 10.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 0
+State transition: 0 -> 0
+Updated Internal State ID to: 0
+Requesting available actions for state: 0
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.error
+Received messageType: GAME_ERROR
+Parsing messageType: GAME_ERROR
+All received keys: [messageType]
+Missing 'errorMessage' field in GAME_ERROR message.
+Received GAME_ERROR: null
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 2]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [0, 2]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 0
+State transition: 0 -> 0
+Updated Internal State ID to: 0
+Requesting available actions for state: 0
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 1
+Updated Q-value for state 0, action 3: 0.7933598190531075
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.9000874278732445
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploiting with best action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.error
+Received messageType: GAME_ERROR
+Parsing messageType: GAME_ERROR
+All received keys: [messageType]
+Missing 'errorMessage' field in GAME_ERROR message.
+Received GAME_ERROR: null
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.error
+Received messageType: GAME_ERROR
+Parsing messageType: GAME_ERROR
+All received keys: [messageType]
+Missing 'errorMessage' field in GAME_ERROR message.
+Received GAME_ERROR: null
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 7
+Updated Q-value for state 1, action 1: 0.1582275101323508
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8955869907338783
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 6
+Updated Q-value for state 7, action 2: 0.13772268527565454
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8911090557802088
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 0
+Updated Q-value for state 6, action 0: 0.609383133106179
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8866535105013078
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 1
+Updated Q-value for state 0, action 3: 0.7486357616163543
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8822202429488013
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 0
+Updated Q-value for state 1, action 2: 0.15111382884213537
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8778091417340573
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 1
+Updated Q-value for state 0, action 3: 0.7083841099232763
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8734200960253871
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.22091768969121806
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8690529955452602
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploiting with best action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 1
+Updated Q-value for state 2, action 2: 0.5525735345462813
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8647077305675338
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.24755753883126158
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8603841919146962
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploiting with best action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 1
+Updated Q-value for state 2, action 2: 0.5319281055602106
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8560822709551227
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 7
+Updated Q-value for state 1, action 1: 0.10138205026514135
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.851801859600347
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 13
+Updated Q-value for state 7, action 1: 0.5564027658522925
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8475428503023453
+Requested available actions for state 13
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 13
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 13 -> 7
+Updated Q-value for state 13, action 0: 0.7014685252469248
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8433051360508336
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploiting with best action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 6
+Updated Q-value for state 7, action 2: 0.09227913810848518
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8390886103705794
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 7
+Updated Q-value for state 6, action 3: 0.38591643076844384
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8348931673187264
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploiting with best action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 1
+Updated Q-value for state 7, action 0: 0.6243848359288138
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8307187014821328
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [0, 1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 7
+Updated Q-value for state 1, action 1: 0.047438480472220455
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8265651079747222
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploiting with best action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 1
+Updated Q-value for state 7, action 0: 0.5965582768044899
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8224322824348486
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-1.0, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -1.0, -1.0, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 0
+
+=== Episode 2 Information ===
+Reason: Maximum steps (20) reached
+Goal Reached: No
+================================
+
+Sent GAME_FINAL_STATE message to the server.
+
+=== Starting Episode 3/3 ===
+Steps: 0/20
+Episode Reward: 0.0
+===========================
+
+Requesting initial state for new episode...
+Updated Q-value for state 1, action 2: 0.20047177998975096
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8183201210226743
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_FINAL_STATE_RESPONSE
+Parsing messageType: GAME_FINAL_STATE_RESPONSE
+All received keys: [stepsThisEpisode, messageType, successfulEpisodes, cumulativeReward, totalEpisodes, isTerminal]
+
+
+=== End of Episode Summary ===
+Steps Taken: 20/20
+Episode Reward: -8.119999999999997
+===============================================
+
+Reset cumulative reward from -8.119999999999997 to 0.0
+Starting new episode...
+Requesting initial state for new episode...
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 0
+State transition: 0 -> 0
+Updated Internal State ID to: 0
+Requesting available actions for state: 0
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 2, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.error
+Received messageType: GAME_ERROR
+Parsing messageType: GAME_ERROR
+All received keys: [messageType]
+Missing 'errorMessage' field in GAME_ERROR message.
+Received GAME_ERROR: null
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 0
+State transition: 0 -> 0
+Updated Internal State ID to: 0
+Requesting available actions for state: 0
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 6
+Updated Q-value for state 0, action 1: 0.35875824636763826
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8142285204175609
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_STATE_RESPONSE
+Parsing messageType: GAME_STATE_RESPONSE
+All received keys: [messageType, stateId]
+Parsed stateId: 6
+State transition: 6 -> 6
+Updated Internal State ID to: 6
+Requesting available actions for state: 6
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [1, 3]
+Exploiting with best action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [1, 3]
+Exploiting with best action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.error
+Received messageType: GAME_ERROR
+Parsing messageType: GAME_ERROR
+All received keys: [messageType]
+Missing 'errorMessage' field in GAME_ERROR message.
+Received GAME_ERROR: null
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 0
+Updated Q-value for state 6, action 0: 0.6129141538273902
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.810157377815473
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [0, 1, 3]
+Exploiting with best action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.error
+Received messageType: GAME_ERROR
+Parsing messageType: GAME_ERROR
+All received keys: [messageType]
+Missing 'errorMessage' field in GAME_ERROR message.
+Received GAME_ERROR: null
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 1
+Updated Q-value for state 0, action 3: 0.6721576233995061
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8061065909263957
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.26967531444855436
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.8020760579717637
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploiting with best action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 1
+Updated Q-value for state 2, action 2: 0.5133472194727471
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.798065677681905
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.2879090327562462
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7940753492934954
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 1
+Updated Q-value for state 2, action 2: 0.49662442199402984
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7901049725470279
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.30281432746008424
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7861544476842928
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 1
+Updated Q-value for state 2, action 2: 0.48157390426318436
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7822236754458713
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 2
+Updated Q-value for state 1, action 3: 0.3148745460977624
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.778312557068642
+Requested available actions for state 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploiting with best action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 2
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 2
+Deciding action for state: 2 with available actions: [1, 2, 3]
+Exploiting with best action: 2
+Chosen Action: 2
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 2 -> 1
+Updated Q-value for state 2, action 2: 0.4680284383054234
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7744209942832988
+Requested available actions for state 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 1
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 2, 3]
+Requested available rewards for state 1
+Deciding action for state: 1 with available actions: [1, 2, 3]
+Exploiting with best action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 1 -> 7
+Updated Q-value for state 1, action 1: 0.0953848773374025
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7705488893118823
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 6
+Updated Q-value for state 7, action 2: 0.15037994565803275
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7666961448653229
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Sent Action: 0 (UP) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 0
+Updated Q-value for state 6, action 0: 0.6160920724764803
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7628626641409962
+Requested available actions for state 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 0
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [1, 3]
+Requested available rewards for state 0
+Deciding action for state: 0 with available actions: [1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 0 -> 6
+Updated Q-value for state 0, action 1: 0.39021114309127053
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7590483508202912
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 7
+Updated Q-value for state 6, action 3: 0.40001503260400356
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7552531090661897
+Requested available actions for state 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 2, 3]
+Exploring with random action: 2
+Chosen Action: 2
+Sent Action: 2 (LEFT) for State: 7
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 7
+Deciding action for state: 7 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 7 -> 6
+Updated Q-value for state 7, action 2: 0.2026706724526256
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7514768435208588
+Requested available actions for state 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploiting with best action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 6
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 2, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 6
+Deciding action for state: 6 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 6 -> 12
+Updated Q-value for state 6, action 1: 0.76386341404025
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7477194593032545
+Requested available actions for state 12
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 12
+Deciding action for state: 12 with available actions: [0, 1, 3]
+Exploring with random action: 3
+Chosen Action: 3
+Sent Action: 3 (RIGHT) for State: 12
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 12 -> 13
+Updated Q-value for state 12, action 3: 0.903030770982273
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7439808620067382
+Requested available actions for state 13
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 2, 3]
+Exploiting with best action: 1
+Chosen Action: 1
+Sent Action: 1 (DOWN) for State: 13
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 3]
+Exploring with random action: 0
+Chosen Action: 0
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_REWARDS_RESPONSE
+All received keys: [messageType, availableRewards]
+Available Rewards: [-0.01, -0.01, -0.01, -0.01]
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+Parsing messageType: GAME_AVAILABLE_ACTIONS_RESPONSE
+All received keys: [availableActions, messageType]
+Available Actions: [0, 1, 2, 3]
+Requested available rewards for state 13
+Deciding action for state: 13 with available actions: [0, 1, 2, 3]
+Exploring with random action: 1
+Chosen Action: 1
+Awaiting server response. Action not sent.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_ACTION_REWARD_RESPONSE
+Parsing messageType: GAME_ACTION_REWARD_RESPONSE
+All received keys: [reward, messageType, nextStateId, action]
+State transition: 13 -> 19
+
+=== Episode 3 Information ===
+Reason: Maximum steps (20) reached
+Goal Reached: No
+================================
+
+Sent GAME_FINAL_STATE message to the server.
+
+=== Training Complete ===
+Total Episodes: 3
+======================
+
+Sent GAME_TRAINING_COMPLETE message to the server.
+Disconnected from SmartFoxServer.
+Updated Q-value for state 13, action 1: 0.9403391027307996
+Sent Q-Table updates to the server.
+Sent V-Table updates to the server.
+Epsilon decayed to: 0.7402609576967045
+Sent GAME_TRAINING_COMPLETE message to the server.
+Disconnected from SmartFoxServer.
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_FINAL_STATE_RESPONSE
+Parsing messageType: GAME_FINAL_STATE_RESPONSE
+All received keys: [stepsThisEpisode, messageType, successfulEpisodes, cumulativeReward, totalEpisodes, isTerminal]
+
+
+=== End of Episode Summary ===
+Steps Taken: 20/20
+Episode Reward: -0.20000000000000004
+===============================================
+
+Reset cumulative reward from -0.20000000000000004 to 0.0
+Starting new episode...
+Requesting initial state for new episode...
+Received EXTENSION_RESPONSE: cmd=rl.action
+Received messageType: GAME_TRAINING_COMPLETE
+Received training complete message from server.
+Training completed. Maximum number of episodes reached.
+Disconnected from SmartFoxServer.
+(base) chinmayarvind@Chinmays-MacBook-Air target % 
