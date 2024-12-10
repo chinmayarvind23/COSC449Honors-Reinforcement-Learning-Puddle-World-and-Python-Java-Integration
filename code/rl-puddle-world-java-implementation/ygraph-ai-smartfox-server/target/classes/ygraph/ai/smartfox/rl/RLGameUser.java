@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import com.smartfoxserver.v2.entities.User;
 
-// This class represents a user within an RL game and holds their current state, final reward, and terminal state check
+// This class represents a user within an RL game (server-side representation of the RL agent)
 public class RLGameUser {
 
     // User and RLWorld defined
@@ -26,6 +26,7 @@ public class RLGameUser {
         return maxEpisodes;
     }
 
+    // Loading in .env file
     private static HashMap<String, String> loadEnv() {
         HashMap<String, String> env = new HashMap<>();
         String workingDir = System.getProperty("user.dir");
@@ -46,6 +47,7 @@ public class RLGameUser {
         return env;
     }
 
+    // Getters and setters for the attributes
     public int getMaxStepsPerEpisode() {
         return maxStepsPerEpisode;
     }
@@ -78,18 +80,19 @@ public class RLGameUser {
         return gridSize;
     }
 
+    // Number of max episodes possible, successful episodes, cumulative reward for an episode, steps done in one episode so far
     private int totalEpisodes = 0;
     private int successfulEpisodes = 0;
     private double cumulativeReward = 0.0;
     private int stepsThisEpisode = 0;
 
-    // Thresholds for evaluation
-    private double successRewardThreshold = 1.0;
+    // Threshold for evaluation
+    private double successRewardThreshold = Double.parseDouble(ENV.getOrDefault("SUCCESS_REWARD_THRESHOLD", "1.0"));
 
     // Grid size
     private final int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
 
-    // Constructor that associates a User object with an RL world and starts the game
+    // Constructor that links a User object with an RL world and starts the game
     public RLGameUser(User user, RLWorld world) {
         this.user = user;
         this.world = world;
@@ -127,53 +130,41 @@ public class RLGameUser {
     // Processes an action taken by a user for the following actions: "UP", "DOWN", "LEFT", "RIGHT".
     public void takeAction(String actionStr) {
         if (isTerminal) {
-            return; // Episode already terminated
+            return;
         }
-    
-        // Map action string to index
+
         int actionIndex = mapActionStringToIndex(actionStr);
-    
-        // Use gridSize to map stateId to (row, col)
         int row = currentStateId / gridSize;
         int col = currentStateId % gridSize;
-    
-        // Validate current position
+
         if (!isValidPosition(row, col)) {
             System.err.println("Invalid current position: (" + row + ", " + col + ") for user: " + user.getName());
-            //concludeEpisode();
             return;
         }
     
-        // Perform the action in the world using actionIndex
+        // Move the agent
         int newStateId = world.moveAgentWithAction(currentStateId, actionIndex);
-    
-        // Update last reward
         double reward = world.getLastReward();
     
-        // Update user's state and reward
+        // Update state and last step reward
         this.currentStateId = newStateId;
         this.lastReward = reward;
-    
-        // Increment steps and cumulative reward
         stepsThisEpisode++;
         cumulativeReward += lastReward;
     
-        // Calculate new row and col after action
+        // New position of agent
         int newRow = newStateId / gridSize;
         int newCol = newStateId % gridSize;
-    
-        // Validate new position
         if (!isValidPosition(newRow, newCol)) {
             System.err.println("Invalid new position: (" + newRow + ", " + newCol + ") for user: " + user.getName());
-            //concludeEpisode();
             return;
         }
-    
-        // ADDED CODE HERE: New stopping logic
+
         int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
         double stopProb = Double.parseDouble(ENV.getOrDefault("STOP_PROB", "0.1"));
         System.out.println("DEBUG (Server): stopMethod=" + stopMethod);
-        // For STOP_METHOD=2, random stopping condition (apply after first step)
+
+        // For probabilistic stopping, apply only after atleast 1 step has been taken
         if (stopMethod == 2 && stepsThisEpisode > 1) {
             double rnd = Math.random();
             if (rnd < stopProb) {
@@ -181,18 +172,14 @@ public class RLGameUser {
                 System.out.println("User " + user.getName() + " stopped due to STOP_METHOD=2 random stopping condition.");
             }
         }
-    
-        // Check for terminal state or stopping criteria
+
         if (world.isTerminalState(currentStateId)) {
             isTerminal = true;
             System.out.println("User " + user.getName() + " has reached the terminal state: " + currentStateId);
         } else if (stopMethod == 0 && stepsThisEpisode >= maxStepsPerEpisode) {
-            // For STOP_METHOD=0 only, stop when max steps reached
             isTerminal = true;
             System.out.println("User " + user.getName() + " reached maximum steps per episode.");
         }
-    
-        // Log the state transition and reward
         System.out.println("Action Taken: " + actionStr + ", New State: " + newStateId + ", Reward: " + reward);
     }    
 
@@ -200,7 +187,7 @@ public class RLGameUser {
         return row >= 0 && row < gridSize && col >= 0 && col < gridSize;
     }    
 
-    // Convert action strings to action indices
+    // Change action strings to action indices
     private int mapActionStringToIndex(String actionStr) {
         switch (actionStr) {
             case "UP":
@@ -220,8 +207,7 @@ public class RLGameUser {
         this.cumulativeReward += reward;
     }
 
-    // Episode summary generator
-    // If training hasn't finished, 
+    // Episode summary generator and also resets the variables if an episode has ended
     public void concludeEpisode() {
         if (!isTrainingComplete()) {
             totalEpisodes++;
@@ -235,46 +221,37 @@ public class RLGameUser {
             System.out.println(" - Successful Episodes: " + successfulEpisodes);
             System.out.println(" - Steps Taken: " + stepsThisEpisode);
             System.out.println(" - Episode Reward: " + cumulativeReward);
-    
-            // Check if the maximum number of episodes has been reached
             if (isTrainingComplete()) {
                 System.out.println("Maximum number of episodes reached. Ending training.");
             } else {
                 resetGame();
             }
-    
-            // Reset episode-specific variables
+
             this.stepsThisEpisode = 0;
             this.cumulativeReward = 0.0;
             this.isTerminal = false;
-    
-            // Reset the world state
             this.world.reset();
             System.out.println("Episode concluded for user: " + user.getName());
         }
     }
 
-    // Gets the ID of the current state the RL agent is in
     public int getCurrentStateId() {
         return currentStateId;
     }
 
-    // Gets the final reward of an episode for an RL agent
     public double getLastReward() {
         return lastReward;
     }
 
-    // Set if the current state is the goal state
     public void setTerminal(boolean isTerminal) {
         this.isTerminal = isTerminal;
     }
 
-    // Check if current state is the goal state
     public boolean isTerminal() {
         return isTerminal;
     }
 
-    // Resets the game environment post-episode
+    // Resets agent's variables post-episode
     public void resetGame() {
         initializeGame();
         cumulativeReward = 0.0;
@@ -283,13 +260,12 @@ public class RLGameUser {
         System.out.println("Game reset for user: " + user.getName() + ". New starting state: " + currentStateId);
     }
 
-    // Cleans up the world when a user leaves the game
+    // Clean up the world when a user has been removed from the game room
     public void cleanup() {
         System.out.println("Cleaning up RLGameUser for user: " + user.getName());
         world.cleanup();
     }
 
-    // Increment total episodes
     public void incrementEpisodes() {
         this.totalEpisodes++;
     }
@@ -298,17 +274,14 @@ public class RLGameUser {
         return totalEpisodes >= maxEpisodes;
     }    
 
-    // Update cumulative rewards
     public void updateRewards(double reward) {
         this.cumulativeReward += reward;
     }
 
-    // Update steps taken in the current episode
     public void updateSteps(int steps) {
         this.stepsThisEpisode += steps;
     }
 
-    // Increment successful episodes
     public void incrementSuccessfulEpisodes() {
         this.successfulEpisodes++;
     }

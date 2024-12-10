@@ -7,7 +7,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 import com.smartfoxserver.v2.exceptions.SFSJoinRoomException;
 
-// This class manages non-RL-specific client requests like joining rooms and disconnecting from the server, and interacting with RLGameManager
+// This class manages non-RL-specific client requests like joining rooms and using RLGameManager to add and remove users
 public class RLMultiHandler extends BaseClientRequestHandler {
 
     private final RLGameManager gameManager;
