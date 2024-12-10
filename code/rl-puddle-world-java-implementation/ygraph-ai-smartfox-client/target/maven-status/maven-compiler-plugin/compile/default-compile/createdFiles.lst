@@ -24,6 +24,5 @@ ygraph/ai/smartfox/games/amazons/AmazonsBoard.class
 ygraph/ai/smartfox/games/rl/RLGamePlayer.class
 ygraph/ai/smartfox/games/amazons/AmazonsBoard$1.class
 ygraph/ai/smartfox/games/GamePlayer.class
-ygraph/ai/smartfox/games/rl/RLGameClient.class
 ygraph/ai/smartfox/games/Spectator.class
 ygraph/ai/smartfox/games/BaseGameGUI$2.class
