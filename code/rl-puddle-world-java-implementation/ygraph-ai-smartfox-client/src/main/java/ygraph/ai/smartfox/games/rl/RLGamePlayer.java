@@ -25,7 +25,7 @@ import java.util.Map;
 // This would be provided to the students with the connection details filled in, but the core logic would be left to them to implement
 public class RLGamePlayer implements IEventListener {
 
-    // Connectio params
+    // Connection params
     private String userName = "";
     private String password = "";
     private String serverIP = "localhost";
@@ -33,6 +33,7 @@ public class RLGamePlayer implements IEventListener {
     private String zoneName;
     private String roomName;
 
+    // Hashmap to store loaded in ENV variables
     private static final HashMap<String, String> ENV = loadEnv();
 
     // Creating a smartfox instance to connect to the server
@@ -47,8 +48,13 @@ public class RLGamePlayer implements IEventListener {
     private Map<Integer, double[]> qTable;
     private Map<Integer, Double> vTable;
 
+    // Checks if the client is awaiting a response from the server
     private boolean isAwaitingResponse = false;
+    
+    // Grid size of puddle world loading in from .env file
     private final int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
+
+    // Training completion check
     @SuppressWarnings("unused")
     private boolean trainingComplete = false;
 
@@ -88,6 +94,7 @@ public class RLGamePlayer implements IEventListener {
         this.smartFox.connect(this.serverIP, this.serverPort);
     }
 
+    // Loading in ENV variables
     private static HashMap<String, String> loadEnv() {
         HashMap<String, String> env = new HashMap<>();
         String workingDir = System.getProperty("user.dir");
@@ -96,8 +103,8 @@ public class RLGamePlayer implements IEventListener {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Skip empty lines and comments
-                if (line.isEmpty() || line.startsWith("#")) continue;
+                if (line.isEmpty() || line.startsWith("#")) 
+                    continue;
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     env.put(parts[0].trim(), parts[1].trim());
@@ -110,7 +117,7 @@ public class RLGamePlayer implements IEventListener {
     }
 
     // Q-table initialization with random values
-    // State IDs range: (0, 399) [400 states on 20x20 grid]
+    // State IDs range: (0, ((gridSize^2) - 1)) [400 states on 20x20 grid]
     // actions => 0=UP, 1=DOWN, 2=LEFT, 3=RIGHT
     // Given to students
     private void initializeQTable() {
@@ -181,6 +188,7 @@ public class RLGamePlayer implements IEventListener {
         }
     }
 
+    // Joins a user into a game room
     private void joinRoom() {
         ISFSObject params = new SFSObject();
         params.putUtfString("messageType", "join");
@@ -192,18 +200,10 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Sent JOIN request for room: " + this.roomName);
     }
 
-    // Handles the LOGIN event by sending a join request for the current user to a particular room
+    // Handles the LOGIN event by sending a join request for the current user to a particular room by calling joinRoom()
     private void handleLogin(BaseEvent event) {
         this.currentUser = (User) event.getArguments().get("user");
         System.out.println("Logged in as: " + currentUser.getName());
-
-        // ISFSObject params = new SFSObject();
-        // params.putUtfString("messageType", "join");
-        // params.putUtfString("room.name", this.roomName);
-        // params.putUtfString("room.password", this.password.trim());
-        // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
-        // smartFox.send(joinReq);
-        
         System.out.println("Sent LOGIN request with password: " + this.password);
         joinRoom();
     }
@@ -214,18 +214,10 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Login failed: " + errorMessage);
     }
 
-    // Handles the ROOM_JOIN event by logging the user joining a room and starts the RL episode
+    // Handles the ROOM_JOIN event by logging the user joining a room and starts the RL episode by requesting the initial state (state 0)
     private void handleRoomJoin(BaseEvent event) {
         this.currentRoom = (Room) event.getArguments().get("room");
         System.out.println("Joined room: " + currentRoom.getName());
-
-        // // Room joined, now send extension request
-        // ISFSObject params = new SFSObject();
-        // params.putUtfString("command", "join");
-        // params.putUtfString("room.name", this.roomName);
-        // params.putUtfString("room.password", this.password);
-        // ExtensionRequest joinReq = new ExtensionRequest("rl.action", params, this.currentRoom);
-        // smartFox.send(joinReq);
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -306,24 +298,25 @@ public class RLGamePlayer implements IEventListener {
             System.out.println("Unknown cmd: " + cmd);
         }
     }    
-    
+
+    // Dummy method that prints to console on user disconnecting
     private void processDisconnectResponse(ISFSObject params) {
         System.out.println("Processed disconnect response.");
     }
     
-
+    // Starts the game for the user on joining the room
     private void processJoinSuccess(ISFSObject params) {
         System.out.println("Processed join response.");
         System.out.println("Requesting initial state...");
         requestInitialState();
     }  
     
+    // Processes the GAME_TRAINING_COMPLETE message sent back from the server
     private void processTrainingComplete(ISFSObject params) {
         System.out.println("Received training complete message from server.");
         String message = params.getUtfString("message");
         System.out.println(message);
         this.trainingComplete = true;
-        // Disconnect from the server
         disconnect();
         System.exit(0);
     }
@@ -338,7 +331,7 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Received GAME_ERROR: " + error);
     }
 
-    // Handles info messages about the game from the server
+    // Handles info messages about the game's episodes from the server
     // Given to students
     private void processInfo(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
@@ -435,19 +428,20 @@ public class RLGamePlayer implements IEventListener {
         System.out.println("Available Rewards: " + Arrays.toString(msg.getAvailableRewards()));
     }
 
+    // Sends the final state message to the server
     public void sendFinalStateMessage() {
         boolean isTerminal = this.gameModel.isTerminal();
         double cumulativeReward = this.gameModel.getCumulativeReward();
         int stepsThisEpisode = this.gameModel.getStepsThisEpisode();
     
-        // Create the final state message
+        // Make final state RLClientGameMessage
         RLClientGameMessage finalStateMsg = new RLClientGameMessage(isTerminal, cumulativeReward, stepsThisEpisode);
         finalStateMsg.setUserName(this.userName);
     
-        // Convert to ISFSObject
+        // Change format to ISFSObject to send to server
         ISFSObject params = finalStateMsg.toSFSObject();
     
-        // Create and send the extension request
+        // Create and send the extension request to the current room in the server
         ExtensionRequest req = new ExtensionRequest("rl.action", params, this.currentRoom);
         smartFox.send(req);
     
@@ -455,7 +449,7 @@ public class RLGamePlayer implements IEventListener {
     }
 
     // Processes the GAME_ACTION_REWARD message from the server by getting the reward, the next state, the action taken
-    // Then it updates the Q and V tables based on the received reward and next state, and updates the current to the next state and gets possible actions from the next state
+    // Then it updates the Q and V tables based on the received reward and next state, and updates the steps in this episode
     // Partially given to students
     private void processActionReward(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
@@ -463,11 +457,8 @@ public class RLGamePlayer implements IEventListener {
         double reward = msg.getReward();
         int nextStateId = msg.getNextStateId();
         int action = msg.getAction();
-        
-        // Store previous state
         int previousStateId = this.gameModel.getStateId();
         
-        // Validate reward and state
         if (Double.isNaN(reward) || Double.isInfinite(reward)) {
             System.err.println("Invalid reward received: " + reward);
             return;
@@ -478,16 +469,14 @@ public class RLGamePlayer implements IEventListener {
             return;
         }
 
-        // Update state and reward
+        // Update state and steps in this episode
         this.gameModel.updateState(nextStateId);
-        //this.gameModel.addToCumulativeReward(reward);
         this.gameModel.incrementStepsThisEpisode();
 
-        // Update Q and V tables
         updateQTable(previousStateId, action, reward, nextStateId);
         updateVTable(previousStateId, reward, nextStateId);
         
-        // Send updates to server
+        // Updates for Q and V tables sent to server
         sendQUpdate(
             new int[]{previousStateId},
             new int[]{action},
@@ -498,16 +487,11 @@ public class RLGamePlayer implements IEventListener {
             new double[]{this.vTable.get(previousStateId)}
         );
 
-        // Update exploration rate
-        updateEpsilon();
-        
+        updateEpsilon();        
         isAwaitingResponse = false;
-
-        // **Check if the episode is complete before requesting further actions**
         if (!this.gameModel.isEpisodeComplete() && !this.gameModel.isTrainingComplete()) {
             requestAvailableActions(nextStateId);
         } else {
-            // Do not request actions, episode is complete
             if (this.gameModel.isTrainingComplete()) {
                 sendTrainingCompleteMessage();
             }
@@ -516,19 +500,12 @@ public class RLGamePlayer implements IEventListener {
 
     private void updateEpsilon() {
         if (epsilon > 0.01) {
-            epsilon *= 0.995; // Decay rate
+            epsilon *= 0.995;
             System.out.println("Epsilon decayed to: " + epsilon);
         }
-    }    
-
-    // Helper method to log state mapping
-    public void logStateMapping(int stateId) {
-        int row = stateId / gridSize;
-        int col = stateId % gridSize;
-        System.out.println("State " + stateId + " -> Grid(" + row + "," + col + ")");
     }
 
-    // Processes the GAME_FINAL_STATE message from the server by resetting the environment by checking if the final state has been reached
+    // Processes the GAME_FINAL_STATE message from the server by resetting the environment and checking if the final state has been reached
     // Given to students
     private void processFinalState(ISFSObject params) {
         RLClientGameMessage msg = new RLClientGameMessage();
@@ -539,24 +516,24 @@ public class RLGamePlayer implements IEventListener {
         double cumulativeReward = msg.getCumulativeReward();
         int successfulEpisodes = msg.getSuccessfulEpisodes();
     
-        // Update client-side game model
+        // Client-side agent updating
         this.gameModel.setTotalEpisodes(totalEpisodes);
         this.gameModel.setStepsThisEpisode(stepsTaken);
         this.gameModel.setCumulativeReward(cumulativeReward);
         this.gameModel.setSuccessfulEpisodes(successfulEpisodes);
     
-        // Log episode summary
+        // Episode summary
         System.out.println("\n");
         System.out.println("=== End of Episode" + " Summary ===");
         System.out.println("Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
         System.out.println("Episode Reward: " + cumulativeReward);
         System.out.println("===============================================\n");
     
-        // Reset episode-specific variables for the next episode
+        // Reset reward and steps for next episode
         this.gameModel.resetCumulativeReward();
         this.gameModel.resetStepsThisEpisode();
     
-        // Decide to start a new episode or end training
+        // Continue training or end training based on max episodes
         if (totalEpisodes < this.gameModel.getMaxEpisodes()) {
             System.out.println("Starting new episode...");
             requestInitialState();
@@ -566,6 +543,7 @@ public class RLGamePlayer implements IEventListener {
         }
     }          
     
+    // Sends a message to the server once training is complete
     public void sendTrainingCompleteMessage() {
         RLClientGameMessage trainingCompleteMsg = new RLClientGameMessage(RLClientGameMessage.GAME_TRAINING_COMPLETE);
         trainingCompleteMsg.setUserName(this.userName);
@@ -649,6 +627,7 @@ public class RLGamePlayer implements IEventListener {
         return bestAction;
     }
     
+    // Converts action indexes to strings
     private String getActionString(int actionIndex) {
         switch (actionIndex) {
             case 0:
@@ -751,7 +730,7 @@ public class RLGamePlayer implements IEventListener {
         return max;
     }
 
-    // Resets the puddle world environment with an extension request to the server
+    // Resets the puddle world environment with an extension request to the server and resets the reward for the episode 
     // Given to students
     protected void resetEnvironment() {
         RLClientGameMessage resetMsg = RLClientGameMessage.resetMessage(this.userName);
@@ -773,7 +752,7 @@ public class RLGamePlayer implements IEventListener {
         }
     }
 
-    // Main method to start the RLGamePlayer 
+    // Main method to start the RLGamePlayer
     // The following arguments needed to be typed into command line: <username> <password> <serverIP> <serverPort> <zoneName> <roomName>
     // Given to students
     public static void main(String[] args) {

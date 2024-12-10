@@ -10,7 +10,7 @@ import java.util.List;
 // This class creates and manages attributes of a message sent between the client and server
 public class RLClientGameMessage {
 
-    // Client to server messages
+    // Messaging protocol
     public static final String GAME_STATE = "GAME_STATE";
     public static final String GAME_AVAILABLE_ACTIONS = "GAME_AVAILABLE_ACTIONS";
     public static final String GAME_AVAILABLE_REWARDS = "GAME_AVAILABLE_REWARDS";
@@ -22,8 +22,6 @@ public class RLClientGameMessage {
     public static final String GAME_V_UPDATE = "GAME_V_UPDATE";
     public static final String GAME_INFO = "GAME_INFO";
     public static final String GAME_TRAINING_COMPLETE = "GAME_TRAINING_COMPLETE";
-
-    // Server to Client messages
     public static final String GAME_STATE_RESPONSE = "GAME_STATE_RESPONSE";
     public static final String GAME_AVAILABLE_ACTIONS_RESPONSE = "GAME_AVAILABLE_ACTIONS_RESPONSE";
     public static final String GAME_AVAILABLE_REWARDS_RESPONSE = "GAME_AVAILABLE_REWARDS_RESPONSE";

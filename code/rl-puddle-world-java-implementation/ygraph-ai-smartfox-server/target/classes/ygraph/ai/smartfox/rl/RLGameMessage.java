@@ -8,7 +8,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 
 // This class defines the messages for server-side communication
 public class RLGameMessage {
-    // Client to server messages
+    // Messaging protocol
     public static final String GAME_STATE = "GAME_STATE";
     public static final String GAME_AVAILABLE_ACTIONS = "GAME_AVAILABLE_ACTIONS";
     public static final String GAME_AVAILABLE_REWARDS = "GAME_AVAILABLE_REWARDS";
@@ -20,8 +20,6 @@ public class RLGameMessage {
     public static final String GAME_V_UPDATE = "GAME_V_UPDATE";
     public static final String GAME_INFO = "GAME_INFO";
     public static final String FORWARD_ACTION = "FORWARD_ACTION";
-
-    // Server to Client messages
     public static final String GAME_STATE_RESPONSE = "GAME_STATE_RESPONSE";
     public static final String GAME_AVAILABLE_ACTIONS_RESPONSE = "GAME_AVAILABLE_ACTIONS_RESPONSE";
     public static final String GAME_AVAILABLE_REWARDS_RESPONSE = "GAME_AVAILABLE_REWARDS_RESPONSE";
