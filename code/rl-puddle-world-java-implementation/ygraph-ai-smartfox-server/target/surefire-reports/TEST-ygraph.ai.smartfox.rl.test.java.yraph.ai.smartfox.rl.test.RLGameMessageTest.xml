@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.312" tests="24" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0.001" tests="12" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -55,28 +55,16 @@
     <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testDefaultRewardFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.002"/>
-  <testcase name="testResetWorldResetsPuddles" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testApplyQUpdateAlignmentWithClient" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testThreadSafetyInUpdates" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.28"/>
-  <testcase name="testMaxPuddlesFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testApplyVUpdateAlignmentWithClient" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testPerformActionUp" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testPerformActionRight" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testGridSizeFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testPerformActionDown" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.002"/>
-  <testcase name="testPerformActionLeft" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testRewardsAreConsistent" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testNoExceptionsOnMultipleResets" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testIsPuddle" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testPuddleRewardFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testIsTerminalState" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testGoalRewardFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testApplyQUpdate" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testApplyVUpdate" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testPuddleSizeFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testMultipleQAndVUpdates" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0.001"/>
-  <testcase name="testGetReward" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testReceiveQAndVUpdates" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
-  <testcase name="testQAndVInitializationFromEnv" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLWorldTest" time="0"/>
+  <testcase name="testSetAndGetReward" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetStepsThisEpisode" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetSuccessfulEpisodes" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetMessageType" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetIsTerminal" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetNextStateId" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetTotalEpisodes" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testVUpdateFields" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetStateId" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetCumulativeReward" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testSetAndGetAction" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
+  <testcase name="testQUpdateFields" classname="ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest" time="0"/>
 </testsuite>
