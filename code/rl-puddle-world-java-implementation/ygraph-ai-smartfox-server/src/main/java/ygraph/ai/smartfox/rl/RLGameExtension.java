@@ -32,6 +32,7 @@ public class RLGameExtension extends SFSExtension {
         scheduler.scheduleAtFixedRate(this::checkUserList, 0, 5, TimeUnit.SECONDS);
     }
 
+    // Extension killer post game finish
     @Override
     public void destroy() {
         System.out.println("RLGameExtension destroyed for COSC 322.");
@@ -93,6 +94,7 @@ public class RLGameExtension extends SFSExtension {
                 }
             }
 
+            // Track users removed from room
             for (String userName : usersToRemove) {
                 RLGameUser rlUser = gameManager.getUserByUsername(userName);
                 if (rlUser != null) {

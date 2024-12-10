@@ -60,9 +60,9 @@ public class RLGamePlayer implements IEventListener {
 
     // Learning Parameters: learning rate (prioritizes immediate over future rewards), discount factor (future rewards prioritized over immediate rewards), exploration rate (probability of choosing random action over best action given current knowledge of puddle world)
     // Set in server, so students don't need to worry about this
-    private double alpha = 0.1;
-    private double gamma = 0.9; 
-    private double epsilon = 1;
+    private double alpha = Double.parseDouble(ENV.getOrDefault("ALPHA", "0.1"));
+    private double gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
+    private double epsilon = Double.parseDouble(ENV.getOrDefault("EPSILON", "1.0"));
 
     // RLGamePlayer constructor that takes in username, password, IP, port, zone name, and room name as params
     public RLGamePlayer(String userName, String password, String serverIP, int serverPort, String zoneName, String roomName) {
