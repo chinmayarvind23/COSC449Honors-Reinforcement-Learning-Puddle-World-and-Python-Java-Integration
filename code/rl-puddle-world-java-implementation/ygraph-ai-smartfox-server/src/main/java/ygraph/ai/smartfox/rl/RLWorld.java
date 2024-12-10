@@ -22,9 +22,7 @@ public class RLWorld {
     private final Map<Integer, Double> vTable = new ConcurrentHashMap<>();
     private static final HashMap<String, String> ENV = loadEnv();
 
-    // Learning parameters: learning rate, discount factor, and exploration rate
-    // private double alpha = 0.1;
-    // private double gamma = 0.9;
+    // Learning parameter - exploration rate
     private double epsilon;
 
     private final int gridSize = Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
@@ -34,7 +32,7 @@ public class RLWorld {
     // List of puddle top-left positions to stretch by 2x2 squares for the puddles
     private final List<int[]> puddlePositions;
 
-    private final int goalStateId = gridSize * gridSize - 1; //399 is the terminal state ID
+    private final int goalStateId = gridSize * gridSize - 1;
 
     private int currentStateId;
 
@@ -94,8 +92,8 @@ public class RLWorld {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Skip empty lines and comments
-                if (line.isEmpty() || line.startsWith("#")) continue;
+                if (line.isEmpty() || line.startsWith("#")) 
+                    continue;
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     env.put(parts[0].trim(), parts[1].trim());
@@ -548,25 +546,6 @@ public class RLWorld {
         puddlePositions.clear();
         System.out.println("RL World has been cleaned up.");
     }
-
-    // Updates the Q-Table with the current state, action, reward, and next state as params
-    // public synchronized void updateQTable(int stateId, int action, double reward, int nextStateId) {
-    //     double[] currentQ = qTable.get(stateId);
-    //     if (currentQ == null) {
-    //         System.err.println("Q-Table entry missing for stateId: " + stateId);
-    //         return;
-    //     }
-    //     double[] nextQ = qTable.get(nextStateId);
-    //     if (nextQ == null) {
-    //         System.err.println("Q-Table entry missing for nextStateId: " + nextStateId);
-    //         return;
-    //     }
-    //     double maxNextStateQ = getMaxQ(nextQ);
-        
-    //     // Update Q-value for current state-action pair
-    //     currentQ[action] = currentQ[action] + alpha * (reward + gamma * maxNextStateQ - currentQ[action]);
-    //     qTable.put(stateId, currentQ);
-    // }
 
     // Check for puddle states overlapping with goal state
     private boolean isOverlappingGoal(int row, int col) {

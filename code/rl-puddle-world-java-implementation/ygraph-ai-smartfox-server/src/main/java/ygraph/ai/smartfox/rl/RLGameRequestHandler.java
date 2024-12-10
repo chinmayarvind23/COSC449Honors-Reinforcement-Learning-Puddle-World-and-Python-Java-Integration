@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-// This class handles RL-specific client-side requests like making actions and resets of a game
+// This class handles RL-specific client-side requests and sends responses back to the client
 public class RLGameRequestHandler extends BaseClientRequestHandler {
 
     private RLGameManager gameManager;
@@ -22,6 +22,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         this.gameManager = gameManager;
     }
 
+    // Loading in .env file
      private static HashMap<String, String> loadEnv() {
         HashMap<String, String> env = new HashMap<>();
         String workingDir = System.getProperty("user.dir");
@@ -30,8 +31,8 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Skip empty lines and comments
-                if (line.isEmpty() || line.startsWith("#")) continue;
+                if (line.isEmpty() || line.startsWith("#")) 
+                    continue;
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     env.put(parts[0].trim(), parts[1].trim());
@@ -43,7 +44,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         return env;
     }
 
-    // Handles various client requests like state, action, reset, available actions, available rewards, reward of action chosen, and final state
+    // Handles various client requests like actions, resets, available actions, available rewards, training completion, action rewards, Q and V updates, and game info
     @Override
     public void handleClientRequest(User user, ISFSObject params) {
         if (params == null) {
@@ -89,7 +90,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         if (rlUser.isTrainingComplete()) {
             System.out.println("User " + user.getName() + " has completed training.");
             sendTrainingCompleteMessage(user);
-            return; // Do not process further requests
+            return;
         }
 
         synchronized (rlUser) {
@@ -115,9 +116,6 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
                 case RLGameMessage.GAME_ACTION_REWARD:
                     handleActionRewardRequest(user, params, gameManager);
                     break;
-                // case RLGameMessage.GAME_FINAL_STATE:
-                //     handleFinalStateRequest(user, params, gameManager);
-                //     break;
                 case RLGameMessage.GAME_Q_UPDATE:
                     handleQUpdate(user, params, gameManager);
                     break;
@@ -135,6 +133,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         }
     }
 
+    // Sends training completion message to the client
     private void sendTrainingCompleteMessage(User user) {
         ISFSObject response = new SFSObject();
         response.putUtfString("messageType", RLGameMessage.GAME_TRAINING_COMPLETE);
@@ -142,7 +141,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         send("rl.action", response, user);
     }
 
-    // Sends the initial state and available actions/rewards to the client to start a new episode
+    // Sends the initial state and available actions & rewards to the client to start off a new episode
     private void sendInitialState(User user, RLGameUser rlUser) {
         // Reset the RLWorld for the new episode
         rlUser.resetGame();
@@ -233,6 +232,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         send("rl.action", rewardsResponse, user);
     }
 
+    // Responds to client with the available actions from a particular state
     private void handleAvailableActionsRequest(User user, ISFSObject params, RLGameManager gameManager) {
         try {
             RLGameUser rlUser = gameManager.getUser(user);
@@ -300,6 +300,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         }
     }            
 
+    // Responds to client with the available rewards from a particular state
     private void handleAvailableRewardsRequest(User user, ISFSObject params, RLGameManager gameManager) {
         try {
             RLGameUser rlUser = gameManager.getUser(user);
@@ -379,6 +380,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         }
     }               
     
+    // Responds with reward for the action sent by the client
     private void handleActionRewardRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
@@ -391,9 +393,6 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         double reward = params.getDouble("reward");
         int nextStateId = params.getInt("nextStateId");
 
-        // rlUser.updateQTable(action, reward, nextStateId);
-
-        // Sends action reward back to the client
         ISFSObject response = new SFSObject();
         response.putUtfString("messageType", RLGameMessage.GAME_ACTION_REWARD_RESPONSE);
         response.putInt("action", action);
@@ -402,11 +401,11 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         send("rl.action", response, user);
     }
 
+    // Called when a client sends the GAME_TRAINING_COMPLETE message and removes the user from the world
     private void handleTrainingComplete(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser != null) {
             System.out.println("Received GAME_TRAINING_COMPLETE from user: " + user.getName());
-            // Perform any necessary cleanup
             rlUser.cleanup();
             gameManager.removeUser(user);
         } else {
@@ -458,8 +457,7 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             sendErrorMessage(user, "Failed to process Q-Update.");
         }
     }
-    
-    // Helper method to validate stateId and action index
+
     private boolean isValidStateAction(int stateId, int action, RLWorld world) {
         final int gridSize =  Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
         if (stateId < 0 || stateId >= gridSize * gridSize) {
@@ -512,59 +510,13 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             sendErrorMessage(user, "Failed to process V-Update.");
         }
     }
-    
-    // Helper method to validate stateId
+
     private boolean isValidState(int stateId, RLWorld world) {
         final int gridSize =  Integer.parseInt(ENV.getOrDefault("GRID_SIZE", "5"));
         return stateId >= 0 && stateId < gridSize * gridSize;
-    }    
-    
-    // private void handleFinalStateRequest(User user, ISFSObject params, RLGameManager gameManager) {
-    //     RLGameMessage msg = new RLGameMessage();
-    //     msg.fromSFSObject(params);
-    //     boolean isTerminal = msg.isTerminal();
-    //     double cumulativeReward = msg.getCumulativeReward();
-    //     int stepsThisEpisode = msg.getStepsThisEpisode();
-    
-    //     RLGameUser rlUser = gameManager.getUser(user);
-    //     if (rlUser == null) {
-    //         System.out.println("RLGameUser not found for user: " + user.getName());
-    //         sendErrorMessage(user, "User not found.");
-    //         return;
-    //     }
-    
-    //     rlUser.setTerminal(isTerminal);
-    //     rlUser.updateRewards(cumulativeReward);
-    //     rlUser.updateStepsThisEpisode(stepsThisEpisode);
-    
-    //     if (rlUser.getCumulativeReward() >= rlUser.getSuccessRewardThreshold()) {
-    //         rlUser.incrementSuccessfulEpisodes();
-    //         System.out.println("Episode " + rlUser.getTotalEpisodes() + " was successful!");
-    //     }
-    
-    //     rlUser.concludeEpisode();
-    
-    //     // Construct GAME_FINAL_STATE_RESPONSE using RLGameMessage
-    //     RLGameMessage finalStateMsg = new RLGameMessage();
-    //     finalStateMsg.setMessageType(RLGameMessage.GAME_FINAL_STATE_RESPONSE);
-    //     finalStateMsg.setTotalEpisodes(rlUser.getTotalEpisodes());
-    //     finalStateMsg.setStepsThisEpisode(rlUser.getStepsThisEpisode());
-    //     finalStateMsg.setCumulativeReward(rlUser.getCumulativeReward());
-    //     finalStateMsg.setSuccessfulEpisodes(rlUser.getSuccessfulEpisodes());
-    //     finalStateMsg.setTerminal(rlUser.isTerminal());
-    
-    //     // Send GAME_FINAL_STATE_RESPONSE to the client
-    //     ISFSObject finalStateResponse = finalStateMsg.toSFSObject();
-    //     send("rl.action", finalStateResponse, user);
-    //     System.out.println("Sent GAME_FINAL_STATE_RESPONSE to user: " + user.getName());
-    
-    //     // Check if training is complete
-    //     if (rlUser.isTrainingComplete()) {
-    //         sendTrainingCompleteMessage(user);
-    //     }
-    // }            
+    }        
 
-    // Handles the GAME_INFO request by sending a summary of the RL agent's training over x episodes
+    // Handles the GAME_INFO request by sending a summary of the RL agent's current training episode
     private void handleInfoRequest(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
@@ -573,13 +525,11 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             return;
         }
 
-        // Retrieve metrics from RLGameUser
         double cumulativeReward = rlUser.getCumulativeReward();
         int stepsThisEpisode = rlUser.getStepsThisEpisode();
         int totalEpisodes = rlUser.getTotalEpisodes();
         int successfulEpisodes = rlUser.getSuccessfulEpisodes();
 
-        // Log metrics
         System.out.println("Episode " + totalEpisodes + " Summary:");
         System.out.println(" - Cumulative Reward: " + cumulativeReward);
         System.out.println(" - Steps Taken: " + stepsThisEpisode);
@@ -598,7 +548,6 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     }
 
     // Handles the GAME_ACTION_MOVE request by performing the action, updating the state, calculating the reward and responding with the reward, state, available actions and available rewards
-    // RLGameRequestHandler.java
     private void handleActionMove(User user, ISFSObject params, RLGameManager gameManager) {
         RLGameUser rlUser = gameManager.getUser(user);
         if (rlUser == null) {
@@ -609,25 +558,19 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
     
         int action = params.getInt("action");
         int stateId = params.getInt("stateId");
-    
-        // Validate the state ID
         if (stateId != rlUser.getCurrentStateId()) {
-            // System.out.println("State ID mismatch for user: " + user.getName() + ". Expected: " 
-            //     + rlUser.getCurrentStateId() + ", Received: " + stateId);
             sendErrorMessage(user, "State ID mismatch.");
             return;
         }
     
-        // Perform the action
         String actionStr = mapActionIndexToString(action);
         if (actionStr == null) {
             System.out.println("Invalid action index received: " + action);
             sendErrorMessage(user, "Invalid action index: " + action);
             return;
         }
+        // Make the move
         rlUser.takeAction(actionStr);
-    
-        // Retrieve updated state and reward
         int updatedStateId = rlUser.getCurrentStateId();
         double reward = rlUser.getLastReward();
 
@@ -639,10 +582,9 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
         actionRewardResponse.putInt("nextStateId", updatedStateId);
         send("rl.action", actionRewardResponse, user);
         System.out.println("Sent GAME_ACTION_REWARD_RESPONSE with action: " + action + ", reward: " + reward + ", nextStateId: " + updatedStateId);
-    
-
         int stopMethod = Integer.parseInt(ENV.getOrDefault("STOP_METHOD", "0"));
-        // Check if the episode has ended
+        
+        // Episode ending check based on stop method
         if (rlUser.isTerminal() || (stopMethod == 0 && rlUser.getStepsThisEpisode() >= rlUser.getMaxStepsPerEpisode())) {
             // Send GAME_FINAL_STATE_RESPONSE
             RLGameMessage finalStateMsg = new RLGameMessage();
@@ -655,16 +597,11 @@ public class RLGameRequestHandler extends BaseClientRequestHandler {
             ISFSObject finalStateResponse = finalStateMsg.toSFSObject();
             send("rl.action", finalStateResponse, user);
             System.out.println("Sent GAME_FINAL_STATE_RESPONSE");
-    
-            // Conclude the episode
+
             rlUser.concludeEpisode();
-    
-            // Check if training is complete
             if (rlUser.isTrainingComplete()) {
-                // Send GAME_TRAINING_COMPLETE
                 sendTrainingCompleteMessage(user);
             } else {
-                // Start a new episode by sending initial state and available actions/rewards
                 sendInitialState(user, rlUser);
             }
         } else {    

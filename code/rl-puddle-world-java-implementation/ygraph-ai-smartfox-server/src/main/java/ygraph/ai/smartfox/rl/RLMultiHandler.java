@@ -7,7 +7,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 import com.smartfoxserver.v2.exceptions.SFSJoinRoomException;
 
-// This class manages RL-specific client requests like joining rooms and disconnecting from the server, and interacting with RLGameManager
+// This class manages non-RL-specific client requests like joining rooms and disconnecting from the server, and interacting with RLGameManager
 public class RLMultiHandler extends BaseClientRequestHandler {
 
     private final RLGameManager gameManager;
@@ -16,7 +16,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
         this.gameManager = gameManager;
     }
 
-    // Handles client requests to join a room and disconnect from the server
+    // Handles client requests to join a room from the client
     @Override
     public void handleClientRequest(User sender, ISFSObject params) {
         if (params == null) {
@@ -31,9 +31,6 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             case "join":
                 handleJoinRequest(sender, params);
                 break;
-            // case "disconnect":
-            //     handleDisconnectRequest(sender, params);
-            //     break;
             default:
                 System.out.println("Unknown message type received in RLMultiHandler: " + messageType);
                 sendErrorMessage(sender, "Unknown message type: " + messageType);
@@ -87,17 +84,7 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             System.out.println("Unexpected error while user " + user.getName() + " attempts to join room " + roomName + ": " + e.getMessage());
             sendErrorMessage(user, "An unexpected error occurred.");
         }
-    }            
-
-    // Handles the disconnect command from the client by removing the user from their game and disconnecting them from the server by notifiying the game manager
-    // private void handleDisconnectRequest(User user, ISFSObject params) {
-    //     System.out.println("User " + user.getName() + " requests to disconnect.");
-    //     if (gameManager != null) {
-    //         gameManager.removeUser(user);
-    //     }
-    //     getApi().logout(user);
-    //     System.out.println("User " + user.getName() + " has been disconnected.");
-    // }
+    }
 
     // Sends an error message to the user
     private void sendErrorMessage(User user, String message) {

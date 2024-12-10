@@ -6,7 +6,7 @@ import java.util.List;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 
-// This class defines the messages for server-side communication
+// This class defines the messaging protocol that understand what is being sent from the client side and can communicate back to the client side
 public class RLGameMessage {
     // Messaging protocol
     public static final String GAME_STATE = "GAME_STATE";
@@ -55,13 +55,12 @@ public class RLGameMessage {
 
     private String errorMessage;
 
+    // Constructor
     public RLGameMessage() {
         this.messageType = "";
         this.userName = "";
         this.stateId = 0;
-        // this.action = -1;
         this.reward = 0.0;
-        // this.nextStateId = -1;
         this.isTerminal = false;
         this.qStateIds = new int[0];
         this.qActionIndices = new int[0];
@@ -95,6 +94,7 @@ public class RLGameMessage {
         this.stepsThisEpisode = stepsThisEpisode;
     }
 
+    // Converting RLGameMessage into an ISFSObject for sending data to the client
     public ISFSObject toSFSObject() {
         ISFSObject params = new SFSObject();
         params.putUtfString("messageType", this.messageType);
@@ -179,6 +179,7 @@ public class RLGameMessage {
         return params;
     }    
 
+    // Getting fields sent from the client as an ISFSObject
     public void fromSFSObject(ISFSObject params) {
         this.messageType = params.getUtfString("messageType");
         this.userName = params.getUtfString("userName");

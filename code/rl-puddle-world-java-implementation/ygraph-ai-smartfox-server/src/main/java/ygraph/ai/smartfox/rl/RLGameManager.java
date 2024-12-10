@@ -45,8 +45,8 @@ public class RLGameManager {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Skip empty lines and comments
-                if (line.isEmpty() || line.startsWith("#")) continue;
+                if (line.isEmpty() || line.startsWith("#")) 
+                    continue;
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
                     env.put(parts[0].trim(), parts[1].trim());

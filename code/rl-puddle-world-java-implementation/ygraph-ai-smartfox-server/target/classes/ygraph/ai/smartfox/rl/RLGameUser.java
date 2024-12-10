@@ -16,7 +16,7 @@ public class RLGameUser {
 
     private static final HashMap<String, String> ENV = loadEnv();
 
-    // Creating a state ID, a final reward, and a terminal state check
+    // Creating variables for state ID, a final reward, a terminal state check, maximum episodes, and maximum number of steps in an episode
     private int currentStateId;
     private double lastReward;
     private boolean isTerminal;
@@ -34,7 +34,6 @@ public class RLGameUser {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
-                // Skip empty lines and comments
                 if (line.isEmpty() || line.startsWith("#")) continue;
                 String[] parts = line.split("=", 2);
                 if (parts.length == 2) {
@@ -182,7 +181,6 @@ public class RLGameUser {
                 System.out.println("User " + user.getName() + " stopped due to STOP_METHOD=2 random stopping condition.");
             }
         }
-        // END OF ADDED CODE
     
         // Check for terminal state or stopping criteria
         if (world.isTerminalState(currentStateId)) {
@@ -197,13 +195,12 @@ public class RLGameUser {
         // Log the state transition and reward
         System.out.println("Action Taken: " + actionStr + ", New State: " + newStateId + ", Reward: " + reward);
     }    
-    
-    // Helper method to validate position
+
     private boolean isValidPosition(int row, int col) {
         return row >= 0 && row < gridSize && col >= 0 && col < gridSize;
     }    
 
-    // Helper method to map action strings to indices
+    // Convert action strings to action indices
     private int mapActionStringToIndex(String actionStr) {
         switch (actionStr) {
             case "UP":
@@ -223,9 +220,11 @@ public class RLGameUser {
         this.cumulativeReward += reward;
     }
 
+    // Episode summary generator
+    // If training hasn't finished, 
     public void concludeEpisode() {
         if (!isTrainingComplete()) {
-            totalEpisodes++; // Increment only once
+            totalEpisodes++;
             if (cumulativeReward >= successRewardThreshold) {
                 successfulEpisodes++;
                 System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
@@ -240,7 +239,6 @@ public class RLGameUser {
             // Check if the maximum number of episodes has been reached
             if (isTrainingComplete()) {
                 System.out.println("Maximum number of episodes reached. Ending training.");
-                // Do not reset the game; training is complete
             } else {
                 resetGame();
             }
@@ -285,7 +283,7 @@ public class RLGameUser {
         System.out.println("Game reset for user: " + user.getName() + ". New starting state: " + currentStateId);
     }
 
-    // Cleans up the world, done in the RLWorld class when a user leaves a world
+    // Cleans up the world when a user leaves the game
     public void cleanup() {
         System.out.println("Cleaning up RLGameUser for user: " + user.getName());
         world.cleanup();

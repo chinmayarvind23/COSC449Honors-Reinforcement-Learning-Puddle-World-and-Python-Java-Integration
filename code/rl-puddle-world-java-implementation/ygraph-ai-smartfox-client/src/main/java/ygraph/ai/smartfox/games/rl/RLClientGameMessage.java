@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-// This class creates and manages attributes of a message sent between the client and server
+// This class creates and manages attributes of a message sent between the client and server - establishing a consistent protocol
 public class RLClientGameMessage {
 
     // Messaging protocol
