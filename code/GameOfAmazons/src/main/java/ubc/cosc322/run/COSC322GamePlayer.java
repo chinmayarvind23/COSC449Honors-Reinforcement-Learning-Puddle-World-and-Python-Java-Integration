@@ -2,8 +2,8 @@ package ubc.cosc322.run;
 
 import java.util.*;
 
-import ubc.cosc322.actionutil.ActionFactory;
-import ubc.cosc322.actionutil.Action;
+// import ubc.cosc322.actionutil.ActionFactory;
+// import ubc.cosc322.actionutil.Action;
 import ubc.cosc322.mcts.MCTS_Manager;
 import ubc.cosc322.mcts.Node;
 
@@ -111,7 +111,6 @@ public class COSC322GamePlayer extends GamePlayer {
 
 				@SuppressWarnings("unused")
 				String playingWhiteQueens = (String) msgDetails.get(AmazonsGameMessage.PLAYER_WHITE);
-				@SuppressWarnings("unused")
 				String playingBlackQueens = (String) msgDetails.get(AmazonsGameMessage.PLAYER_BLACK);
 				setMyQueen(playingBlackQueens);
 				MCTS_Manager.setCurrentNode(new Node(this.board, 2, null, null, null, 0));

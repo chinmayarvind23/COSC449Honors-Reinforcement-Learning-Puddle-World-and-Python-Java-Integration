@@ -1,8 +1,8 @@
 package ubc.cosc322.actionutil;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
+// import java.util.Comparator;
+// import java.util.PriorityQueue;
 
 public class ActionFactory {
 
@@ -243,6 +243,7 @@ public class ActionFactory {
             for(int col=0; col<10; col++)
                 newState[row][col] = state[row][col];
 
+        @SuppressWarnings("unused")
         int newPlayer;
         if(player == 1)
             newPlayer = 2;
