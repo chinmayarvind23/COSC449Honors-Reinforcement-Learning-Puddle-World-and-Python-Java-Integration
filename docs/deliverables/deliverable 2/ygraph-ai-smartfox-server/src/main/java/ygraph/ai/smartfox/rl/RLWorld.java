@@ -53,6 +53,8 @@ public class RLWorld {
     private double lastReward;
     private boolean isTerminal;
 
+    private double gamma;
+
     // Constructors
     public RLWorld() {
         random = new Random();
@@ -62,6 +64,7 @@ public class RLWorld {
         this.defaultReward = Double.parseDouble(ENV.getOrDefault("DEFAULT_REWARD", "-0.01"));
         this.puddleReward = Double.parseDouble(ENV.getOrDefault("PUDDLE_REWARD", "-1.0"));
         this.goalReward = Double.parseDouble(ENV.getOrDefault("GOAL_REWARD", "10.0"));
+        this.gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
         puddlePositions = new ArrayList<>();
         initializeQTable();
         initializeVTable();
@@ -78,6 +81,7 @@ public class RLWorld {
         this.defaultReward = Double.parseDouble(ENV.getOrDefault("DEFAULT_REWARD", "-0.01"));
         this.puddleReward = Double.parseDouble(ENV.getOrDefault("PUDDLE_REWARD", "-1.0"));
         this.goalReward = Double.parseDouble(ENV.getOrDefault("GOAL_REWARD", "10.0"));
+        this.gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
         this.random = new Random();
         this.puddlePositions = new ArrayList<>();
         initializeQTable();
@@ -525,4 +529,8 @@ public class RLWorld {
     public void setTerminal(boolean terminal) {
         this.isTerminal = terminal;
     }
+
+    public double getGamma() {
+        return this.gamma;
+    }    
 }

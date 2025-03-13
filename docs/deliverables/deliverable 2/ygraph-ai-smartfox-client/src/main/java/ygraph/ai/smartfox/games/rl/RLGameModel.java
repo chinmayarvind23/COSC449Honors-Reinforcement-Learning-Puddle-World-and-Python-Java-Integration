@@ -17,6 +17,8 @@ public class RLGameModel {
     private int stepsThisEpisode;
     private int maxStepsPerEpisode = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
     private boolean success;
+    private double gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
+    private static final String EPISODE_SEPARATOR = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
 
     // Number of episodes completed - for testing purposes, will be cleaned up soon
     private int totalEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
@@ -108,7 +110,7 @@ public class RLGameModel {
 
     // Update cumulative reward for training
     public void updateReward(double reward) {
-        this.cumulativeReward += reward;
+        this.cumulativeReward += Math.pow(gamma, this.stepsThisEpisode - 1) * reward;
     }
 
     // Setting terminal state and success of the episode
@@ -164,10 +166,11 @@ public class RLGameModel {
     // Add onto cumulative reward for an episode
     public void addToCumulativeReward(double reward) {
         if (!Double.isNaN(reward) && !Double.isInfinite(reward)) {
-            this.cumulativeReward += reward;
-            this.episodeReward += reward;
+            double discountedReward = Math.pow(gamma, this.stepsThisEpisode - 1) * reward;
+            this.cumulativeReward += discountedReward;
+            this.episodeReward += discountedReward;
             System.out.println(String.format(
-                "Episode %d/%d - Step %d/%d - Reward: %.2f (Episode Total: %.2f)", 
+                "Episode %d/%d - Step %d/%d - Reward: %.2f (Discounted Episode Total: %.2f)", 
                 currentEpisode + 1, MAX_EPISODES,
                 stepsThisEpisode + 1, MAX_STEPS,
                 reward, episodeReward
@@ -259,7 +262,7 @@ public class RLGameModel {
 
         System.out.println("\n=== Starting Episode " + (currentEpisode + 1) + "/" + MAX_EPISODES + " ===");
         System.out.println("Steps: 0/" + MAX_STEPS);
-        System.out.println("Episode Reward: 0.0");
+        System.out.println("Discounted Episode Reward: 0.0");
         System.out.println("===========================\n");
 
         if (gamePlayer != null) {
@@ -275,6 +278,8 @@ public class RLGameModel {
             System.out.println("Ignoring max steps end condition for STOP_METHOD=1");
             return;
         }
+
+        System.out.println(EPISODE_SEPARATOR);
 
         // Episode terminated and summary printed if the episode wasn't terminated
         if (!episodeComplete) {
@@ -300,6 +305,8 @@ public class RLGameModel {
                 }
             }
         }
+
+        System.out.println(EPISODE_SEPARATOR);
     }
 
     public double getEpisodeReward() {

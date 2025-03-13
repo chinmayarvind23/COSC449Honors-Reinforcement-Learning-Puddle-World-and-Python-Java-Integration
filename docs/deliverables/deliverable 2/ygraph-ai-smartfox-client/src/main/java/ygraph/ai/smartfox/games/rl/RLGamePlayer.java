@@ -64,6 +64,8 @@ public class RLGamePlayer implements IEventListener {
     private double gamma = Double.parseDouble(ENV.getOrDefault("GAMMA", "0.9"));
     private double epsilon = Double.parseDouble(ENV.getOrDefault("EPSILON", "1.0"));
 
+    private static final String EPISODE_SEPARATOR = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
+
     // RLGamePlayer constructor that takes in username, password, IP, port, zone name, and room name as params
     public RLGamePlayer(String userName, String password, String serverIP, int serverPort, String zoneName, String roomName) {
         this.userName = userName;
@@ -524,10 +526,12 @@ public class RLGamePlayer implements IEventListener {
     
         // Episode summary
         System.out.println("\n");
+        System.out.println(EPISODE_SEPARATOR);
         System.out.println("=== End of Episode" + " Summary ===");
         System.out.println("Steps Taken: " + stepsTaken + "/" + this.gameModel.getMaxStepsPerEpisode());
-        System.out.println("Episode Reward: " + cumulativeReward);
+        System.out.println("Discounted Episode Reward: " + cumulativeReward);
         System.out.println("===============================================\n");
+        System.out.println(EPISODE_SEPARATOR);
     
         // Reset reward and steps for next episode
         this.gameModel.resetCumulativeReward();

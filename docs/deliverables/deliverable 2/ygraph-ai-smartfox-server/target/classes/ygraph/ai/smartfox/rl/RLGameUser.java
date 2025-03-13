@@ -22,6 +22,7 @@ public class RLGameUser {
     private boolean isTerminal;
     private final int maxEpisodes = Integer.parseInt(ENV.getOrDefault("EPISODE_COUNT", "2"));
     private int maxStepsPerEpisode = Integer.parseInt(ENV.getOrDefault("MAX_STEPS", "10"));
+    private static final String EPISODE_SEPARATOR = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
     public int getMaxEpisodes() {
         return maxEpisodes;
     }
@@ -150,8 +151,8 @@ public class RLGameUser {
         this.currentStateId = newStateId;
         this.lastReward = reward;
         stepsThisEpisode++;
-        cumulativeReward += lastReward;
-    
+        cumulativeReward += Math.pow(world.getGamma(), stepsThisEpisode - 1) * lastReward;
+
         // New position of agent
         int newRow = newStateId / gridSize;
         int newCol = newStateId % gridSize;
@@ -215,12 +216,13 @@ public class RLGameUser {
                 successfulEpisodes++;
                 System.out.println("User " + user.getName() + " achieved success in episode " + totalEpisodes);
             }
-            
+            System.out.println(EPISODE_SEPARATOR);
             System.out.println("End of Episode Summary:");
             System.out.println(" - Total Episodes: " + totalEpisodes);
             System.out.println(" - Successful Episodes: " + successfulEpisodes);
             System.out.println(" - Steps Taken: " + stepsThisEpisode);
-            System.out.println(" - Episode Reward: " + cumulativeReward);
+            System.out.println(" - Discounted Episode Reward: " + cumulativeReward);
+            System.out.println(EPISODE_SEPARATOR);
             if (isTrainingComplete()) {
                 System.out.println("Maximum number of episodes reached. Ending training.");
             } else {
