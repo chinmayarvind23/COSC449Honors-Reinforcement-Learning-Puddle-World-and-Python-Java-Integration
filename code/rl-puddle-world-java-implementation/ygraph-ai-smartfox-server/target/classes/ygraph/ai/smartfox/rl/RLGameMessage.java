@@ -182,6 +182,10 @@ public class RLGameMessage {
     // Getting fields sent from the client as an ISFSObject
     public void fromSFSObject(ISFSObject params) {
         this.messageType = params.getUtfString("messageType");
+        if (this.messageType == null) {
+            this.messageType = "";
+            System.err.println("Warning: messageType was null. Defaulting to empty string.");
+        }
         this.userName = params.getUtfString("userName");
     
         switch (this.messageType) {

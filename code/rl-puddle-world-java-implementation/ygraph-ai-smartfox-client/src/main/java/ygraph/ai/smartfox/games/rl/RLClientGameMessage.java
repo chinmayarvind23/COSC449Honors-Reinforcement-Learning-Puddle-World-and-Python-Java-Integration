@@ -182,6 +182,10 @@ public class RLClientGameMessage {
     // Getting fields sent from the server as an ISFSObject
     public void fromSFSObject(ISFSObject params) {
         this.messageType = params.getUtfString("messageType");
+        if (this.messageType == null) {
+            this.messageType = "";
+            System.err.println("Warning: messageType was null. Defaulting to empty string.");
+        }
         this.userName = params.getUtfString("userName");
     
         System.out.println("Parsing messageType: " + this.messageType);
@@ -239,7 +243,6 @@ public class RLClientGameMessage {
                 }
                 break;
             case GAME_RESET_RESPONSE:
-                // Handle reset response if necessary
                 break;
             case GAME_Q_UPDATE:
                 List<Integer> qStateList = (List<Integer>) params.getIntArray("qStateIds");

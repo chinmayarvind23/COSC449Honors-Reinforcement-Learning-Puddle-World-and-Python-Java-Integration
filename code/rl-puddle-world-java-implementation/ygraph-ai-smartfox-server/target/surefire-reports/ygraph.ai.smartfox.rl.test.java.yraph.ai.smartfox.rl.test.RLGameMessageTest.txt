@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest
 -------------------------------------------------------------------------------
-Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest
+Tests run: 12, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.001 s - in ygraph.ai.smartfox.rl.test.java.yraph.ai.smartfox.rl.test.RLGameMessageTest

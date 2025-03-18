@@ -58,12 +58,12 @@ public class RLMultiHandler extends BaseClientRequestHandler {
             return;
         }
     
-        int numOfPlayers = room.getPlayersList().size();
-        if (numOfPlayers > 0) {
-            System.out.println("Room " + roomName + " is already occupied.");
-            sendErrorMessage(user, "Room " + roomName + " is already occupied.");
-            return;
-        }
+        // int numOfPlayers = room.getPlayersList().size();
+        // if (numOfPlayers > 0) {
+        //     System.out.println("Room " + roomName + " is already occupied.");
+        //     sendErrorMessage(user, "Room " + roomName + " is already occupied.");
+        //     return;
+        // }
     
         try {
             getApi().joinRoom(user, room, roomPassword, false, user.getLastJoinedRoom());
