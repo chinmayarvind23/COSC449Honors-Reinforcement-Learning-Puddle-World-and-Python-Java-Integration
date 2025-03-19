@@ -327,6 +327,7 @@ public class RLGamePlayer implements IEventListener {
     // Handles error messages from the server
     // Given to students
     private void processError(ISFSObject params) {
+        isAwaitingResponse = false;
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
         String error = params.getUtfString("error");
@@ -336,6 +337,7 @@ public class RLGamePlayer implements IEventListener {
     // Handles info messages about the game's episodes from the server
     // Given to students
     private void processInfo(ISFSObject params) {
+        isAwaitingResponse = false;
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
         double cumulativeReward = msg.getCumulativeReward();
@@ -396,6 +398,7 @@ public class RLGamePlayer implements IEventListener {
     // And then sends the chosen action back to the server
     // Given to students
     private void processAvailableActions(ISFSObject params) {
+        isAwaitingResponse = false;
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
         this.gameModel.updateAvailableActions(msg.getAvailableActions());
@@ -510,6 +513,7 @@ public class RLGamePlayer implements IEventListener {
     // Processes the GAME_FINAL_STATE message from the server by resetting the environment and checking if the final state has been reached
     // Given to students
     private void processFinalState(ISFSObject params) {
+        isAwaitingResponse = false;
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
     
@@ -562,6 +566,7 @@ public class RLGamePlayer implements IEventListener {
     // Processes the GAME_RESET message from the server by requesting the initial state of the game
     // Given to students
     private void processReset(ISFSObject params) {
+        isAwaitingResponse = false;
         RLClientGameMessage msg = new RLClientGameMessage();
         msg.fromSFSObject(params);
         String resetUserName = msg.userName;
@@ -650,9 +655,12 @@ public class RLGamePlayer implements IEventListener {
     // Sends the action chosen by the RL agent to the server via the extension request
     // Given to students
     protected void sendAction(int action, int stateId) {
-        if (isAwaitingResponse) {
-            System.out.println("Awaiting server response. Action not sent.");
-            return;
+        while (isAwaitingResponse) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         
         isAwaitingResponse = true;
