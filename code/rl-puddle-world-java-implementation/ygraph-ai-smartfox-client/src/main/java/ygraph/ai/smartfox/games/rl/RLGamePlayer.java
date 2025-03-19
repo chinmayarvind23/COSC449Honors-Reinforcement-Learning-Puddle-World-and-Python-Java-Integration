@@ -505,7 +505,7 @@ public class RLGamePlayer implements IEventListener {
 
     private void updateEpsilon() {
         if (epsilon > 0.01) {
-            epsilon *= 0.995;
+            epsilon *= 0.99;
             System.out.println("Epsilon decayed to: " + epsilon);
         }
     }
