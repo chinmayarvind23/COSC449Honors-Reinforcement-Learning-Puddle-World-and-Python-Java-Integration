@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import re
 import csv
 import sys
@@ -22,8 +21,8 @@ def parse_client_logs(client_log_path):
         if line == "=== End of Episode Summary ===":
             episode += 1
             if i + 2 < len(lines):
-                steps_line = lines[i + 1].strip()  # "Steps Taken: 20/30"
-                reward_line = lines[i + 2].strip() # "Discounted Episode Reward: -5.627220814338541"
+                steps_line = lines[i + 1].strip()  # Steps Taken: 20/30
+                reward_line = lines[i + 2].strip() # Discounted Episode Reward: -5.627220814338541
                 m_steps = re.search(r'^Steps Taken:\s+(\d+)/', steps_line)
                 if m_steps:
                     try:
@@ -32,8 +31,6 @@ def parse_client_logs(client_log_path):
                         client_steps = None
                 else:
                     client_steps = None
-
-                # Extract the reward after the colon
                 m_reward = re.search(r'^Discounted Episode Reward:\s+([-+]?\d*\.?\d+(?:[eE][-+]?\d+)?)', reward_line)
                 if m_reward:
                     try:
@@ -44,7 +41,7 @@ def parse_client_logs(client_log_path):
                     client_reward = None
 
                 episodes[episode] = (client_steps, client_reward)
-                i += 2  # Skip the two lines we just processed
+                i += 2
         i += 1
 
     return episodes
@@ -62,8 +59,6 @@ def parse_server_logs(server_log_path):
 
     with open(server_log_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-
-    # Count "error" lines (case-insensitive)
     for line in lines:
         if re.search(r'error', line, re.IGNORECASE):
             error_count += 1
@@ -75,8 +70,8 @@ def parse_server_logs(server_log_path):
         if "End of episode summary:" in line:
             episode += 1
             if i + 4 < len(lines):
-                steps_line = lines[i + 3].strip()    # " - Steps Taken: 26"
-                reward_line = lines[i + 4].strip()   # "- Discounted Episode Reward: -8.595328550337097"
+                steps_line = lines[i + 3].strip()    # - Steps Taken: 26
+                reward_line = lines[i + 4].strip()   # - Discounted Episode Reward: -8.595328550337097
                 m_steps = re.search(r'Steps Taken:\s*(\d+)', steps_line)
                 if m_steps:
                     try:
@@ -96,7 +91,7 @@ def parse_server_logs(server_log_path):
                     server_reward = None
 
                 episodes[episode] = (server_steps, server_reward)
-            i += 5  # Skip past the summary block
+            i += 5
         else:
             i += 1
 

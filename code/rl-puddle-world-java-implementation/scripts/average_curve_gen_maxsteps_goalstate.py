@@ -1,0 +1,40 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+csv_file_path = input("Enter the CSV file path: ").strip()
+df = pd.read_csv(csv_file_path)
+df["MaxQDiff"] = pd.to_numeric(df["MaxQDiff"], errors="coerce")
+s = df.groupby("EpisodeNumber")["MaxQDiff"].mean()
+moving_avg = s.rolling(window=10, min_periods=1).mean()
+moving_std = s.rolling(window=10, min_periods=1).std()
+moving_var = s.rolling(window=10, min_periods=1).var()
+rel_change = s.pct_change()
+threshold = 0.001
+stability_streak = []
+streak = 0
+for val in s.abs().values:
+    if val < threshold:
+        streak += 1
+    else:
+        streak = 0
+    stability_streak.append(streak)
+stability_streak_series = pd.Series(stability_streak, index=s.index)
+
+plt.figure(figsize=(12,8))
+plt.plot(s.index, s.values, marker='o', linestyle='-', label='Difference in Maximum Q-value for state 0')
+plt.plot(moving_avg.index, moving_avg.values, marker='o', linestyle='--', color='red', label='Moving Average of Difference in Maximum Q-value for state 0 (10 episode window)')
+plt.xlabel("Training Episode Number")
+plt.ylabel("Difference in Max Q-values for State 0 between episodes (one to the next)")
+plt.title("Change in Max Q-values for State 0 between episodes in one full program run (averaged over 5 runs)")
+plt.legend()
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(12,8))
+plt.plot(moving_var.index, moving_var.values, marker='o', linestyle='-', color='green', label='Moving Variance of Difference in Maximum Q-value for state 0 (10 episode window)')
+plt.xlabel("Training Episode Number")
+plt.ylabel("Variance of change in Max Q-values for State 0 between episodes (10 episode window)")
+plt.title("Rolling Variance of change in Max Q-values for State 0 in one full program run (10 episode window) (averaged over 5 runs)")
+plt.legend()
+plt.grid(True)
+plt.show()

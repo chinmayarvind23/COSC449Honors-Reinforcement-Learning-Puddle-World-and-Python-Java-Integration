@@ -118,7 +118,7 @@ public class RLGamePlayer implements IEventListener {
         return env;
     }
 
-    // Q-table initialization with random values
+    // Q-table initialization with values set to 0
     // State IDs range: (0, ((gridSize^2) - 1)) [400 states on 20x20 grid]
     // actions => 0=UP, 1=DOWN, 2=LEFT, 3=RIGHT
     // Given to students
@@ -126,7 +126,7 @@ public class RLGamePlayer implements IEventListener {
         for (int state = 0; state < gridSize * gridSize; state++) {
             double[] actions = new double[4];
             for (int a = 0; a < 4; a++) {
-                actions[a] = Math.random();
+                actions[a] = 0.0;
             }
             qTable.put(state, actions);
         }
@@ -505,7 +505,7 @@ public class RLGamePlayer implements IEventListener {
 
     private void updateEpsilon() {
         if (epsilon > 0.01) {
-            epsilon *= 0.99;
+            epsilon *= 0.90;
             System.out.println("Epsilon decayed to: " + epsilon);
         }
     }

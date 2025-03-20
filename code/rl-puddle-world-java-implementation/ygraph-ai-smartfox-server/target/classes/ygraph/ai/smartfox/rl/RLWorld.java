@@ -113,12 +113,12 @@ public class RLWorld {
         return env;
     }
 
-    // Initializes the master Q-table with random values for each state-action pair
+    // Initializes the master Q-table with values set to 0 for each state-action pair
     private void initializeQTable() {
         for (int state = 0; state < gridSize * gridSize; state++) {
             double[] actions = new double[4];
             for (int a = 0; a < 4; a++) {
-                actions[a] = Math.random();
+                actions[a] = 0.0;
             }
             qTable.put(state, actions);
         }

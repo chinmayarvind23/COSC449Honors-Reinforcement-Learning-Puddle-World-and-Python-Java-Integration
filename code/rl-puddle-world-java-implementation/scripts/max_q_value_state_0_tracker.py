@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import re
 import csv
 import sys
@@ -31,6 +30,22 @@ def parse_client_logs_for_max_q(log_path):
                 current_max = float('-inf')
     return episodes
 
+def parse_client_logs_for_max_q_diff(log_path):
+    episodes = parse_client_logs_for_max_q(log_path)
+    
+    differences = {}
+    prev_q = None
+    for ep in sorted(episodes.keys()):
+        current_q = episodes[ep]
+        if prev_q is not None and current_q is not None:
+            q_diff = current_q - prev_q
+        else:
+            q_diff = None
+        
+        differences[ep] = (current_q, q_diff)
+        prev_q = current_q
+    return differences
+
 def get_next_run_number(csv_path):
     run_number = 1
     if os.path.exists(csv_path):
@@ -50,24 +65,28 @@ def get_next_run_number(csv_path):
         except Exception:
             run_number = 1
     return run_number
-
-def append_max_q_to_csv(episodes, run_number, csv_path):
+    
+def append_max_q_to_csv(differences, run_number, csv_path):
     file_empty = not os.path.exists(csv_path) or os.stat(csv_path).st_size == 0
 
     with open(csv_path, 'a', newline='') as f:
         writer = csv.writer(f)
         if file_empty:
-            writer.writerow(["RunNumber", "EpisodeNumber", "MaxQValueForState0"])
-        for ep in sorted(episodes.keys()):
-            writer.writerow([run_number, ep, episodes[ep]])
-    print(f"Appended run {run_number} results to {csv_path}")
+            writer.writerow(["RunNumber", "EpisodeNumber", "MaxQValueForState0", "MaxQDiff"])
+        
+        for ep in sorted(differences.keys()):
+            max_q, q_diff = differences[ep]
+            writer.writerow([run_number, ep, max_q, q_diff])
+    
+    print(f"Appended run {run_number} results (with Q-value differences) to {csv_path}")
 
 def main():
-    client_log_path = input("Enter the full path to the client log file: ").strip()
-    output_csv_path = input("Enter the full path for the output CSV file: ").strip()
+    client_log_path = input("Enter path to client logs file: ").strip()
+    output_csv_path = input("Enter path for output CSV file: ").strip()
     run_number = get_next_run_number(output_csv_path)
     print(f"Next run number is: {run_number}")
-    episodes = parse_client_logs_for_max_q(client_log_path)
-    append_max_q_to_csv(episodes, run_number, output_csv_path)
+    differences = parse_client_logs_for_max_q_diff(client_log_path)
+    append_max_q_to_csv(differences, run_number, output_csv_path)
+
 if __name__ == "__main__":
     main()
