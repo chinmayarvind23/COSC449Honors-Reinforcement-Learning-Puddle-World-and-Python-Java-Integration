@@ -1,0 +1,110 @@
+++++++++++++++++++++++++++++++++++++++++++++
+Maximum Steps Training Termination Condition
+++++++++++++++++++++++++++++++++++++++++++++
+Run 1: 
+- Number of Episodes: 500 episodes
+- Start time: 06:28:30,409 
+- End time: 06:27:35,154
+- Wall clock time taken for completion: 55 seconds, 255 milliseconds
+
+Run 2: 
+- Number of Episodes: 500 episodes
+- Start time: 06:31:15,235
+- End time: 06:32:05,916
+- Wall clock time taken for completion: 50 seconds, 681 milliseconds
+
+Run 3: 
+- Number of Episodes: 500 episodes
+- Start time: 06:35:09,513
+- End time: 06:35:59,596
+- Wall clock time taken for completion: 50 seconds, 83 milliseconds
+
+Run 4: 
+- Number of Episodes: 500 episodes
+- Start time: 07:17:23,644
+- End time: 07:18:10,666
+- Wall clock time taken for completion: 47 seconds, 22 milliseconds
+
+Run 5: 
+- Number of Episodes: 500 episodes
+- Start time: 07:26:28,375
+- End time: 07:27:17,735
+- Wall clock time taken for completion: 49 seconds, 360 milliseconds
+
+Average Wall Clock Time for max steps training termination condition: (55.255+50.681+50.0832+47.022+49.360) seconds / 5 runs ~ 50.480 seconds
+
++++++++++++++++++++++++++++++++++++++++++
+Goal State Training Termination Condition
++++++++++++++++++++++++++++++++++++++++++
+Run 1: 
+- Number of Episodes: 500 episodes
+- Start time: 07:50:41,420
+- End time: 07:51:29,146
+- Wall clock time taken for completion: 47 seconds, 726 milliseconds
+
+Run 2: 
+- Number of Episodes: 500 episodes
+- Start time: 08:22:56,256
+- End time: 08:23:42,629
+- Wall clock time taken for completion: 46 seconds, 373 milliseconds
+
+Run 3: 
+- Number of Episodes: 500 episodes
+- Start time: 08:32:03,817
+- End time: 08:33:04,704
+- Wall clock time taken for completion: 60 seconds, 887 milliseconds
+
+Run 4: 
+- Number of Episodes: 500 episodes
+- Start time: 08:38:48,805
+- End time: 08:39:33,382
+- Wall clock time taken for completion: 44 seconds, 577 milliseconds
+
+Run 5: 
+- Number of Episodes: 500 episodes
+- Start time: 08:56:09,090
+- End time: 08:56:56,866
+- Wall clock time taken for completion: 47 seconds, 776 milliseconds
+
+Average Wall Clock Time for goal state training termination condition: (47.726+46.373+60.887+44.577+47.776) seconds / 5 runs ~ 49.468 seconds
+
+++++++++++++++++++++++++++++++++++++++++++++
+Probabilistic Training Termination Condition
+++++++++++++++++++++++++++++++++++++++++++++
+
+//Probability of stopping = 0.1//
+Run 1: 
+- Number of Episodes: 500 episodes
+- Start time: 09:58:08,830
+- End time: 09:58:53,767
+- Wall clock time taken for completion: 44 seconds, 937 milliseconds
+
+//Probability of stopping = 0.3//
+Run 2: 
+- Number of Episodes: 500 episodes
+- Start time: 10:21:43,739
+- End time: 10:22:05,995
+- Wall clock time taken for completion: 22 seconds, 256 milliseconds
+
+//Probability of stopping = 0.5//
+Run 3: 
+- Number of Episodes: 500 episodes
+- Start time: 10:37:59,523
+- End time: 10:38:15,989
+- Wall clock time taken for completion: 16 seconds, 466 milliseconds
+
+//Probability of stopping = 0.7//
+Run 4: 
+- Number of Episodes: 500 episodes
+- Start time: 10:46:42,496
+- End time: 10:46:56,256
+- Wall clock time taken for completion: 13 seconds, 760 milliseconds
+
+//Probability of stopping = 0.9//
+Run 5: 
+- Number of Episodes: 500 episodes
+- Start time: 10:53:40,221
+- End time: 10:53:51,970
+- Wall clock time taken for completion: 11 seconds, 749 milliseconds
+
+Average Wall Clock Time for probabilistic training termination condition: (44.937+22.256+16.466+13.760+11.749) seconds / 5 runs ~ 21.834 seconds
