@@ -9,16 +9,6 @@ moving_avg = s.rolling(window=10, min_periods=1).mean()
 moving_std = s.rolling(window=10, min_periods=1).std()
 moving_var = s.rolling(window=10, min_periods=1).var()
 rel_change = s.pct_change()
-threshold = 0.001
-stability_streak = []
-streak = 0
-for val in s.abs().values:
-    if val < threshold:
-        streak += 1
-    else:
-        streak = 0
-    stability_streak.append(streak)
-stability_streak_series = pd.Series(stability_streak, index=s.index)
 
 plt.figure(figsize=(12,8))
 plt.plot(s.index, s.values, marker='o', linestyle='-', label='Difference in Maximum Q-value for state 0')
