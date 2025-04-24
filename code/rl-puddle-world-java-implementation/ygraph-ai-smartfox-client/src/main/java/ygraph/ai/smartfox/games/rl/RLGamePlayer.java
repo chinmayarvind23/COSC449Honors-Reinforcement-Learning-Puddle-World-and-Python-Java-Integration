@@ -563,7 +563,7 @@ public class RLGamePlayer implements IEventListener {
     }
     
 
-    // Processes the GAME_RESET message from the server by requesting the initial state of the game
+    // Processes the GAME_RESET message from the server by requesting the initial state of the game (called when something goes wrong)
     // Given to students
     private void processReset(ISFSObject params) {
         isAwaitingResponse = false;
@@ -742,7 +742,7 @@ public class RLGamePlayer implements IEventListener {
         return max;
     }
 
-    // Resets the puddle world environment with an extension request to the server and resets the reward for the episode 
+    // Resets the puddle world environment with an extension request to the server and resets the reward for the episode (if something goes wrong)
     // Given to students
     protected void resetEnvironment() {
         RLClientGameMessage resetMsg = RLClientGameMessage.resetMessage(this.userName);
