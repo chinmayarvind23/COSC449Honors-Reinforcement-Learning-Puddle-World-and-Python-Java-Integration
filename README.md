@@ -1,6 +1,6 @@
 # PNRL: A System to Support Reinforcement Learning Development in an Undergraduate AI Course (includes Python-Java Integration)
 
-This repository contains code for the backend logic of a Reinforcement Learning-based Puddle World game implemented in Java, along with code for integrating Python code to Java code for the Game of Amazons. 
+This repository contains code for the backend logic of a Reinforcement Learning-based Puddle World game implemented in Java, along with code for integrating Python code to Java code for the Game of Amazons can be found [here](https://github.com/chinmayarvind23/COSC449Honors-COSC322Python-Java-Integration-GameOfAmazons). 
 
 Link to thesis written on the code: [Honors Thesis - Chinmay Arvind, April 2025](https://drive.google.com/file/d/1U1igX7QhhvddLht8Y_FE4toOWc9GTndy/view?usp=sharing)
 
